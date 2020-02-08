@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "711807334093",
+    "firebase_url": "https://greenearthhero-cceb4.firebaseio.com",
+    "project_id": "greenearthhero-cceb4",
+    "storage_bucket": "greenearthhero-cceb4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711807334093:android:4eff8e8a84a5ac21f01b84",
+        "android_client_info": {
+          "package_name": "com.oymj.greenearthhero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711807334093-mtt2c6nkkjv940qeiule52v75c11s1c6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_VtFFJLAHpTMoBCTo7EWb9LaGwTOWO9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711807334093-mtt2c6nkkjv940qeiule52v75c11s1c6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

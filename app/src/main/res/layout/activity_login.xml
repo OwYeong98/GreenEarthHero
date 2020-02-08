@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/green_gradient_color"
+    tools:context=".LoginActivity">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/montserrat"
+        android:text="Login"
+        android:textColor="#FFFFFF"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintWidth_percent="0.3" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:autoSizeTextType="uniform"
+        android:text="Email Or Username"
+        android:textColor="@color/lightgreen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.05"
+        app:layout_constraintStart_toStartOf="@+id/tv_login"
+        app:layout_constraintTop_toBottomOf="@+id/tv_login" />
+
+    <EditText
+        android:id="@+id/input_emailOrUsername"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_roundedrectangle_green"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingLeft="10dp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintStart_toStartOf="@+id/tv_login"
+        app:layout_constraintTop_toBottomOf="@+id/tv_username" />
+
+    <TextView
+        android:id="@+id/tv_password"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.05"
+        android:layout_marginTop="40dp"
+        android:autoSizeTextType="uniform"
+        android:text="Password"
+        android:textColor="@color/lightgreen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_login"
+        app:layout_constraintTop_toBottomOf="@+id/input_emailOrUsername" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_roundedrectangle_green"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintStart_toStartOf="@+id/tv_login"
+        app:layout_constraintTop_toBottomOf="@+id/tv_password" />
+
+    <ImageButton
+        android:id="@+id/button_signIn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:layout_marginTop="50dp"
+        app:layout_constraintDimensionRatio="3.5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintWidth_percent="0.5"
+        app:srcCompat="@drawable/ic_loginpage_signinbutton" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <ImageButton
+        android:id="@+id/button_back"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintDimensionRatio="1:1"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_loginpage_backbutton" />
+</androidx.constraintlayout.widget.ConstraintLayout>

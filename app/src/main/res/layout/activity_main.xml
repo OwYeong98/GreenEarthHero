@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/montserrat"
+        android:maxLines="1"
+        android:text="GREEN EARTH HERO"
+        android:textAlignment="center"
+        android:textColor="#035B0F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintWidth_percent="0.9" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintHeight_percent="0.05"
+        android:autoSizeTextType="uniform"
+        android:fontFamily="@font/couriernew"
+        android:maxLines="1"
+        android:text="A Digital 3R Platform"
+        android:textAlignment="center"
+        android:textColor="#035B0F"
+        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="30dp"
+        android:minWidth="200dp"
+        android:minHeight="200dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/getStartedButton"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:srcCompat="@drawable/ic_mainpage_illustration" />
+
+    <ImageButton
+        android:id="@+id/getStartedButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginBottom="3dp"
+        android:background="@null"
+        android:minWidth="200dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/tv_registerAccount"
+        app:layout_constraintDimensionRatio="6:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.265"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_mainpage_getstartedbutton" />
+
+    <TextView
+        android:id="@+id/tv_registerAccount"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintHeight_percent="0.05"
+        android:autoSizeTextType="uniform"
+        android:layout_marginBottom="36dp"
+        android:text="Register Account For Free Now!"
+        app:layout_constraintBottom_toTopOf="@+id/loginButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintWidth_max="400dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@null"
+        android:fontFamily="@font/montserrat"
+        android:text="Login"
+        android:textAllCaps="false"
+        android:textColor="#035B0F"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.06" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
