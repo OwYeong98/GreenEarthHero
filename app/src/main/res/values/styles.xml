@@ -8,9 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name = "NoActionBar" parent = "Theme.AppCompat.Light.NoActionBar">
+    <style name = "NoActionBar" parent = "Theme.MaterialComponents.Light.NoActionBar">
         <item name = "android:windowActionBar">false</item>
         <item name = "android:windowNoTitle">true</item>
     </style>
+    <style name="textInputOutlineTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_layout_box_stroke_color</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+
 
 </resources>
