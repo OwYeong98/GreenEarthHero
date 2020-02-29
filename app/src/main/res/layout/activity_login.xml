@@ -13,95 +13,118 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.05" />
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.35" />
 
     <TextView
-        android:id="@+id/tv_login"
+        android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/montserrat"
-        android:text="Login"
-        android:textColor="#FFFFFF"
+        android:maxLines="1"
+        android:text="GREEN EARTH HERO"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.08"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:layout_constraintWidth_percent="0.3" />
+        app:layout_constraintWidth_percent="0.9" />
 
     <TextView
-        android:id="@+id/tv_username"
+        android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="40dp"
-        android:autoSizeTextType="uniform"
-        android:text="Email Or Username"
-        android:textColor="@color/lightgreen"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.7"
         app:layout_constraintHeight_percent="0.05"
-        app:layout_constraintStart_toStartOf="@+id/tv_login"
-        app:layout_constraintTop_toBottomOf="@+id/tv_login" />
-
-    <EditText
-        android:id="@+id/input_emailOrUsername"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/shape_roundedrectangle_green"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:paddingLeft="10dp"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintHeight_percent="0.07"
-        app:layout_constraintStart_toStartOf="@+id/tv_login"
-        app:layout_constraintTop_toBottomOf="@+id/tv_username" />
-
-    <TextView
-        android:id="@+id/tv_password"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintHeight_percent="0.05"
-        android:layout_marginTop="40dp"
         android:autoSizeTextType="uniform"
-        android:text="Password"
-        android:textColor="@color/lightgreen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tv_login"
-        app:layout_constraintTop_toBottomOf="@+id/input_emailOrUsername" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/shape_roundedrectangle_green"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:paddingLeft="10dp"
+        android:fontFamily="@font/couriernew"
+        android:maxLines="1"
+        android:text="A Digital 3R Platform"
+        android:textAlignment="center"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintHeight_percent="0.07"
-        app:layout_constraintStart_toStartOf="@+id/tv_login"
-        app:layout_constraintTop_toBottomOf="@+id/tv_password" />
+        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
-    <ImageButton
-        android:id="@+id/button_signIn"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutUsername"
+        style="@style/textInputOutlineTextWhiteStyle"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:layout_marginTop="50dp"
-        app:layout_constraintDimensionRatio="3.5:1"
+        android:layout_height="60dp"
+        app:endIconCheckable="false"
+        app:endIconDrawable="@drawable/googleg_disabled_color_18"
+        app:endIconMode="custom"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintStart_toStartOf="@id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/guideline5">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutPassword"
+        style="@style/textInputOutlineTextWhiteStyle"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        app:endIconCheckable="false"
+        app:endIconDrawable="@drawable/googleg_disabled_color_18"
+        app:endIconMode="custom"
+        android:textColorHint="@color/white"
+        app:hintTextColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintStart_toStartOf="@id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutUsername">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/darkgreen"
+        android:paddingLeft="80dp"
+        android:paddingTop="15dp"
+        android:paddingRight="80dp"
+        android:paddingBottom="15dp"
+        android:text="Sign In"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:cornerRadius="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
-        app:layout_constraintWidth_percent="0.5"
-        app:srcCompat="@drawable/ic_loginpage_signinbutton" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.05"/>
+        app:layout_constraintGuide_percent="0.05" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
@@ -109,6 +132,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
+
+
 
     <ImageButton
         android:id="@+id/button_back"

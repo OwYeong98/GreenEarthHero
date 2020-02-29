@@ -67,22 +67,47 @@
                 app:layout_constraintGuide_percent="0.95" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutEmail"
+                android:id="@+id/textInputLayoutUsername"
                 style="@style/textInputOutlineTextStyle"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="32dp"
                 app:hintTextColor="#000000"
                 app:boxStrokeColor="@color/lightgrey"
+                app:endIconMode="custom"
+                app:endIconCheckable="false"
+                app:endIconDrawable="@drawable/googleg_disabled_color_18"
                 app:layout_constraintEnd_toStartOf="@+id/guideline8"
                 app:layout_constraintHeight_percent="0.08"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/lightgrey"
+                    android:hint="Username" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutEmail"
+                style="@style/textInputOutlineTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                app:hintTextColor="#000000"
+                app:boxStrokeColor="@color/lightgrey"
+                app:layout_constraintEnd_toStartOf="@+id/guideline8"
+                app:layout_constraintHeight_percent="0.08"
+                app:layout_constraintStart_toStartOf="@+id/guideline7"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutUsername">
+
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/lightgrey"
                     android:hint="Email" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,6 +117,8 @@
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="20dp"
+                app:hintTextColor="#000000"
+                app:boxStrokeColor="@color/lightgrey"
                 app:layout_constraintEnd_toStartOf="@+id/guideline8"
                 app:layout_constraintHeight_percent="0.08"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
@@ -101,8 +128,81 @@
                     android:id="@+id/inputName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/lightgrey"
                     android:hint="Name" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutPhone"
+                style="@style/textInputOutlineTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                app:hintTextColor="#000000"
+                app:boxStrokeColor="@color/lightgrey"
+                app:layout_constraintEnd_toStartOf="@+id/guideline8"
+                app:layout_constraintHeight_percent="0.08"
+                app:layout_constraintStart_toStartOf="@+id/guideline7"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutName">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/lightgrey"
+                    android:hint="Phone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutBirthDate"
+                style="@style/textInputOutlineTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                app:hintTextColor="#000000"
+                app:boxStrokeColor="@color/lightgrey"
+                app:layout_constraintEnd_toStartOf="@+id/guideline8"
+                app:layout_constraintHeight_percent="0.08"
+                app:layout_constraintStart_toStartOf="@+id/guideline7"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPhone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputBirthDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/lightgrey"
+                    android:hint="Date Of Birth" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/materialButton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:backgroundTint="@color/darkgrey"
+                android:paddingLeft="80dp"
+                android:paddingTop="15dp"
+                android:paddingRight="80dp"
+                android:paddingBottom="15dp"
+                android:text="Register"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                app:cornerRadius="18dp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline8"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/guideline7"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutBirthDate" />
+
+            <TextView
+                android:id="@+id/tvDoesNotHaveAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already have an acoount? Login Now"
+                android:textSize="13dp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/materialButton2" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,5 +17,10 @@
         <item name="boxStrokeWidth">2dp</item>
     </style>
 
+    <style name="textInputOutlineTextWhiteStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_layout_box_white_color</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+
 
 </resources>
