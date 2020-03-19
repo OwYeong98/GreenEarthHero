@@ -20,6 +20,9 @@
         <activity android:name=".RegisterActivity"/>
         <activity android:name=".LoginActivity" />
         <activity android:name=".IntroActivity" />
+        <activity android:name=".MenuActivity"
+            android:theme="@style/AppTheme.Transparent"
+            android:launchMode="singleTask"/>
     </application>
 
 </manifest>
