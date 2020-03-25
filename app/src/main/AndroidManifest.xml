@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.oymj.greenearthhero">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -23,6 +27,8 @@
         <activity android:name=".MenuActivity"
             android:theme="@style/AppTheme.Transparent"
             android:launchMode="singleTask"/>
+        <activity android:name=".RecycleActivity" />
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC-LH6ORqOPKLi9mVAxnq4_yDuRQXD3VT8" />
     </application>
 
 </manifest>

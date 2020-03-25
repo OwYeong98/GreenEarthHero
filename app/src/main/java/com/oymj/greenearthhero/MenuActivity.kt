@@ -19,11 +19,53 @@ import kotlinx.android.synthetic.main.activity_menu.*
 
 
 class MenuActivity : AppCompatActivity() {
+
+    //Better control of onClickListener
+    //all button action will be registered here
+    private var myOnClickListener = object: View.OnClickListener {
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        override fun onClick(v: View?) {
+            when (v) {
+                menu_cross_icon -> {
+                    revertCircularRevealActivity()
+                }
+                menu_notification_icon -> {
+
+                }
+                menu_chat_icon -> {
+
+                }
+                menu_profile_icon -> {
+
+                }
+                menu_recycle_icon -> {
+                    var intent = Intent(this@MenuActivity, RecycleActivity::class.java)
+                    startActivity(intent)
+                }
+                menu_food_donation_icon -> {
+
+                }
+                menu_good_selling_icon -> {
+
+                }
+                menu_request_icon-> {
+
+                }
+                menu_app_info_icon -> {
+                    var intent = Intent(this@MenuActivity, IntroActivity::class.java)
+                    startActivity(intent)
+                }
+
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         overridePendingTransition(R.anim.freeze, R.anim.freeze)
         setContentView(R.layout.activity_menu)
 
+        linkAllButtonWithOnClickListener()
         if (savedInstanceState == null) {
             val viewTreeObserver: ViewTreeObserver = menu_bg.getViewTreeObserver()
             if (viewTreeObserver.isAlive) {
@@ -37,24 +79,27 @@ class MenuActivity : AppCompatActivity() {
             }
         }
         animateMenuIcon()
-
-        menu_cross_icon.setOnClickListener(object : View.OnClickListener {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun onClick(v: View?) {
-                revertCircularRevealActivity()
-            }
-        })
-
-        menu_app_info_icon.setOnClickListener (object : View.OnClickListener {
-
-            override fun onClick(v: View?) {
-                var intent = Intent(this@MenuActivity, IntroActivity::class.java)
-                startActivity(intent)
-            }
-        })
-
-
     }
+
+    private fun linkAllButtonWithOnClickListener() {
+        //all button with onClick listener should be registered in this list
+        val actionButtonViewList = listOf(
+            menu_cross_icon,
+            menu_notification_icon,
+            menu_chat_icon,
+            menu_profile_icon,
+            menu_recycle_icon,
+            menu_food_donation_icon,
+            menu_good_selling_icon,
+            menu_request_icon,
+            menu_app_info_icon
+        )
+
+        for (view in actionButtonViewList) {
+            view.setOnClickListener(myOnClickListener)
+        }
+    }
+
 
     private fun animateMenuIcon(){
         val fadeInAnimation: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
@@ -92,9 +137,13 @@ class MenuActivity : AppCompatActivity() {
          * Tips:
          * cx and cy identify the anchor point of the reveal circle
          * Final radius identify the reveal circle final size
+         *
+         * NOTE: we are try to get cx and cy in the center of our menu icon
+         * 16 identify the margin of our menu icon
+         * 56/2 identify the radius of our floating action button(floating action button has a default size of 56dp)
          */
-        val cx: Int = menu_bg.right
-        val cy: Int = menu_bg.bottom
+        val cx: Int = menu_bg.left + getDips(16) + getDips(56/2)
+        val cy: Int = menu_bg.top + getDips(16) + getDips(56/2)
         val finalRadius: Float = Math.max(menu_bg.width, menu_bg.height).toFloat()
 
         val circularReveal = ViewAnimationUtils.createCircularReveal(
@@ -110,9 +159,11 @@ class MenuActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun revertCircularRevealActivity() {
+        val cx: Int = menu_bg.left + getDips(16) + getDips(56/2)
+        val cy: Int = menu_bg.top + getDips(16) + getDips(56/2)
         val finalRadius: Float = Math.max(menu_bg.width, menu_bg.height).toFloat()
         val circularReveal =
-            ViewAnimationUtils.createCircularReveal(menu_bg, menu_bg.right, menu_bg.bottom, finalRadius, 0f)
+            ViewAnimationUtils.createCircularReveal(menu_bg, cx, cy, finalRadius, 0f)
         circularReveal.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animator: Animator) {}
             override fun onAnimationEnd(animator: Animator) {

@@ -1,0 +1,708 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <fragment
+        android:id="@+id/recycle_map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/recycle_action_button_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="260dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/guideline10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dark_gray_rounded_corner_bg"
+                android:fontFamily="@font/montserrat_regular"
+                android:padding="15dp"
+                android:text="My Request"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/dark_gray_rounded_corner_bg"
+                android:fontFamily="@font/montserrat_regular"
+                android:padding="15dp"
+                android:text="Volunteer Collection"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/green_rounded_corner_bg"
+                android:fontFamily="@font/montserrat_regular"
+                android:padding="15dp"
+                android:text="My Volunteer"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+
+        <!-- Floating Action Button has a normal size of 56x56 dp-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:id="@+id/recycle_mapbox_recenter_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/darkgrey"
+            android:elevation="6dp"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/my_location_icon"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:layout_constraintRight_toLeftOf="@id/guideline11"
+            app:layout_constraintBottom_toBottomOf="@id/recycle_action_button_wrapper"
+            app:tint="@color/white" />
+
+
+        <!-- Floating Action Button has a normal size of 56x56 dp-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:id="@+id/recycle_menu_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:elevation="6dp"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/menu_icon"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:layout_constraintLeft_toRightOf="@id/guideline10"
+            app:layout_constraintTop_toBottomOf="@id/guideline17"
+            app:tint="@color/darkgrey" />
+
+        <TextView
+            android:id="@+id/recycle_request_location_label"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clickable="true"
+            app:layout_constraintLeft_toRightOf="@id/recycle_menu_icon"
+            app:layout_constraintRight_toLeftOf="@id/guideline11"
+            app:layout_constraintTop_toBottomOf="@id/guideline17"
+            app:layout_constraintBottom_toBottomOf="@id/recycle_menu_icon"
+            android:gravity="center"
+            android:background="#60FFFFFF"
+            android:elevation="10dp"
+            android:layout_margin="10dp"
+            android:text="Select A Pick Up Location"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="20sp"
+            android:textColor="@color/darkgrey"
+            android:textAlignment="center" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="16dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recycle_location_select_panel"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recycle_location_search_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/recycle_location_search_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:maxLines="1"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
+                android:textColor="@color/darkgrey"
+                android:hint="Search Here"
+                android:textColorHint="@color/lightgrey"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                android:paddingStart="50dp"
+                android:background="@drawable/darkgrey_border"
+                app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/recycle_location_search_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_icon"
+                android:adjustViewBounds="true"
+                android:padding="5dp"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toTopOf="@id/recycle_location_search_edittext"
+                app:layout_constraintBottom_toBottomOf="@id/recycle_location_search_edittext"
+                app:layout_constraintLeft_toLeftOf="@id/recycle_location_search_edittext"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <RelativeLayout
+            android:id="@+id/recycle_location_search_result_section"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/recycle_location_search_section"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temporary Testing.\nSearch Result Shown Here"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
+                android:textColor="@color/darkgrey"
+                android:textAlignment="center"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recycle_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@drawable/white_rounded_corner_bg_with_shadow"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:focusable="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recycle_bottom_sheet_collapse_view"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            app:layout_constraintTop_toTopOf="parent">
+            <View
+                android:id="@+id/recycle_drag_indicator"
+                android:layout_width="100dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/gray_rounded_corner_stroke"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/recycle_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="Recycle Material"
+                android:textColor="@color/darkgrey"
+                android:textSize="15sp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@+id/guideline13"
+                app:layout_constraintTop_toTopOf="@id/recycle_drag_indicator"/>
+            <LinearLayout
+                android:id="@+id/recycle_material_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                app:layout_constraintWidth_percent="0.3"
+                app:layout_constraintTop_toBottomOf="@id/recycle_textview"
+                app:layout_constraintStart_toEndOf="@id/guideline13">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:weightSum="10">
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_weight="4"
+                        android:src="@drawable/metal_icon"/>
+                    <TextView
+                        android:id="@+id/recycle_metal_info_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="0 KG"
+                        android:textSize="13sp"
+                        android:textColor="@color/darkgrey"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:paddingLeft="10dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="10">
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_weight="4"
+                        android:src="@drawable/plastic_icon"/>
+                    <TextView
+                        android:id="@+id/recycle_plastic_info_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="0 KG"
+                        android:textSize="13sp"
+                        android:textColor="@color/darkgrey"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:paddingLeft="10dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="10">
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_weight="4"
+                        android:src="@drawable/paper_icon"/>
+                    <TextView
+                        android:id="@+id/recycle_paper_info_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="0 KG"
+                        android:textSize="13sp"
+                        android:textColor="@color/darkgrey"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:paddingLeft="10dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:weightSum="10">
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_weight="4"
+                        android:src="@drawable/glass_icon"/>
+                    <TextView
+                        android:id="@+id/recycle_glass_info_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="0 KG"
+                        android:textSize="13sp"
+                        android:textColor="@color/darkgrey"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:paddingLeft="10dp"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:clickable="true"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_green_gradient_button"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:text="Recycle Now"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/recycle_material_container"
+                app:layout_constraintRight_toLeftOf="@id/guideline14"
+                app:layout_constraintWidth_percent="0.5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="Total Earnings: RM 200"
+                android:textColor="@color/darkgrey"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@+id/textView3"
+                app:layout_constraintEnd_toEndOf="@+id/textView3"
+                app:layout_constraintStart_toStartOf="@+id/textView3" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recycle_bottom_sheet_expanded_view"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/recycle_expanded_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recycle Material"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"
+                android:textColor="@color/darkgrey"
+                android:fontFamily="@font/montserrat_regular"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/guideline15" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toRightOf="@id/guideline15"
+                app:layout_constraintRight_toLeftOf="@id/guideline16"
+                app:layout_constraintTop_toBottomOf="@id/recycle_expanded_textview">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/metal_icon" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Metal"
+                            android:layout_marginBottom="5dp"
+                            android:textColor="@color/darkgrey"
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/recyle_metal_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:textSize="20sp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textAlignment="textEnd"
+                            android:inputType = "number"
+                            android:padding="10dp"
+                            android:maxLength="3"
+                            android:maxLines="1"
+                            android:background="@drawable/light_gray_rounded_corner_stroke" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:text="KG"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textColor="@color/darkgrey"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/plastic_icon" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Plastic"
+                            android:layout_marginBottom="5dp"
+                            android:textColor="@color/darkgrey"
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/recyle_plastic_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:textSize="20sp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textAlignment="textEnd"
+                            android:inputType = "number"
+                            android:padding="10dp"
+                            android:maxLength="3"
+                            android:maxLines="1"
+                            android:background="@drawable/light_gray_rounded_corner_stroke" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:text="KG"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textColor="@color/darkgrey"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:src="@drawable/paper_icon" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Paper"
+                            android:layout_marginBottom="5dp"
+                            android:textColor="@color/darkgrey"
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/recyle_paper_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:textSize="20sp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textAlignment="textEnd"
+                            android:inputType = "number"
+                            android:padding="10dp"
+                            android:maxLength="3"
+                            android:maxLines="1"
+                            android:background="@drawable/light_gray_rounded_corner_stroke" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:text="KG"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textColor="@color/darkgrey"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:weightSum="10">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/glass_icon" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Glass"
+                            android:layout_marginBottom="5dp"
+                            android:textColor="@color/darkgrey"
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/recyle_glass_edittext"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginBottom="10dp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:textSize="20sp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textAlignment="textEnd"
+                            android:inputType = "number"
+                            android:padding="10dp"
+                            android:maxLength="3"
+                            android:maxLines="1"
+                            android:background="@drawable/light_gray_rounded_corner_stroke" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:text="KG"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textColor="@color/darkgrey"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/recycle_expanded_closebtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:background="#515151"
+                android:gravity="center"
+                android:padding="40dp"
+                android:text="Close Now"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Earning:  RM 20"
+                android:textColor="@color/darkgrey"
+                android:textSize="20sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@id/recycle_expanded_closebtn"
+                app:layout_constraintLeft_toRightOf="@id/guideline15"
+                app:layout_constraintRight_toLeftOf="@id/guideline16"
+                android:layout_marginBottom="5dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+        
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

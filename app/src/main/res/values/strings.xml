@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GreenEarthHero</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="true">AIzaSyC-LH6ORqOPKLi9mVAxnq4_yDuRQXD3VT8</string>
 </resources>

@@ -9,4 +9,6 @@
     <color name="darkgreen">#1B7713</color>
     <color name="lightgrey">#7A7C79</color>
     <color name="darkgrey">#515151</color>
+
+    <color name="mapboxGreen">#1B7713</color>
 </resources>

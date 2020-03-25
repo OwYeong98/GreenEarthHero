@@ -1,8 +1,11 @@
 package com.oymj.greenearthhero
 
-import android.app.Application
+import android.R
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.multidex.MultiDexApplication
+import java.lang.String
+
 
 class MyApplication : MultiDexApplication() {
     // Called when the application is starting, before any other application objects have been created.
@@ -24,4 +27,5 @@ class MyApplication : MultiDexApplication() {
     override fun onLowMemory() {
         super.onLowMemory()
     }
+
 }
