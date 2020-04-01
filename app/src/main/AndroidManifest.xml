@@ -28,6 +28,7 @@
             android:theme="@style/AppTheme.Transparent"
             android:launchMode="singleTask"/>
         <activity android:name=".RecycleActivity" />
+        <activity android:name=".VolunteerCollectionActivity" />
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC-LH6ORqOPKfadsfsdaLi9mVAxnq4_yDuRQXD3VT8" />
     </application>
 

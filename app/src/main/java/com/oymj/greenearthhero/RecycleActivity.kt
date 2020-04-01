@@ -15,6 +15,7 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -22,11 +23,18 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
+import com.mapbox.mapboxsdk.location.LocationComponentOptions
+import com.mapbox.mapboxsdk.location.modes.RenderMode
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.Style
 import com.oymj.greenearthhero.Utils.LocationUtils
+import com.oymj.greenearthhero.api.ApisImplementation
 
 import kotlinx.android.synthetic.main.activity_recycle.*
 
@@ -34,8 +42,7 @@ import kotlinx.android.synthetic.main.activity_recycle.*
 
 class RecycleActivity : AppCompatActivity() {
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var mapFragment: SupportMapFragment
-    private lateinit var googleMap: GoogleMap
+    private lateinit var myMapBoxMap: MapboxMap
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
     private var isLocationPanelOpened = false
 
@@ -68,14 +75,21 @@ class RecycleActivity : AppCompatActivity() {
                 }
                 recycle_mapbox_recenter_btn -> {
                     if(LocationUtils?.getLastKnownLocation() != null) {
-                        var cameraUpdate: CameraUpdate = CameraUpdateFactory.newLatLngZoom(
-                            LatLng(
-                                LocationUtils!!.getLastKnownLocation()!!.latitude,
-                                LocationUtils!!.getLastKnownLocation()!!.longitude
-                            ), 15f
-                        )
-                        googleMap.animateCamera(cameraUpdate)
+                        if(::myMapBoxMap != null){
+                            var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
+                            var cameraPosition = CameraPosition.Builder()
+                                .target(LatLng(userCurrentLocationLatLng.latitude, userCurrentLocationLatLng.longitude)) // Sets the new camera position
+                                .zoom(17.0) // Sets the zoom
+                                .bearing(180.0) // Rotate the camera
+                                .tilt(30.0) // Set the camera tilt
+                                .build(); // Creates a CameraPosition
+
+                            myMapBoxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000)
+                        }
                     }
+                }
+                btnVolunteerCollection -> {
+                    startActivity(Intent(this@RecycleActivity, VolunteerCollectionActivity::class.java))
                 }
 
             }
@@ -92,17 +106,42 @@ class RecycleActivity : AppCompatActivity() {
 
         setupGoogleMap()
         setupBottomSheet()
+        setupLocationPanel()
     }
 
     private fun setupGoogleMap(){
-        mapFragment = supportFragmentManager.findFragmentById(R.id.recycle_map_view) as SupportMapFragment
-        mapFragment.getMapAsync(OnMapReadyCallback {
-                googleMap->
-            this.googleMap = googleMap
-            this.googleMap.isMyLocationEnabled = true
-            this.googleMap.uiSettings.isMyLocationButtonEnabled = false
 
-        })
+        mapBoxView?.getMapAsync{
+            mapboxMap ->
+            myMapBoxMap = mapboxMap
+            //set map style
+            mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+                style ->
+
+                //show user current location icon in the map
+                var locationComponent = mapboxMap.locationComponent
+                locationComponent.activateLocationComponent(this,style,true)
+                locationComponent.isLocationComponentEnabled = true
+                locationComponent.renderMode = RenderMode.COMPASS
+
+                mapboxMap.uiSettings.isCompassEnabled = false
+
+                if(LocationUtils?.getLastKnownLocation() != null) {
+                    var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
+                    var cameraPosition = CameraPosition.Builder()
+                        .target(LatLng(userCurrentLocationLatLng.latitude, userCurrentLocationLatLng.longitude)) // Sets the new camera position
+                        .zoom(17.0) // Sets the zoom
+                        .bearing(180.0) // Rotate the camera
+                        .tilt(30.0) // Set the camera tilt
+                        .build(); // Creates a CameraPosition
+
+                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000)
+                }else{
+                    Toast.makeText(this,"Current Location not found! Please turn on Location Services",Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
     }
 
     private fun setupBottomSheet(){
@@ -149,6 +188,22 @@ class RecycleActivity : AppCompatActivity() {
         })
     }
 
+    private fun setupLocationPanel(){
+        recycle_location_search_edittext.setOnKeyListener(object: View.OnKeyListener{
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+                if(event!!.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+                    ApisImplementation().searchAddress(this@RecycleActivity,"sunway",callback = {
+                        success,response->
+
+                    })
+
+                    return true
+                }
+                return false
+            }
+        })
+    }
+
     private fun linkAllButtonWithOnClickListener() {
         //all button with onClick listener should be registered in this list
         val actionButtonViewList = listOf(
@@ -156,7 +211,8 @@ class RecycleActivity : AppCompatActivity() {
             recycle_menu_icon,
             recycle_request_location_label,
             recycle_location_search_back_btn,
-            recycle_mapbox_recenter_btn
+            recycle_mapbox_recenter_btn,
+            btnVolunteerCollection
         )
 
         for (view in actionButtonViewList) {

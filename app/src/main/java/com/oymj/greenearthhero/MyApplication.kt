@@ -4,6 +4,8 @@ import android.R
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.multidex.MultiDexApplication
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.maps.MapboxMap
 import java.lang.String
 
 
@@ -12,7 +14,10 @@ class MyApplication : MultiDexApplication() {
     // Overriding this method is totally optional!
     override fun onCreate() {
         super.onCreate()
-        // Required initialization logic here!
+
+        //setup Mapbox
+        Mapbox.getInstance(applicationContext, getString(com.oymj.greenearthhero.R.string.mapbox_access_token))
+
     }
 
     // Called by the system when the device configuration changes while your component is running.
