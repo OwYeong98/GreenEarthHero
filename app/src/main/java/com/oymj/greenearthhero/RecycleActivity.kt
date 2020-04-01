@@ -24,7 +24,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.oymj.greenearthhero.Utils.LocationUtils
 
 import kotlinx.android.synthetic.main.activity_recycle.*
 
@@ -37,8 +39,8 @@ class RecycleActivity : AppCompatActivity() {
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
     private var isLocationPanelOpened = false
 
-    private val PERMISSION_REQUEST = 10
-    private var permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+
+
     lateinit var locationManager: LocationManager
     private var hasGps = false
     private var hasNetwork = false
@@ -65,22 +67,19 @@ class RecycleActivity : AppCompatActivity() {
                     showLocationPanel(false)
                 }
                 recycle_mapbox_recenter_btn -> {
-                    if(accurateLocation != null) {
+                    if(LocationUtils?.getLastKnownLocation() != null) {
                         var cameraUpdate: CameraUpdate = CameraUpdateFactory.newLatLngZoom(
                             LatLng(
-                                accurateLocation!!.latitude,
-                                accurateLocation!!.longitude
-                            ), 12f
-                        );
+                                LocationUtils!!.getLastKnownLocation()!!.latitude,
+                                LocationUtils!!.getLastKnownLocation()!!.longitude
+                            ), 15f
+                        )
                         googleMap.animateCamera(cameraUpdate)
                     }
                 }
 
             }
-
         }
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,35 +90,25 @@ class RecycleActivity : AppCompatActivity() {
         linkAllButtonWithOnClickListener()
         syncMaterialInfoWithEditText()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkPermission(permissions)) {
-                getLocation()
-            } else {
-                requestPermissions(permissions, PERMISSION_REQUEST)
-            }
-        } else {
-            getLocation()
-        }
+        setupGoogleMap()
+        setupBottomSheet()
+    }
 
+    private fun setupGoogleMap(){
         mapFragment = supportFragmentManager.findFragmentById(R.id.recycle_map_view) as SupportMapFragment
         mapFragment.getMapAsync(OnMapReadyCallback {
-            googleMap = it
-            googleMap.isMyLocationEnabled = true
-            googleMap.uiSettings.isMyLocationButtonEnabled = false
-
-            if(accurateLocation != null){
-                var cameraUpdate:CameraUpdate = CameraUpdateFactory.newLatLngZoom(LatLng(accurateLocation!!.latitude, accurateLocation!!.longitude), 10f);
-                googleMap.animateCamera(cameraUpdate)
-            }
-
+                googleMap->
+            this.googleMap = googleMap
+            this.googleMap.isMyLocationEnabled = true
+            this.googleMap.uiSettings.isMyLocationButtonEnabled = false
 
         })
+    }
 
-
+    private fun setupBottomSheet(){
         myBottomSheetBehavior = BottomSheetBehavior.from(recycle_bottom_sheet)
 
-        myBottomSheetBehavior.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
+        myBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (currentBottomSheetState == BottomSheetBehavior.STATE_EXPANDED) {
                     recycle_bottom_sheet.setBackgroundResource(R.drawable.white_rounded_corner_bg_with_shadow)
@@ -156,124 +145,9 @@ class RecycleActivity : AppCompatActivity() {
                         }
                     }
                 }
-
-
             }
         })
-
-
     }
-
-    private fun checkPermission(permissionArray:Array<String>) : Boolean {
-        var success = true
-        for (i in permissionArray.indices) {
-            if (checkCallingOrSelfPermission(permissionArray[i]) == PackageManager.PERMISSION_DENIED) {
-                success = false
-            }
-        }
-        return success
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST) {
-            var allSuccess = true
-            for (i in permissions.indices) {
-                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    allSuccess = false
-                    val requestAgain = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(permissions[i])
-                    if (requestAgain) {
-                        Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, "Go to settings and enable the permission", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            if (allSuccess) {
-                getLocation()
-            }
-
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getLocation() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        if (hasGps || hasNetwork) {
-
-            if (hasGps) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F, object :
-                    LocationListener {
-                    override fun onLocationChanged(location: Location?) {
-                        if (location != null) {
-                            locationGps = location
-                        }
-                    }
-
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
-                    }
-
-                    override fun onProviderEnabled(provider: String?) {
-
-                    }
-
-                    override fun onProviderDisabled(provider: String?) {
-
-                    }
-
-                })
-
-                val localGpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                if (localGpsLocation != null)
-                    locationGps = localGpsLocation
-            }
-            if (hasNetwork) {
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0F, object : LocationListener {
-                    override fun onLocationChanged(location: Location?) {
-                        if (location != null) {
-                            locationNetwork = location
-                        }
-                    }
-
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-
-                    }
-
-                    override fun onProviderEnabled(provider: String?) {
-
-                    }
-
-                    override fun onProviderDisabled(provider: String?) {
-
-                    }
-
-                })
-
-                val localNetworkLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                if (localNetworkLocation != null)
-                    locationNetwork = localNetworkLocation
-            }
-            var isGpsNull = locationGps == null
-            var isNetworkNull = locationNetwork == null
-
-            Log.i("haha", "gps is ${isGpsNull.toString()} network is ${isNetworkNull.toString()}")
-            if(locationGps!= null && locationNetwork!= null){
-                if (locationGps!!.accuracy > locationNetwork!!.accuracy){
-                    accurateLocation = locationNetwork
-                }else{
-                    accurateLocation = locationGps
-                }
-            }
-
-        } else {
-            startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-
-        }
-    }
-
 
     private fun linkAllButtonWithOnClickListener() {
         //all button with onClick listener should be registered in this list
@@ -290,7 +164,7 @@ class RecycleActivity : AppCompatActivity() {
         }
     }
 
-
+    //expand bottom sheet
     private fun showExpandedView() {
         val fadeInAnimation: Animation =
             AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
@@ -321,6 +195,7 @@ class RecycleActivity : AppCompatActivity() {
 
     }
 
+    //collapse bottom sheet
     private fun showCollapseView() {
         val fadeInAnimation: Animation =
             AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
@@ -330,7 +205,7 @@ class RecycleActivity : AppCompatActivity() {
         recycle_bottom_sheet_expanded_view.startAnimation(fadeOutAnimation)
         fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationRepeat(animation: Animation?) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onAnimationEnd(animation: Animation?) {
@@ -339,7 +214,7 @@ class RecycleActivity : AppCompatActivity() {
             }
 
             override fun onAnimationStart(animation: Animation?) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
         })
         recycle_bottom_sheet_collapse_view.visibility = View.VISIBLE
