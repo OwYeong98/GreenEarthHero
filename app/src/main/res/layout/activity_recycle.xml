@@ -166,7 +166,9 @@
                 android:padding="10dp"
                 android:paddingStart="50dp"
                 android:background="@drawable/darkgrey_border"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:imeOptions="actionSend"
+                android:inputType="text"/>
             <ImageView
                 android:id="@+id/recycle_location_search_back_btn"
                 android:layout_width="wrap_content"
@@ -180,15 +182,15 @@
                 app:layout_constraintLeft_toLeftOf="@id/recycle_location_search_edittext"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.recyclerview.widget.RecyclerView
+        <FrameLayout
             android:id="@+id/recycle_location_search_result_section"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/darkgrey"
+            android:background="@color/white"
             app:layout_constraintTop_toBottomOf="@id/recycle_location_search_section"
             app:layout_constraintBottom_toBottomOf="parent">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </FrameLayout>
 
         
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.oymj.greenearthhero
+package com.oymj.greenearthhero.ui.activity
 
 import android.content.DialogInterface
 import android.content.Intent
@@ -13,9 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.viewpager2.widget.ViewPager2
-import com.oymj.greenearthhero.Adapters.IntroSliderAdapter
-import com.oymj.greenearthhero.Models.IntroSlide
-import com.oymj.greenearthhero.Models.SharedPreference
+import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.adapters.IntroSliderAdapter
+import com.oymj.greenearthhero.models.IntroSlide
+import com.oymj.greenearthhero.models.SharedPreference
 import kotlinx.android.synthetic.main.activity_intro.*
 
 

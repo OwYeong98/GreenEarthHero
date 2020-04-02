@@ -1,15 +1,15 @@
-package com.oymj.greenearthhero
+package com.oymj.greenearthhero.ui.activity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.oymj.greenearthhero.Models.SharedPreference
-import com.oymj.greenearthhero.Utils.LocationUtils
-import com.oymj.greenearthhero.Utils.PermissionManager
+import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.models.SharedPreference
+import com.oymj.greenearthhero.utils.LocationUtils
+import com.oymj.greenearthhero.utils.PermissionManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

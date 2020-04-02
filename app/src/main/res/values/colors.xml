@@ -13,4 +13,6 @@
     <color name="darkgrey">#515151</color>
 
     <color name="mapboxGreen">#1B7713</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="transparent_pressed">#c4c2bc</color>
 </resources>

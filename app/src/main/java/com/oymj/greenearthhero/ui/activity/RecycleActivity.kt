@@ -1,40 +1,37 @@
-package com.oymj.greenearthhero
+package com.oymj.greenearthhero.ui.activity
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
-import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.Style
-import com.oymj.greenearthhero.Utils.LocationUtils
-//import com.oymj.greenearthhero.api.ApisImplementation
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.utils.LocationUtils
+import com.oymj.greenearthhero.data.FeaturePlaces
+import com.oymj.greenearthhero.ui.fragment.SearchAddressResultFragment
+import com.oymj.greenearthhero.utils.MapboxManager
+import com.oymj.greenearthhero.utils.MapboxManager.getMapBoxStyle
 
 import kotlinx.android.synthetic.main.activity_recycle.*
 
@@ -43,6 +40,9 @@ import kotlinx.android.synthetic.main.activity_recycle.*
 class RecycleActivity : AppCompatActivity() {
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private lateinit var myMapBoxMap: MapboxMap
+    private lateinit var mapBoxMapSymbolManager: SymbolManager
+    private lateinit var locationSearchResultFragment: SearchAddressResultFragment
+    private lateinit var currentPinnedLocation: Symbol
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
     private var isLocationPanelOpened = false
 
@@ -104,19 +104,21 @@ class RecycleActivity : AppCompatActivity() {
         linkAllButtonWithOnClickListener()
         syncMaterialInfoWithEditText()
 
-        setupGoogleMap()
+        setupMapboxMap()
         setupBottomSheet()
-        setupLocationPanel()
+        setupLocationSearchPanel()
     }
 
-    private fun setupGoogleMap(){
+    private fun setupMapboxMap(){
 
         mapBoxView?.getMapAsync{
             mapboxMap ->
             myMapBoxMap = mapboxMap
             //set map style
-            mapboxMap.setStyle(Style.MAPBOX_STREETS) {
+            mapboxMap.setStyle(getMapBoxStyle(this)) {
                 style ->
+
+                mapBoxMapSymbolManager = SymbolManager(mapBoxView,mapboxMap,style)
 
                 //show user current location icon in the map
                 var locationComponent = mapboxMap.locationComponent
@@ -188,21 +190,68 @@ class RecycleActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupLocationPanel(){
-//        recycle_location_search_edittext.setOnKeyListener(object: View.OnKeyListener{
-//            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-//                if(event!!.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
-//                    ApisImplementation().searchAddress(this@RecycleActivity,"sunway",callback = {
-//                        success,response->
-//
-//                    })
-//
-//                    return true
-//                }
-//                return false
-//            }
-//        })
+    private fun setupLocationSearchPanel(){
+        locationSearchResultFragment = SearchAddressResultFragment{
+            data->
+            selectLocationFromSearchPanel(data)
+        }
+
+        //replace framelayout with fragment
+        var fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.recycle_location_search_result_section,locationSearchResultFragment)
+        fragmentTransaction.commit()
+
+        recycle_location_search_edittext.setOnEditorActionListener { v, actionId, event ->
+            var handled=false
+            if(actionId == EditorInfo.IME_ACTION_SEND){
+                handled = true
+                locationSearchResultFragment.searchAddressFromMapBoxApi(v.text.toString())
+            }
+            handled
+        }
     }
+
+    //this function is called when user select location
+    fun selectLocationFromSearchPanel(data:FeaturePlaces){
+        //hide location panel
+        showLocationPanel(false)
+
+        mapBoxMapSymbolManager.iconAllowOverlap = true
+        mapBoxMapSymbolManager.iconIgnorePlacement = true
+
+        //pin selected location in map
+        if(!::currentPinnedLocation.isInitialized){
+            //first time
+            currentPinnedLocation = mapBoxMapSymbolManager.create(SymbolOptions()
+                .withLatLng(LatLng(data.getLatitude(),data.getLongitude()))
+                .withIconImage(MapboxManager.ID_LOCATION_ICON)
+                .withIconSize(2f)
+                .withDraggable(true))
+        }else{
+            //change the location of the pin
+            currentPinnedLocation.latLng = LatLng(data.getLatitude(),data.getLongitude())
+            mapBoxMapSymbolManager.update(currentPinnedLocation)
+        }
+        //update the selected location
+        recycle_request_location_label.text = data.title
+
+
+
+        //move to selected location
+        var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
+        var cameraPosition = CameraPosition.Builder()
+            .target(LatLng(data.getLatitude(),data.getLongitude())) // Sets the new camera position
+            .zoom(17.0) // Sets the zoom
+            .bearing(180.0) // Rotate the camera
+            .tilt(30.0) // Set the camera tilt
+            .build(); // Creates a CameraPosition
+
+        myMapBoxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000)
+
+
+    }
+
+
 
     private fun linkAllButtonWithOnClickListener() {
         //all button with onClick listener should be registered in this list
@@ -223,9 +272,13 @@ class RecycleActivity : AppCompatActivity() {
     //expand bottom sheet
     private fun showExpandedView() {
         val fadeInAnimation: Animation =
-            AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
+            AnimationUtils.loadAnimation(applicationContext,
+                R.anim.fade_in
+            )
         val fadeOutAnimation: Animation =
-            AnimationUtils.loadAnimation(applicationContext, R.anim.fade_out)
+            AnimationUtils.loadAnimation(applicationContext,
+                R.anim.fade_out
+            )
 
         recycle_bottom_sheet_collapse_view.startAnimation(fadeOutAnimation)
         fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
@@ -254,9 +307,13 @@ class RecycleActivity : AppCompatActivity() {
     //collapse bottom sheet
     private fun showCollapseView() {
         val fadeInAnimation: Animation =
-            AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
+            AnimationUtils.loadAnimation(applicationContext,
+                R.anim.fade_in
+            )
         val fadeOutAnimation: Animation =
-            AnimationUtils.loadAnimation(applicationContext, R.anim.fade_out)
+            AnimationUtils.loadAnimation(applicationContext,
+                R.anim.fade_out
+            )
 
         recycle_bottom_sheet_expanded_view.startAnimation(fadeOutAnimation)
         fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
@@ -359,9 +416,13 @@ class RecycleActivity : AppCompatActivity() {
 
     private fun showLocationPanel(yesOrNo: Boolean) {
         val slideUpAnimation: Animation =
-            AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
+            AnimationUtils.loadAnimation(applicationContext,
+                R.anim.slide_up
+            )
         val slideDownAnimation: Animation =
-            AnimationUtils.loadAnimation(applicationContext, R.anim.slide_down)
+            AnimationUtils.loadAnimation(applicationContext,
+                R.anim.slide_down
+            )
         isLocationPanelOpened = yesOrNo
         if (yesOrNo) {
             recycle_location_select_panel.visibility = View.VISIBLE
