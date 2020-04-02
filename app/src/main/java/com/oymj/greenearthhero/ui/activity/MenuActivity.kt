@@ -1,4 +1,4 @@
-package com.oymj.greenearthhero
+package com.oymj.greenearthhero.ui.activity
 
 import android.animation.Animator
 import android.content.Intent
@@ -14,7 +14,8 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.oymj.greenearthhero.Utils.LottieUtils
+import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.utils.LottieUtils
 import kotlinx.android.synthetic.main.activity_menu.*
 
 
@@ -62,7 +63,10 @@ class MenuActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        overridePendingTransition(R.anim.freeze, R.anim.freeze)
+        overridePendingTransition(
+            R.anim.freeze,
+            R.anim.freeze
+        )
         setContentView(R.layout.activity_menu)
 
         linkAllButtonWithOnClickListener()
@@ -102,7 +106,9 @@ class MenuActivity : AppCompatActivity() {
 
 
     private fun animateMenuIcon(){
-        val fadeInAnimation: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
+        val fadeInAnimation: Animation = AnimationUtils.loadAnimation(applicationContext,
+            R.anim.fade_in
+        )
 
         val fadeInIcon = listOf(
             menu_cross_icon,

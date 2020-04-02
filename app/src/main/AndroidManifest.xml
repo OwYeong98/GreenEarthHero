@@ -14,21 +14,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"/>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".IntroActivity" />
-        <activity android:name=".MenuActivity"
+        <activity android:name=".ui.activity.RegisterActivity"/>
+        <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".ui.activity.IntroActivity" />
+        <activity android:name=".ui.activity.MenuActivity"
             android:theme="@style/AppTheme.Transparent"
             android:launchMode="singleTask"/>
-        <activity android:name=".RecycleActivity" />
-        <activity android:name=".VolunteerCollectionActivity" />
+        <activity android:name=".ui.activity.RecycleActivity" />
+        <activity android:name=".ui.activity.VolunteerCollectionActivity" />
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC-LH6ORqOPKfadsfsdaLi9mVAxnq4_yDuRQXD3VT8" />
     </application>
 

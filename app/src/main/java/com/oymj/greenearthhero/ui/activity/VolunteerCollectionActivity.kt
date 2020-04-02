@@ -1,4 +1,4 @@
-package com.oymj.greenearthhero
+package com.oymj.greenearthhero.ui.activity
 
 import android.os.Bundle
 import android.view.View
@@ -7,6 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.oymj.greenearthhero.R
 import kotlinx.android.synthetic.main.activity_volunteer_collection.*
 
 class VolunteerCollectionActivity : AppCompatActivity() {
@@ -56,7 +57,9 @@ class VolunteerCollectionActivity : AppCompatActivity() {
     }
 
     private fun showBackToListButton(){
-        val slideUpAnimation: Animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_up)
+        val slideUpAnimation: Animation = AnimationUtils.loadAnimation(applicationContext,
+            R.anim.slide_up
+        )
         btnBackToList.visibility=View.VISIBLE
         btnBackToList.startAnimation(slideUpAnimation)
 

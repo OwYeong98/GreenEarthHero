@@ -13,11 +13,11 @@ class FeaturePlaces {
     var latLong:List<Double>? = null
 
     fun getLatitude(): Double{
-        return latLong!![0]
+        return latLong!![1]
     }
 
     fun getLongitude(): Double{
-        return latLong!![1]
+        return latLong!![0]
     }
 
 }
