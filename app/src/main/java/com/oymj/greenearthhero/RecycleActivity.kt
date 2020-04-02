@@ -34,7 +34,7 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.oymj.greenearthhero.Utils.LocationUtils
-import com.oymj.greenearthhero.api.ApisImplementation
+//import com.oymj.greenearthhero.api.ApisImplementation
 
 import kotlinx.android.synthetic.main.activity_recycle.*
 
@@ -189,19 +189,19 @@ class RecycleActivity : AppCompatActivity() {
     }
 
     private fun setupLocationPanel(){
-        recycle_location_search_edittext.setOnKeyListener(object: View.OnKeyListener{
-            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-                if(event!!.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
-                    ApisImplementation().searchAddress(this@RecycleActivity,"sunway",callback = {
-                        success,response->
-
-                    })
-
-                    return true
-                }
-                return false
-            }
-        })
+//        recycle_location_search_edittext.setOnKeyListener(object: View.OnKeyListener{
+//            override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+//                if(event!!.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER){
+//                    ApisImplementation().searchAddress(this@RecycleActivity,"sunway",callback = {
+//                        success,response->
+//
+//                    })
+//
+//                    return true
+//                }
+//                return false
+//            }
+//        })
     }
 
     private fun linkAllButtonWithOnClickListener() {
