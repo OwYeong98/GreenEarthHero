@@ -14,14 +14,16 @@ import com.oymj.greenearthhero.RecyclerViewOnItemClickListener
 import com.oymj.greenearthhero.adapters.FeaturePlacesRecyclerViewAdapter
 import com.oymj.greenearthhero.api.ApisImplementation
 import com.oymj.greenearthhero.data.FeaturePlaces
+import com.oymj.greenearthhero.data.TomTomPlacesResult
+import com.oymj.greenearthhero.data.TomTomPosition
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.fragment_search_address_result.*
 
 
-class SearchAddressResultFragment(var callback:(FeaturePlaces)->Unit) : Fragment(), RecyclerViewOnItemClickListener {
+class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fragment(), RecyclerViewOnItemClickListener {
 
-    var placesList = ArrayList<FeaturePlaces>()
+    var placesList = ArrayList<TomTomPlacesResult>()
     lateinit var recyclerViewAdapter: FeaturePlacesRecyclerViewAdapter
 
 
@@ -46,9 +48,13 @@ class SearchAddressResultFragment(var callback:(FeaturePlaces)->Unit) : Fragment
         )
 
         btnDragSelf.setOnClickListener {
-            var currentLocation = FeaturePlaces()
-            currentLocation.title = "Current Location"
-            currentLocation.latLong = listOf(LocationUtils.getLastKnownLocation()?.longitude!!,LocationUtils.getLastKnownLocation()?.latitude!!)
+            var currentLocation = TomTomPlacesResult()
+
+            var currentLatLong = TomTomPosition()
+            currentLatLong.lat = LocationUtils.getLastKnownLocation()?.latitude!!
+            currentLatLong.lon = LocationUtils.getLastKnownLocation()?.longitude!!
+
+            currentLocation.latLong = currentLatLong
 
             callback(currentLocation)
         }
@@ -60,18 +66,18 @@ class SearchAddressResultFragment(var callback:(FeaturePlaces)->Unit) : Fragment
     }
 
     override fun onItemClick(data:Any) {
-        if(data is FeaturePlaces){
+        if(data is TomTomPlacesResult){
             callback(data)
         }
     }
 
     fun searchAddressFromMapBoxApi(keyword: String){
-        ApisImplementation().searchAddress(context!!,keyword,callback = {
-                success, response->
 
+        ApisImplementation().geocodingFromTomTom(context!!,keyword,callback = {
+            success,response->
             if(success){
                 placesList.clear()
-                placesList.addAll(response?.resultList!!)
+                placesList.addAll(response?.results!!)
                 recyclerViewAdapter.notifyDataSetChanged()
 
                 //if no places found show zero state

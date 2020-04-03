@@ -27,8 +27,10 @@ import com.mapbox.mapboxsdk.plugins.annotation.Symbol
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.api.ApisImplementation
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.data.FeaturePlaces
+import com.oymj.greenearthhero.data.TomTomPlacesResult
 import com.oymj.greenearthhero.ui.fragment.SearchAddressResultFragment
 import com.oymj.greenearthhero.utils.MapboxManager
 import com.oymj.greenearthhero.utils.MapboxManager.getMapBoxStyle
@@ -42,7 +44,8 @@ class RecycleActivity : AppCompatActivity() {
     private lateinit var myMapBoxMap: MapboxMap
     private lateinit var mapBoxMapSymbolManager: SymbolManager
     private lateinit var locationSearchResultFragment: SearchAddressResultFragment
-    private lateinit var currentPinnedLocation: Symbol
+    private lateinit var currentPinnedLocation: TomTomPlacesResult
+    private lateinit var currentPinnedLocationSymbol: Symbol
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
     private var isLocationPanelOpened = false
 
@@ -212,43 +215,61 @@ class RecycleActivity : AppCompatActivity() {
     }
 
     //this function is called when user select location
-    fun selectLocationFromSearchPanel(data:FeaturePlaces){
+    fun selectLocationFromSearchPanel(data:TomTomPlacesResult){
         //hide location panel
         showLocationPanel(false)
+
+        //store current selected location
+        this.currentPinnedLocation = data
+        if(data.address?.fullAddress == null){
+            updateFeaturePlaceAddressWithLatLong(this.currentPinnedLocation)
+        }else{
+            //update the selected location
+            recycle_request_location_label.text = data.address?.fullAddress
+        }
 
         mapBoxMapSymbolManager.iconAllowOverlap = true
         mapBoxMapSymbolManager.iconIgnorePlacement = true
 
         //pin selected location in map
-        if(!::currentPinnedLocation.isInitialized){
+        if(!::currentPinnedLocationSymbol.isInitialized){
             //first time
-            currentPinnedLocation = mapBoxMapSymbolManager.create(SymbolOptions()
-                .withLatLng(LatLng(data.getLatitude(),data.getLongitude()))
+            currentPinnedLocationSymbol = mapBoxMapSymbolManager.create(SymbolOptions()
+                .withLatLng(LatLng(data.latLong?.lat!!,data.latLong?.lon!!))
                 .withIconImage(MapboxManager.ID_LOCATION_ICON)
                 .withIconSize(2f)
                 .withDraggable(true))
         }else{
             //change the location of the pin
-            currentPinnedLocation.latLng = LatLng(data.getLatitude(),data.getLongitude())
-            mapBoxMapSymbolManager.update(currentPinnedLocation)
+            currentPinnedLocationSymbol.latLng = LatLng(LatLng(data.latLong?.lat!!,data.latLong?.lon!!))
+            mapBoxMapSymbolManager.update(currentPinnedLocationSymbol)
         }
-        //update the selected location
-        recycle_request_location_label.text = data.title
-
-
 
         //move to selected location
-        var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
         var cameraPosition = CameraPosition.Builder()
-            .target(LatLng(data.getLatitude(),data.getLongitude())) // Sets the new camera position
+            .target(LatLng(data.latLong?.lat!!,data.latLong?.lon!!)) // Sets the new camera position
             .zoom(17.0) // Sets the zoom
             .bearing(180.0) // Rotate the camera
             .tilt(30.0) // Set the camera tilt
             .build(); // Creates a CameraPosition
 
         myMapBoxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000)
+    }
 
+    fun updateFeaturePlaceAddressWithLatLong(location:TomTomPlacesResult){
+        ApisImplementation().reverseGeocodingFromTomTom(this,location.latLong?.lat!!,location.latLong?.lon!!,callback = {
+            success,response->
+            if(success){
+                var address = response!!.addressResult!![0].address
 
+                location.address = address
+
+                recycle_request_location_label.text = address?.fullAddress
+
+            }else{
+
+            }
+        })
     }
 
 

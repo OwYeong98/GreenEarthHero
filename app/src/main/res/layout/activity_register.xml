@@ -74,9 +74,8 @@
                 android:layout_marginTop="32dp"
                 app:hintTextColor="#000000"
                 app:boxStrokeColor="@color/lightgrey"
-                app:endIconMode="custom"
-                app:endIconCheckable="false"
-                app:endIconDrawable="@drawable/googleg_disabled_color_18"
+                app:startIconCheckable="false"
+                app:startIconDrawable="@drawable/googleg_disabled_color_18"
                 app:layout_constraintEnd_toStartOf="@+id/guideline8"
                 app:layout_constraintHeight_percent="0.08"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
@@ -108,6 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/lightgrey"
+                    android:inputType="textPassword"
                     android:hint="Password" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -129,6 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/lightgrey"
+                    android:inputType="textPassword"
                     android:hint="Confirm Password" />
             </com.google.android.material.textfield.TextInputLayout>
 
