@@ -1,5 +1,7 @@
 package com.oymj.greenearthhero.utils
 
+import java.util.regex.Pattern
+
 object FormUtils {
 
     fun isNull(name:String,input:String): String?{
@@ -54,6 +56,14 @@ object FormUtils {
             return error
         }else{
             return null
+        }
+    }
+
+    fun isMatchRegex(input:String, regex:String, errorMessage:String): String?{
+        return if(!Pattern.compile(regex).matcher(input).matches()){
+            errorMessage
+        }else{
+            null
         }
     }
 

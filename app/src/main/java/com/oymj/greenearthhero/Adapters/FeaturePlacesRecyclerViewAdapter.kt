@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.RecyclerViewOnItemClickListener
 import com.oymj.greenearthhero.data.FeaturePlaces
+import com.oymj.greenearthhero.data.TomTomPlacesResult
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.listitem_feature_places.view.*
 
-class FeaturePlacesRecyclerViewAdapter(val data : ArrayList<FeaturePlaces>, val context: Context, val onItemClickListener: RecyclerViewOnItemClickListener) : RecyclerView.Adapter<ViewHolder>() {
+class FeaturePlacesRecyclerViewAdapter(val data : ArrayList<TomTomPlacesResult>, val context: Context, val onItemClickListener: RecyclerViewOnItemClickListener) : RecyclerView.Adapter<ViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -28,9 +29,9 @@ class FeaturePlacesRecyclerViewAdapter(val data : ArrayList<FeaturePlaces>, val 
         var currentData = data[position]
 
         //set data
-        holder.tvLocationTitle.text = currentData.title
+        holder.tvLocationTitle.text = currentData.address?.street?:currentData.address?.taman
         holder.tvDistance.text = "10 km"
-        holder.tvAddress.text = currentData.fullAddress
+        holder.tvAddress.text = currentData.address?.fullAddress
 
         //set ripple background
         holder.mainContainer.background = RippleUtil.getRippleButtonOutlineDrawable(holder.mainContainer.context,

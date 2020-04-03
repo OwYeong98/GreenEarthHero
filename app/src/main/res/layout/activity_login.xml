@@ -55,13 +55,12 @@
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayoutUsername"
+        android:id="@+id/textInputLayoutEmail"
         style="@style/textInputOutlineTextWhiteStyle"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        app:endIconCheckable="false"
-        app:endIconDrawable="@drawable/googleg_disabled_color_18"
-        app:endIconMode="custom"
+        app:startIconCheckable="false"
+        app:startIconDrawable="@drawable/googleg_disabled_color_18"
         android:textColorHint="@color/white"
         app:hintTextColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
@@ -69,10 +68,10 @@
         app:layout_constraintTop_toTopOf="@+id/guideline5">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/inputUsername"
+            android:id="@+id/inputEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
+            android:hint="Email"
             android:textColorHint="@color/white"
             android:textColor="@color/white" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -83,14 +82,13 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
-        app:endIconCheckable="false"
-        app:endIconDrawable="@drawable/googleg_disabled_color_18"
-        app:endIconMode="custom"
+        app:startIconCheckable="false"
+        app:startIconDrawable="@drawable/googleg_disabled_color_18"
         android:textColorHint="@color/white"
         app:hintTextColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="@id/guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutUsername">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputPassword"
@@ -136,7 +134,7 @@
 
 
     <ImageButton
-        android:id="@+id/button_back"
+        android:id="@+id/btnBack"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
@@ -145,5 +143,5 @@
         android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_loginpage_backbutton" />
+        android:src="@drawable/ic_loginpage_backbutton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
