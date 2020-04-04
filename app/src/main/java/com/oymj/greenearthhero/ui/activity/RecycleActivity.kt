@@ -3,6 +3,7 @@ package com.oymj.greenearthhero.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -34,6 +35,7 @@ import com.oymj.greenearthhero.data.TomTomPlacesResult
 import com.oymj.greenearthhero.ui.fragment.SearchAddressResultFragment
 import com.oymj.greenearthhero.utils.MapboxManager
 import com.oymj.greenearthhero.utils.MapboxManager.getMapBoxStyle
+import com.oymj.greenearthhero.utils.RippleUtil
 
 import kotlinx.android.synthetic.main.activity_recycle.*
 
@@ -44,7 +46,7 @@ class RecycleActivity : AppCompatActivity() {
     private lateinit var myMapBoxMap: MapboxMap
     private lateinit var mapBoxMapSymbolManager: SymbolManager
     private lateinit var locationSearchResultFragment: SearchAddressResultFragment
-    private lateinit var currentPinnedLocation: TomTomPlacesResult
+    private var currentPinnedLocation: TomTomPlacesResult? = null
     private lateinit var currentPinnedLocationSymbol: Symbol
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
     private var isLocationPanelOpened = false
@@ -94,6 +96,12 @@ class RecycleActivity : AppCompatActivity() {
                 btnVolunteerCollection -> {
                     startActivity(Intent(this@RecycleActivity, VolunteerCollectionActivity::class.java))
                 }
+                btnMyRequest -> {
+
+                }
+                btnMyVolunteer -> {
+
+                }
 
             }
         }
@@ -107,9 +115,40 @@ class RecycleActivity : AppCompatActivity() {
         linkAllButtonWithOnClickListener()
         syncMaterialInfoWithEditText()
 
+        setupUI()
+
         setupMapboxMap()
         setupBottomSheet()
         setupLocationSearchPanel()
+    }
+
+    private fun setupUI(){
+        btnRecycleNow.background = RippleUtil.getGradientRippleButtonOutlineDrawable(this,
+            Color.parseColor("#7CDF75"),
+            Color.parseColor("#6BF261"),
+            resources.getColor(R.color.transparent_pressed),
+            resources.getColor(R.color.transparent),
+            resources.getColor(R.color.transparent),
+            50f,0, GradientDrawable.Orientation.LEFT_RIGHT
+        )
+
+        btnMyRequest.background = RippleUtil.getRippleButtonOutlineDrawable(this,
+            resources.getColor(R.color.darkgrey),
+            resources.getColor(R.color.transparent_pressed),
+            resources.getColor(R.color.transparent),
+            25f, 0)
+
+        btnVolunteerCollection.background = RippleUtil.getRippleButtonOutlineDrawable(this,
+            resources.getColor(R.color.darkgrey),
+            resources.getColor(R.color.transparent_pressed),
+            resources.getColor(R.color.transparent),
+            25f, 0)
+
+        btnMyVolunteer.background = RippleUtil.getRippleButtonOutlineDrawable(this,
+            resources.getColor(R.color.darkgrey),
+            resources.getColor(R.color.transparent_pressed),
+            resources.getColor(R.color.transparent),
+            25f, 0)
     }
 
     private fun setupMapboxMap(){
@@ -222,7 +261,7 @@ class RecycleActivity : AppCompatActivity() {
         //store current selected location
         this.currentPinnedLocation = data
         if(data.address?.fullAddress == null){
-            updateFeaturePlaceAddressWithLatLong(this.currentPinnedLocation)
+            updateFeaturePlaceAddressWithLatLong(this.currentPinnedLocation!!)
         }else{
             //update the selected location
             recycle_request_location_label.text = data.address?.fullAddress
@@ -282,7 +321,9 @@ class RecycleActivity : AppCompatActivity() {
             recycle_request_location_label,
             recycle_location_search_back_btn,
             recycle_mapbox_recenter_btn,
-            btnVolunteerCollection
+            btnVolunteerCollection,
+            btnMyVolunteer,
+            btnMyRequest
         )
 
         for (view in actionButtonViewList) {
@@ -364,7 +405,8 @@ class RecycleActivity : AppCompatActivity() {
         recyle_metal_edittext.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                recycle_metal_info_textview.setText("$s KG")
+                //convert to int first then convert to string so that if user key in "0009", we will only show 9
+                recycle_metal_info_textview.setText("${s.toString().toInt().toString()} KG")
             }
 
             override fun beforeTextChanged(
@@ -382,7 +424,8 @@ class RecycleActivity : AppCompatActivity() {
         recyle_plastic_edittext.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                recycle_plastic_info_textview.setText("$s KG")
+                //convert to int first then convert to string so that if user key in "0009", we will only show 9
+                recycle_plastic_info_textview.setText("${s.toString().toInt().toString()} KG")
             }
 
             override fun beforeTextChanged(
@@ -400,7 +443,8 @@ class RecycleActivity : AppCompatActivity() {
         recyle_paper_edittext.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                recycle_paper_info_textview.setText("$s KG")
+                //convert to int first then convert to string so that if user key in "0009", we will only show 9
+                recycle_paper_info_textview.setText("${s.toString().toInt().toString()} KG")
             }
 
             override fun beforeTextChanged(
@@ -418,7 +462,8 @@ class RecycleActivity : AppCompatActivity() {
         recyle_glass_edittext.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                recycle_glass_info_textview.setText("$s KG")
+                //convert to int first then convert to string so that if user key in "0009", we will only show 9
+                recycle_glass_info_textview.setText("${s.toString().toInt().toString()} KG")
             }
 
             override fun beforeTextChanged(

@@ -7,10 +7,13 @@ import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FormUtils
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
+
+    lateinit var loadingDialog:LoadingDialog
     //all button action will be registered here
     private var myOnClickListener = object: View.OnClickListener {
         override fun onClick(v: View?) {
@@ -33,6 +36,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        inputEmail.setText("hahaha@gmail.com")
+        inputPassword.setText("123456")
+
+        //initialize loading dialog
+        loadingDialog = LoadingDialog(this)
+
         linkAllButtonWithOnClickListener()
     }
 
@@ -52,15 +61,19 @@ class LoginActivity : AppCompatActivity() {
         var email = inputEmail.text.toString()
         var password = inputPassword.text.toString()
 
+        loadingDialog.show()
+
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password).addOnCompleteListener(this) {
             task ->
 
             if(task.isSuccessful){
+                loadingDialog.hide()
                 //redirect to menu activity
                 var intent = Intent(this@LoginActivity, MenuActivity::class.java)
                 startActivity(intent)
             }else{
-                Toast.makeText(this,"Authentication Fail", Toast.LENGTH_SHORT).show()
+                loadingDialog.hide()
+                Toast.makeText(this,"Authentication Fail! Crediential provided is not valid", Toast.LENGTH_SHORT).show()
             }
         }
     }
