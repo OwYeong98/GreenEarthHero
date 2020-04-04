@@ -27,6 +27,7 @@
             app:layout_constraintLeft_toRightOf="@id/guideline10">
 
             <TextView
+                android:id="@+id/btnMyRequest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/dark_gray_rounded_corner_bg"
@@ -49,6 +50,7 @@
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/btnMyVolunteer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -342,7 +344,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/btnRecycleNow"
                 android:clickable="true"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -365,9 +367,9 @@
                 android:text="Total Earnings: RM 200"
                 android:textColor="@color/darkgrey"
                 android:textSize="15sp"
-                app:layout_constraintBottom_toTopOf="@+id/textView3"
-                app:layout_constraintEnd_toEndOf="@+id/textView3"
-                app:layout_constraintStart_toStartOf="@+id/textView3" />
+                app:layout_constraintBottom_toTopOf="@id/btnRecycleNow"
+                app:layout_constraintEnd_toEndOf="@id/btnRecycleNow"
+                app:layout_constraintStart_toStartOf="@id/btnRecycleNow" />
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline13"
                 android:layout_width="wrap_content"
@@ -448,12 +450,12 @@
                             android:layout_marginBottom="10dp"
                             android:fontFamily="@font/montserrat_regular"
                             android:textSize="20sp"
-                            android:text="0"
                             android:textColor="@color/white"
                             android:textAlignment="textEnd"
                             android:inputType = "number"
+                            android:text="0"
                             android:padding="10dp"
-                            android:maxLength="3"
+                            android:maxLength="5"
                             android:maxLines="1"
                             android:background="@drawable/light_gray_rounded_corner_stroke" />
 
@@ -514,7 +516,7 @@
                             android:textAlignment="textEnd"
                             android:inputType = "number"
                             android:padding="10dp"
-                            android:maxLength="3"
+                            android:maxLength="5"
                             android:maxLines="1"
                             android:background="@drawable/light_gray_rounded_corner_stroke" />
 
@@ -576,7 +578,7 @@
                             android:textAlignment="textEnd"
                             android:inputType = "number"
                             android:padding="10dp"
-                            android:maxLength="3"
+                            android:maxLength="5"
                             android:maxLines="1"
                             android:background="@drawable/light_gray_rounded_corner_stroke" />
 
@@ -632,12 +634,12 @@
                             android:layout_marginBottom="10dp"
                             android:fontFamily="@font/montserrat_regular"
                             android:textSize="20sp"
-                            android:text="0"
                             android:textColor="@color/white"
+                            android:text="0"
                             android:textAlignment="textEnd"
                             android:inputType = "number"
                             android:padding="10dp"
-                            android:maxLength="3"
+                            android:maxLength="5"
                             android:maxLines="1"
                             android:background="@drawable/light_gray_rounded_corner_stroke" />
 

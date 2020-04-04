@@ -15,6 +15,8 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.utils.LottieUtils
 import kotlinx.android.synthetic.main.activity_menu.*
 
@@ -31,9 +33,11 @@ class MenuActivity : AppCompatActivity() {
                     revertCircularRevealActivity()
                 }
                 menu_notification_icon -> {
+                    SuccessDialog(this@MenuActivity,"Success","Your Recycle request is submitted successfully! Please wait for someone to collect ur request").show()
 
                 }
                 menu_chat_icon -> {
+                    ErrorDialog(this@MenuActivity,"Error","You must recycle at least some material!").show()
 
                 }
                 menu_profile_icon -> {
