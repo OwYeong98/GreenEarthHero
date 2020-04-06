@@ -2,7 +2,6 @@ package com.oymj.greenearthhero.ui.fragment
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oymj.greenearthhero.R
-import com.oymj.greenearthhero.RecyclerViewOnItemClickListener
-import com.oymj.greenearthhero.adapters.FeaturePlacesRecyclerViewAdapter
+import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.api.ApisImplementation
-import com.oymj.greenearthhero.data.FeaturePlaces
 import com.oymj.greenearthhero.data.TomTomPlacesResult
 import com.oymj.greenearthhero.data.TomTomPosition
 import com.oymj.greenearthhero.utils.LocationUtils
@@ -21,10 +18,10 @@ import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.fragment_search_address_result.*
 
 
-class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fragment(), RecyclerViewOnItemClickListener {
+class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fragment() {
 
-    var placesList = ArrayList<TomTomPlacesResult>()
-    lateinit var recyclerViewAdapter: FeaturePlacesRecyclerViewAdapter
+    var placesList = ArrayList<Any>()
+    lateinit var recyclerViewAdapter: UniversalAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -59,24 +56,27 @@ class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fra
             callback(currentLocation)
         }
 
-        recyclerViewAdapter = FeaturePlacesRecyclerViewAdapter(placesList,context!!,this)
+        recyclerViewAdapter = object: UniversalAdapter(placesList,context!!){
+            override fun onItemClickedListener(data: Any) {
+                if(data is TomTomPlacesResult){
+                    callback(data)
+                }
+            }
+        }
         myRecyclerView.layoutManager = LinearLayoutManager(view.context)
         myRecyclerView.adapter = recyclerViewAdapter
 
     }
 
-    override fun onItemClick(data:Any) {
-        if(data is TomTomPlacesResult){
-            callback(data)
-        }
-    }
-
     fun searchAddressFromMapBoxApi(keyword: String){
+        placesList.clear()
+        zeroStateContainer.visibility = View.GONE
+        recyclerViewAdapter.startSkeletalLoading(8)
 
         ApisImplementation().geocodingFromTomTom(context!!,keyword,callback = {
             success,response->
+            recyclerViewAdapter.stopSkeletalLoading()
             if(success){
-                placesList.clear()
                 placesList.addAll(response?.results!!)
                 recyclerViewAdapter.notifyDataSetChanged()
 
@@ -87,7 +87,6 @@ class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fra
                     zeroStateContainer.visibility = View.VISIBLE
                 }
             }else{
-                placesList.clear()
                 recyclerViewAdapter.notifyDataSetChanged()
                 zeroStateContainer.visibility = View.VISIBLE
             }

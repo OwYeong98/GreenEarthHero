@@ -1,4 +1,4 @@
-package com.oymj.greenearthhero.models
+package com.oymj.greenearthhero.Models
 
 import android.content.Context
 import android.content.SharedPreferences

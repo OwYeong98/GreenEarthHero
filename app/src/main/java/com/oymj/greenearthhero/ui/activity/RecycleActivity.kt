@@ -19,26 +19,35 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.api.ApisImplementation
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.data.FeaturePlaces
 import com.oymj.greenearthhero.data.TomTomPlacesResult
+import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.LoadingDialog
+import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.ui.fragment.SearchAddressResultFragment
+import com.oymj.greenearthhero.utils.FormUtils
 import com.oymj.greenearthhero.utils.MapboxManager
 import com.oymj.greenearthhero.utils.MapboxManager.getMapBoxStyle
 import com.oymj.greenearthhero.utils.RippleUtil
 
 import kotlinx.android.synthetic.main.activity_recycle.*
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class RecycleActivity : AppCompatActivity() {
@@ -66,7 +75,8 @@ class RecycleActivity : AppCompatActivity() {
         override fun onClick(v: View?) {
             when (v) {
                 recycle_expanded_closebtn -> {
-                    myBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    if(syncMaterialInfoWithEditText())
+                       myBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 recycle_menu_icon -> {
                     var intent = Intent(this@RecycleActivity, MenuActivity::class.java)
@@ -101,6 +111,9 @@ class RecycleActivity : AppCompatActivity() {
                 }
                 btnMyVolunteer -> {
 
+                }
+                btnRecycleNow -> {
+                    sendRecycleRequestToFirebase()
                 }
 
             }
@@ -278,6 +291,22 @@ class RecycleActivity : AppCompatActivity() {
                 .withIconImage(MapboxManager.ID_LOCATION_ICON)
                 .withIconSize(2f)
                 .withDraggable(true))
+
+            mapBoxMapSymbolManager.addDragListener(object: OnSymbolDragListener {
+                 override fun onAnnotationDragStarted(annotation: Symbol?) {
+
+                  }
+                  override fun onAnnotationDrag(annotation: Symbol?) {
+
+                  }
+                  override fun onAnnotationDragFinished(annotation: Symbol?) {
+                        currentPinnedLocation!!.latLong?.lat = annotation?.latLng?.latitude!!
+                        currentPinnedLocation!!.latLong?.lon = annotation?.latLng?.longitude!!
+
+                        updateFeaturePlaceAddressWithLatLong(currentPinnedLocation!!)
+                  }
+            })
+
         }else{
             //change the location of the pin
             currentPinnedLocationSymbol.latLng = LatLng(LatLng(data.latLong?.lat!!,data.latLong?.lon!!))
@@ -296,22 +325,92 @@ class RecycleActivity : AppCompatActivity() {
     }
 
     fun updateFeaturePlaceAddressWithLatLong(location:TomTomPlacesResult){
+        var loadingDialog = LoadingDialog(this)
+        loadingDialog.show()
+
         ApisImplementation().reverseGeocodingFromTomTom(this,location.latLong?.lat!!,location.latLong?.lon!!,callback = {
             success,response->
+            loadingDialog.hide()
+
             if(success){
+
                 var address = response!!.addressResult!![0].address
+
+                if(address?.fullAddress == null){
+                    address?.fullAddress = "Unnamed Place"
+                }
 
                 location.address = address
 
                 recycle_request_location_label.text = address?.fullAddress
 
             }else{
+                loadingDialog.hide()
 
+                var errorDialog = ErrorDialog(this,"Error", "We have encountered some error when updating address with Latitude and Longitude!")
+                errorDialog.show()
             }
         })
     }
 
+    private fun sendRecycleRequestToFirebase(){
 
+        if(currentPinnedLocation != null){
+            var metalAmount = recycle_metal_info_textview.text.toString().replace("KG","").trim().toInt()
+            var glassAmount = recycle_glass_info_textview.text.toString().replace("KG","").trim().toInt()
+            var paperAmount = recycle_paper_info_textview.text.toString().replace("KG","").trim().toInt()
+            var plasticAmount = recycle_plastic_info_textview.text.toString().replace("KG","").trim().toInt()
+            var address = currentPinnedLocation!!.address!!.fullAddress
+            var latLong = currentPinnedLocation!!.latLong
+
+            var totalAmount = metalAmount+glassAmount+paperAmount+plasticAmount
+            if(totalAmount > 0){
+
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                val currentDateTime: String = dateFormat.format(Date()) // Find todays date
+
+
+                //create a firebase document
+                val recycleRequestDocument = hashMapOf(
+                "userId" to FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this),
+                "date_requested" to currentDateTime,
+                "address" to address,
+                "location" to GeoPoint(latLong?.lat!!,latLong?.lon!!),
+                "glass_weight" to glassAmount,
+                "metal_weight" to metalAmount,
+                "plastic_weight" to plasticAmount,
+                "paper_weight" to paperAmount,
+                "accepted_collect_by" to ""
+                )
+
+                var loadingDialog = LoadingDialog(this)
+                loadingDialog.show()
+
+                FirebaseFirestore.getInstance().collection("Recycle_Request").add(recycleRequestDocument)
+                    .addOnSuccessListener {
+                        loadingDialog.hide()
+
+                        var successDialog = SuccessDialog(this,"Success","You request is made successfully!")
+                        successDialog.show()
+                    }
+                    .addOnFailureListener {
+                    e ->
+                        Log.d("error", "Error writing document", e)
+                        loadingDialog.hide()
+
+                        var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+                        errorDialog.show()
+                }
+            }else{
+                var errorDialog = ErrorDialog(this,"Input Error","You must at least recycle some material!")
+                errorDialog.show()
+            }
+        }else{
+            var errorDialog = ErrorDialog(this,"Input Error","Please select a location first! You can select location by pressing select location button located at the most top of the screen")
+            errorDialog.show()
+        }
+
+    }
 
     private fun linkAllButtonWithOnClickListener() {
         //all button with onClick listener should be registered in this list
@@ -323,7 +422,8 @@ class RecycleActivity : AppCompatActivity() {
             recycle_mapbox_recenter_btn,
             btnVolunteerCollection,
             btnMyVolunteer,
-            btnMyRequest
+            btnMyRequest,
+            btnRecycleNow
         )
 
         for (view in actionButtonViewList) {
@@ -397,88 +497,48 @@ class RecycleActivity : AppCompatActivity() {
         recycle_bottom_sheet_collapse_view.startAnimation(fadeInAnimation)
     }
 
-    /**
-     * Function use to sync material info edittext with the info textview
-     */
-    private fun syncMaterialInfoWithEditText() {
+    private fun syncMaterialInfoWithEditText(): Boolean {
+        var metalQty: String = recyle_metal_edittext.text.toString()
+        var plasticQty: String = recyle_plastic_edittext.text.toString()
+        var paperQty: String = recyle_paper_edittext.text.toString()
+        var glassQty: String = recyle_glass_edittext.text.toString()
 
-        recyle_metal_edittext.addTextChangedListener(object : TextWatcher {
+        var metalQtyError = "" + FormUtils.isNull("Metal Quantity", metalQty)
+        var plasticQtyError = "" + FormUtils.isNull("Plastic Quantity", plasticQty)
+        var paperQtyError = "" + FormUtils.isNull("Paper Quantity", paperQty)
+        var glassQtyError = "" + FormUtils.isNull("Glass Quantity", glassQty)
 
-            override fun afterTextChanged(s: Editable) {
-                //convert to int first then convert to string so that if user key in "0009", we will only show 9
-                recycle_metal_info_textview.setText("${s.toString().toInt().toString()} KG")
-            }
+        if (metalQtyError != "") {
+            recyle_metal_edittext.setError(metalQtyError)
+        }
 
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
+        if (plasticQtyError != "") {
+            recyle_plastic_edittext.setError(plasticQtyError)
+        }
 
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
-        recyle_plastic_edittext.addTextChangedListener(object : TextWatcher {
+        if (paperQtyError != "") {
+            recyle_paper_edittext.setError(paperQtyError)
+        }
+        if (glassQtyError != "") {
+            recyle_glass_edittext.setError(glassQtyError)
+        }
 
-            override fun afterTextChanged(s: Editable) {
-                //convert to int first then convert to string so that if user key in "0009", we will only show 9
-                recycle_plastic_info_textview.setText("${s.toString().toInt().toString()} KG")
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
-        recyle_paper_edittext.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable) {
-                //convert to int first then convert to string so that if user key in "0009", we will only show 9
-                recycle_paper_info_textview.setText("${s.toString().toInt().toString()} KG")
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
-        recyle_glass_edittext.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(s: Editable) {
-                //convert to int first then convert to string so that if user key in "0009", we will only show 9
-                recycle_glass_info_textview.setText("${s.toString().toInt().toString()} KG")
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
+        //if no error
+        if (metalQtyError + plasticQtyError + paperQtyError + glassQtyError == "") {
+            //convert to int first then convert to string so that if user key in "0009", we will only show 9
+            recycle_metal_info_textview.setText("${metalQty.toInt()} KG")
+            recycle_plastic_info_textview.setText("${plasticQty.toInt()} KG")
+            recycle_paper_info_textview.setText("${paperQty.toInt()} KG")
+            recycle_glass_info_textview.setText("${glassQty.toInt()} KG")
+            //return success
+            return true
+        } else {
+            ErrorDialog(this, "Input Error", "Please complete the form").show()
+            return false
+        }
     }
+
+
 
     private fun showLocationPanel(yesOrNo: Boolean) {
         val slideUpAnimation: Animation =
