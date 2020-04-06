@@ -11,7 +11,7 @@
     <color name="darkgreen">#1B7713</color>
     <color name="lightgrey">#7A7C79</color>
     <color name="darkgrey">#515151</color>
-
+    <color name="lightestgrey">#E2DEDE</color>
     <color name="mapboxGreen">#1B7713</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="transparent_pressed">#c4c2bc</color>

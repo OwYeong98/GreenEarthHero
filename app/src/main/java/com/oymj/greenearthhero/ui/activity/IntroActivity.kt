@@ -15,8 +15,8 @@ import androidx.core.view.get
 import androidx.viewpager2.widget.ViewPager2
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.IntroSliderAdapter
-import com.oymj.greenearthhero.models.IntroSlide
-import com.oymj.greenearthhero.models.SharedPreference
+import com.oymj.greenearthhero.Models.IntroSlide
+import com.oymj.greenearthhero.Models.SharedPreference
 import kotlinx.android.synthetic.main.activity_intro.*
 
 
