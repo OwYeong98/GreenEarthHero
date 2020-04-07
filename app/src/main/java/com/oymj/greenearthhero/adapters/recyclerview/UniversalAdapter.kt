@@ -1,13 +1,38 @@
 package com.oymj.greenearthhero.adapters.recyclerview
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import androidx.core.view.marginLeft
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.data.SkeletalEmptyModel
 import java.lang.Exception
 
-open class UniversalAdapter(val data : ArrayList<Any>, val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+open class UniversalAdapter(val data : ArrayList<Any>, val context: Context,val recyclerView:RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    lateinit var shimmerEffectFrameLayout: ShimmerFrameLayout
+
+    init{
+        var parent = recyclerView.parent as ViewGroup
+
+        if(parent != null){
+
+            //create a facebook shimmer framelayout to wrap the recycler view so that we start shimmer animation later
+            shimmerEffectFrameLayout = ShimmerFrameLayout(context)
+            shimmerEffectFrameLayout.duration = 700
+            shimmerEffectFrameLayout.layoutParams = recyclerView.layoutParams
+            parent.removeView(recyclerView)
+            shimmerEffectFrameLayout.addView(recyclerView)
+            parent.addView(shimmerEffectFrameLayout)
+            shimmerEffectFrameLayout.startShimmerAnimation()
+
+        }
+    }
+    
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
         return data.size
@@ -57,9 +82,14 @@ open class UniversalAdapter(val data : ArrayList<Any>, val context: Context) : R
 
     fun startSkeletalLoading(numberOfSkeletal:Int){
         for(x in 0..numberOfSkeletal){
-            data.add(0,SkeletalEmptyModel())
+            var skeletalModel = SkeletalEmptyModel()
+            data.add(0,skeletalModel)
         }
         notifyDataSetChanged()
+
+        shimmerEffectFrameLayout.startShimmerAnimation()
+
+
     }
 
     fun stopSkeletalLoading(){
@@ -69,6 +99,8 @@ open class UniversalAdapter(val data : ArrayList<Any>, val context: Context) : R
             if(iterator.next() is SkeletalEmptyModel)
                 iterator.remove()
         }
+
+        shimmerEffectFrameLayout.stopShimmerAnimation()
     }
 
 }

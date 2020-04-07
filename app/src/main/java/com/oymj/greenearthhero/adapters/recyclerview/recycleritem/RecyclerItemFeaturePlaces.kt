@@ -22,7 +22,7 @@ class RecyclerItemFeaturePlaces : UniversalRecyclerItem(TomTomPlacesResult::clas
         return ViewHolder(inflateView(parent,context),adapter)
     }
 
-    inner class ViewHolder (var view: View,var adapter: UniversalAdapter) : UniversalViewHolder(view) {
+    inner class ViewHolder (var view: View,var adapter: UniversalAdapter) : UniversalViewHolder(view,this) {
 
         override fun onBindViewHolder(data:Any) {
             if(data is TomTomPlacesResult){

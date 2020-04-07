@@ -1,13 +1,16 @@
 package com.oymj.greenearthhero.ui.fragment
 
+import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.api.ApisImplementation
@@ -15,6 +18,7 @@ import com.oymj.greenearthhero.data.TomTomPlacesResult
 import com.oymj.greenearthhero.data.TomTomPosition
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
+import io.supercharge.shimmerlayout.ShimmerLayout
 import kotlinx.android.synthetic.main.fragment_search_address_result.*
 
 
@@ -56,7 +60,7 @@ class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fra
             callback(currentLocation)
         }
 
-        recyclerViewAdapter = object: UniversalAdapter(placesList,context!!){
+        recyclerViewAdapter = object: UniversalAdapter(placesList,context!!,myRecyclerView){
             override fun onItemClickedListener(data: Any) {
                 if(data is TomTomPlacesResult){
                     callback(data)

@@ -17,10 +17,11 @@ class RecyclerItemSkeletalLoading : UniversalRecyclerItem(SkeletalEmptyModel::cl
     }
 
     override fun getViewHolder(parent: ViewGroup, context: Context, adapter: UniversalAdapter) : UniversalViewHolder {
-        return ViewHolder(inflateView(parent,context),adapter)
+        this.viewHolder = ViewHolder(inflateView(parent,context),adapter)
+        return viewHolder
     }
 
-    inner class ViewHolder (var view: View,var adapter: UniversalAdapter) : UniversalViewHolder(view) {
+    inner class ViewHolder (var view: View,var adapter: UniversalAdapter) : UniversalViewHolder(view,this) {
 
         override fun onBindViewHolder(data:Any) {
 
