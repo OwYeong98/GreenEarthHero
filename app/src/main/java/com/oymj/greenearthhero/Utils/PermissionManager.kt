@@ -1,4 +1,4 @@
-package com.oymj.greenearthhero.Utils
+package com.oymj.greenearthhero.utils
 
 import android.Manifest
 import android.app.Activity

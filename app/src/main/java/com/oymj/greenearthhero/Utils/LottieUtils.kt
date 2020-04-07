@@ -1,4 +1,4 @@
-package com.oymj.greenearthhero.Utils
+package com.oymj.greenearthhero.utils
 
 import android.os.Handler
 import com.airbnb.lottie.LottieAnimationView

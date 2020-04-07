@@ -1,4 +1,4 @@
-package com.oymj.greenearthhero.Utils
+package com.oymj.greenearthhero.utils
 
 import android.content.Context
 import android.location.Location

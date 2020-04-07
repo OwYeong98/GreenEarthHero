@@ -1,4 +1,6 @@
-package com.oymj.greenearthhero.Utils
+package com.oymj.greenearthhero.utils
+
+import java.util.regex.Pattern
 
 object FormUtils {
 
@@ -8,7 +10,7 @@ object FormUtils {
             error = "$name cannot be empty!"
             return error
         }else{
-            return null
+            return ""
         }
     }
 
@@ -18,7 +20,7 @@ object FormUtils {
             error = "$name must have character amount between $minLength and $maxLength!"
             return error
         }else{
-            return null
+            return ""
         }
     }
 
@@ -30,7 +32,7 @@ object FormUtils {
             error = "$name can only contain alphabet character"
             return error
         }else{
-            return null
+            return ""
         }
     }
 
@@ -42,7 +44,7 @@ object FormUtils {
             error = "$name can only contain number"
             return error
         }else{
-            return null
+            return ""
         }
     }
 
@@ -53,7 +55,15 @@ object FormUtils {
             error = "Email is not valid"
             return error
         }else{
-            return null
+            return ""
+        }
+    }
+
+    fun isMatchRegex(input:String, regex:String, errorMessage:String): String?{
+        return if(!Pattern.compile(regex).matcher(input).matches()){
+            errorMessage
+        }else{
+            ""
         }
     }
 
