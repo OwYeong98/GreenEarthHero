@@ -15,8 +15,8 @@ import androidx.core.view.get
 import androidx.viewpager2.widget.ViewPager2
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.IntroSliderAdapter
-import com.oymj.greenearthhero.Models.IntroSlide
-import com.oymj.greenearthhero.Models.SharedPreference
+import com.oymj.greenearthhero.data.IntroSlide
+import com.oymj.greenearthhero.data.SharedPreference
 import kotlinx.android.synthetic.main.activity_intro.*
 
 
@@ -172,7 +172,8 @@ class IntroActivity : AppCompatActivity() {
 
     private fun doneIntro() {
 
-        val mySharePreferenceService: SharedPreference = SharedPreference(this)//get shared  / cache
+        val mySharePreferenceService: SharedPreference =
+            SharedPreference(this)//get shared  / cache
         mySharePreferenceService.save("isFirstTimeUser", false)
 
         var intent = Intent(this, MainActivity::class.java)
@@ -181,7 +182,8 @@ class IntroActivity : AppCompatActivity() {
     }
 
     private fun isFirstTimeUser(): Boolean {
-        val mySharePreferenceService: SharedPreference = SharedPreference(this)//get shared  / cache
+        val mySharePreferenceService: SharedPreference =
+            SharedPreference(this)//get shared  / cache
 
         return mySharePreferenceService.getValueBoolean("isFirstTimeUser", true)
     }

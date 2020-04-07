@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
-import com.oymj.greenearthhero.Models.IntroSlide
+import com.oymj.greenearthhero.data.IntroSlide
 import com.oymj.greenearthhero.R
 
 class IntroSliderAdapter(private val introSlide: List<IntroSlide>) :

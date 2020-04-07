@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.oymj.greenearthhero.R
-import com.oymj.greenearthhero.Models.SharedPreference
+import com.oymj.greenearthhero.data.SharedPreference
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.PermissionManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,7 +36,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkFirstTimeUser(){
-        val mySharePreferenceService: SharedPreference = SharedPreference(this)//get shared  / cache
+        val mySharePreferenceService: SharedPreference =
+            SharedPreference(this)//get shared  / cache
 
         if (mySharePreferenceService.getValueBoolean("isFirstTimeUser", true)){
             //if first time user, navigate to intro screen

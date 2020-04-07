@@ -1,4 +1,4 @@
-package com.oymj.greenearthhero.Models
+package com.oymj.greenearthhero.data
 
 data class IntroSlide(
     val title: String,
