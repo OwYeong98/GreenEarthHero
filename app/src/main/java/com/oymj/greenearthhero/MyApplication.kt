@@ -4,8 +4,6 @@ import android.R
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.multidex.MultiDexApplication
-import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.maps.MapboxMap
 import java.lang.String
 
 
@@ -14,9 +12,6 @@ class MyApplication : MultiDexApplication() {
     // Overriding this method is totally optional!
     override fun onCreate() {
         super.onCreate()
-
-        //setup Mapbox
-        Mapbox.getInstance(applicationContext, getString(com.oymj.greenearthhero.R.string.mapbox_access_token))
 
     }
 

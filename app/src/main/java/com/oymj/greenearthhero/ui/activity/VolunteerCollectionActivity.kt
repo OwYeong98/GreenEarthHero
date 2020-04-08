@@ -1,27 +1,34 @@
 package com.oymj.greenearthhero.ui.activity
 
+import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.adapters.googlemap.InfoWindowElementTouchListener
+import com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
 import com.oymj.greenearthhero.utils.LocationUtils
-import com.oymj.greenearthhero.utils.MapboxManager
+import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_volunteer_collection.*
-import kotlinx.android.synthetic.main.activity_volunteer_collection.recycle_bottom_sheet
 
-class VolunteerCollectionActivity : AppCompatActivity() {
-    private lateinit var myMapBoxMap: MapboxMap
+class VolunteerCollectionActivity : AppCompatActivity(){
+    private lateinit var myGoogleMap: GoogleMap
+    private var infoButtonListenerList = ArrayList<InfoWindowElementTouchListener>()
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
 
@@ -30,6 +37,8 @@ class VolunteerCollectionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_volunteer_collection)
 
         setupBottomSheet()
+        setupGoogleMap()
+
 
     }
 
@@ -67,49 +76,99 @@ class VolunteerCollectionActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupMapboxMap() {
+    private fun setupGoogleMap(){
+        var googleMapFragment = supportFragmentManager.findFragmentById(R.id.googleMapFragmentView) as SupportMapFragment
+        googleMapFragment.getMapAsync{
+            googleMap ->
 
-        mapBoxView?.getMapAsync { mapboxMap ->
-            myMapBoxMap = mapboxMap
-            //set map style
-            mapboxMap.setStyle(MapboxManager.getMapBoxStyle(this)) { style ->
+            //save the instance for later use
+            myGoogleMap = googleMap
 
 
-                //show user current location icon in the map
-                var locationComponent = mapboxMap.locationComponent
-                locationComponent.activateLocationComponent(this, style, true)
-                locationComponent.isLocationComponentEnabled = true
-                locationComponent.renderMode = RenderMode.COMPASS
+            (mapWrapper as GoogleMapWrapperForDispatchingTouchEvent).initializeWrapper(myGoogleMap,getPixelsFromDp(this, 39f))
 
-                mapboxMap.uiSettings.isCompassEnabled = false
+            myGoogleMap.isMyLocationEnabled = true
 
-                if (LocationUtils?.getLastKnownLocation() != null) {
-                    var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
-                    var cameraPosition = CameraPosition.Builder()
-                        .target(
-                            LatLng(
-                                userCurrentLocationLatLng.latitude,
-                                userCurrentLocationLatLng.longitude
-                            )
-                        ) // Sets the new camera position
-                        .zoom(17.0) // Sets the zoom
-                        .bearing(180.0) // Rotate the camera
-                        .tilt(30.0) // Set the camera tilt
-                        .build(); // Creates a CameraPosition
+            setupInfoWindow()
 
-                    mapboxMap.animateCamera(
-                        CameraUpdateFactory.newCameraPosition(cameraPosition),
-                        5000
-                    )
-                } else {
-                    Toast.makeText(
-                        this, "Current Location not found! Please turn on Location Services",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            if (LocationUtils?.getLastKnownLocation() != null) {
+
+                var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
+
+                var newCameraPosition = CameraPosition.builder()
+                    .target(LatLng(userCurrentLocationLatLng.latitude!!,userCurrentLocationLatLng.longitude!!-0.01))
+                    .zoom(15f)
+                    .bearing(90f)
+                    .tilt(0f)
+                    .build()
+                myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(newCameraPosition))
+
+                var marker = myGoogleMap.addMarker(MarkerOptions()
+                    .position(LatLng(userCurrentLocationLatLng.latitude!!,userCurrentLocationLatLng.longitude!!-0.05))
+                    .title("hehe"))
+
+                var marker2 = myGoogleMap.addMarker(MarkerOptions()
+                    .position(LatLng(userCurrentLocationLatLng.latitude!!,userCurrentLocationLatLng.longitude!!+0.05))
+                    .title("lol"))
             }
+
+
+
+
         }
     }
+
+    fun setupInfoWindow(){
+        var layoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        var customView = layoutInflater.inflate(R.layout.googlemap_recycle_infowindow, null)
+
+        var btnCollect = customView.findViewById<TextView>(R.id.btnCollect)
+        var btnChat = customView.findViewById<ImageButton>(R.id.btnChat)
+
+
+
+        var chatButtonListener = object: InfoWindowElementTouchListener(btnChat){
+            override fun onClickConfirmed(v: View?, marker: Marker?) {
+                Toast.makeText(this@VolunteerCollectionActivity,"chat button pressed title: ${marker!!.title}",Toast.LENGTH_SHORT).show()
+            }
+        }
+        btnChat.setOnTouchListener(chatButtonListener)
+        infoButtonListenerList.add(chatButtonListener)
+
+        var collectButtonListener = object: InfoWindowElementTouchListener(btnCollect){
+            override fun onClickConfirmed(v: View?, marker: Marker?) {
+                Toast.makeText(this@VolunteerCollectionActivity,"collect button pressed title: ${marker!!.title}",Toast.LENGTH_SHORT).show()
+            }
+        }
+        btnCollect.setOnTouchListener(collectButtonListener)
+        infoButtonListenerList.add(collectButtonListener)
+
+
+
+        myGoogleMap.setInfoWindowAdapter(object: GoogleMap.InfoWindowAdapter{
+            override fun getInfoContents(p0: Marker?): View? {
+                return null
+            }
+
+            override fun getInfoWindow(marker: Marker?): View {
+                //update currently viewing marker
+                for(listener in infoButtonListenerList){
+                    listener.setMarker(marker!!)
+                }
+                //update currently viewing marker
+                mapWrapper.setMarkerWithInfoWindow(marker!!, customView)
+
+                return customView
+            }
+        })
+    }
+
+    fun getPixelsFromDp(context: Context, dp: Float): Int{
+        var scale:Float  = context.resources.displayMetrics.density
+        return (dp*scale + 0.5f).toInt()
+    }
+
 
     private fun showBackToListButton(){
         val slideUpAnimation: Animation = AnimationUtils.loadAnimation(applicationContext,
