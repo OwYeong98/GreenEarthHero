@@ -7,67 +7,50 @@ import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
-import com.mapbox.mapboxsdk.plugins.annotation.Symbol
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.api.ApisImplementation
 import com.oymj.greenearthhero.utils.LocationUtils
-import com.oymj.greenearthhero.data.FeaturePlaces
 import com.oymj.greenearthhero.data.TomTomPlacesResult
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.ui.fragment.SearchAddressResultFragment
 import com.oymj.greenearthhero.utils.FormUtils
-import com.oymj.greenearthhero.utils.MapboxManager
-import com.oymj.greenearthhero.utils.MapboxManager.getMapBoxStyle
 import com.oymj.greenearthhero.utils.RippleUtil
 
 import kotlinx.android.synthetic.main.activity_recycle.*
+import kotlinx.android.synthetic.main.activity_recycle.recycle_bottom_sheet
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class RecycleActivity : AppCompatActivity() {
+    //variable to keep track data
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var myMapBoxMap: MapboxMap
-    private lateinit var mapBoxMapSymbolManager: SymbolManager
+    private lateinit var myGoogleMap: GoogleMap
+    private lateinit var currentPinnedLocationMarker: Marker
     private lateinit var locationSearchResultFragment: SearchAddressResultFragment
     private var currentPinnedLocation: TomTomPlacesResult? = null
-    private lateinit var currentPinnedLocationSymbol: Symbol
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
     private var isLocationPanelOpened = false
-
-
-
-    lateinit var locationManager: LocationManager
-    private var hasGps = false
-    private var hasNetwork = false
-    private var locationGps: Location? = null
-    private var locationNetwork: Location? = null
-    private var accurateLocation: Location? = null
 
     //Better control of onClickListener
     //all button action will be registered here
@@ -90,16 +73,20 @@ class RecycleActivity : AppCompatActivity() {
                 }
                 recycle_mapbox_recenter_btn -> {
                     if(LocationUtils?.getLastKnownLocation() != null) {
-                        if(::myMapBoxMap != null){
+                        if(::myGoogleMap != null){
                             var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
-                            var cameraPosition = CameraPosition.Builder()
-                                .target(LatLng(userCurrentLocationLatLng.latitude, userCurrentLocationLatLng.longitude)) // Sets the new camera position
-                                .zoom(17.0) // Sets the zoom
-                                .bearing(180.0) // Rotate the camera
-                                .tilt(30.0) // Set the camera tilt
-                                .build(); // Creates a CameraPosition
-
-                            myMapBoxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000)
+                            var newCameraPosition = com.google.android.gms.maps.model.CameraPosition.builder()
+                                .target(
+                                    com.google.android.gms.maps.model.LatLng(
+                                        userCurrentLocationLatLng.latitude!!,
+                                        userCurrentLocationLatLng.longitude!! - 0.01
+                                    )
+                                )
+                                .zoom(15f)
+                                .bearing(90f)
+                                .tilt(0f)
+                                .build()
+                            myGoogleMap.animateCamera(com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(newCameraPosition))
                         }
                     }
                 }
@@ -130,7 +117,7 @@ class RecycleActivity : AppCompatActivity() {
 
         setupUI()
 
-        setupMapboxMap()
+        setupGoogleMap()
         setupBottomSheet()
         setupLocationSearchPanel()
     }
@@ -164,41 +151,31 @@ class RecycleActivity : AppCompatActivity() {
             25f, 0)
     }
 
-    private fun setupMapboxMap(){
+    private fun setupGoogleMap(){
+        var googleMapFragment = supportFragmentManager.findFragmentById(R.id.googleMapFragmentView) as SupportMapFragment
+        googleMapFragment.getMapAsync{
+                googleMap ->
 
-        mapBoxView?.getMapAsync{
-            mapboxMap ->
-            myMapBoxMap = mapboxMap
-            //set map style
-            mapboxMap.setStyle(getMapBoxStyle(this)) {
-                style ->
+            //save the instance for later use
+            myGoogleMap = googleMap
 
-                mapBoxMapSymbolManager = SymbolManager(mapBoxView,mapboxMap,style)
+            myGoogleMap.isMyLocationEnabled = true
+            myGoogleMap.uiSettings.isMyLocationButtonEnabled = false
 
-                //show user current location icon in the map
-                var locationComponent = mapboxMap.locationComponent
-                locationComponent.activateLocationComponent(this,style,true)
-                locationComponent.isLocationComponentEnabled = true
-                locationComponent.renderMode = RenderMode.COMPASS
+            if (LocationUtils?.getLastKnownLocation() != null) {
 
-                mapboxMap.uiSettings.isCompassEnabled = false
+                var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
 
-                if(LocationUtils?.getLastKnownLocation() != null) {
-                    var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
-                    var cameraPosition = CameraPosition.Builder()
-                        .target(LatLng(userCurrentLocationLatLng.latitude, userCurrentLocationLatLng.longitude)) // Sets the new camera position
-                        .zoom(17.0) // Sets the zoom
-                        .bearing(180.0) // Rotate the camera
-                        .tilt(30.0) // Set the camera tilt
-                        .build(); // Creates a CameraPosition
+                var newCameraPosition = com.google.android.gms.maps.model.CameraPosition.builder()
+                    .target(LatLng(userCurrentLocationLatLng.latitude!!, userCurrentLocationLatLng.longitude!! - 0.01))
+                    .zoom(15f)
+                    .bearing(90f)
+                    .tilt(0f)
+                    .build()
+                myGoogleMap.animateCamera(com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(newCameraPosition))
 
-                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000)
-                }else{
-                    Toast.makeText(this,"Current Location not found! Please turn on Location Services",Toast.LENGTH_SHORT).show()
-                }
             }
         }
-
     }
 
     private fun setupBottomSheet(){
@@ -280,48 +257,45 @@ class RecycleActivity : AppCompatActivity() {
             recycle_request_location_label.text = data.address?.fullAddress
         }
 
-        mapBoxMapSymbolManager.iconAllowOverlap = true
-        mapBoxMapSymbolManager.iconIgnorePlacement = true
 
         //pin selected location in map
-        if(!::currentPinnedLocationSymbol.isInitialized){
+        if(!::currentPinnedLocationMarker.isInitialized){
             //first time
-            currentPinnedLocationSymbol = mapBoxMapSymbolManager.create(SymbolOptions()
-                .withLatLng(LatLng(data.latLong?.lat!!,data.latLong?.lon!!))
-                .withIconImage(MapboxManager.ID_LOCATION_ICON)
-                .withIconSize(2f)
-                .withDraggable(true))
+            currentPinnedLocationMarker = myGoogleMap.addMarker(MarkerOptions()
+                .position(LatLng(data.latLong?.lat!!,data.latLong?.lon!!))
+                .draggable(true)
+                .title("Drag Me")
+                .snippet("Long Click the Marker!"))
 
-            mapBoxMapSymbolManager.addDragListener(object: OnSymbolDragListener {
-                 override fun onAnnotationDragStarted(annotation: Symbol?) {
+            myGoogleMap.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener{
+                override fun onMarkerDragEnd(marker: Marker?) {
+                    currentPinnedLocation!!.latLong?.lat = marker?.position?.latitude!!
+                    currentPinnedLocation!!.latLong?.lon = marker?.position?.longitude!!
 
-                  }
-                  override fun onAnnotationDrag(annotation: Symbol?) {
+                    updateFeaturePlaceAddressWithLatLong(currentPinnedLocation!!)
+                }
 
-                  }
-                  override fun onAnnotationDragFinished(annotation: Symbol?) {
-                        currentPinnedLocation!!.latLong?.lat = annotation?.latLng?.latitude!!
-                        currentPinnedLocation!!.latLong?.lon = annotation?.latLng?.longitude!!
+                override fun onMarkerDragStart(p0: Marker?) {
+                }
 
-                        updateFeaturePlaceAddressWithLatLong(currentPinnedLocation!!)
-                  }
+                override fun onMarkerDrag(p0: Marker?) {
+                }
             })
+
 
         }else{
             //change the location of the pin
-            currentPinnedLocationSymbol.latLng = LatLng(LatLng(data.latLong?.lat!!,data.latLong?.lon!!))
-            mapBoxMapSymbolManager.update(currentPinnedLocationSymbol)
+            currentPinnedLocationMarker.position = LatLng(data.latLong?.lat!!,data.latLong?.lon!!)
         }
 
         //move to selected location
-        var cameraPosition = CameraPosition.Builder()
-            .target(LatLng(data.latLong?.lat!!,data.latLong?.lon!!)) // Sets the new camera position
-            .zoom(17.0) // Sets the zoom
-            .bearing(180.0) // Rotate the camera
-            .tilt(30.0) // Set the camera tilt
-            .build(); // Creates a CameraPosition
-
-        myMapBoxMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition),5000)
+        var newCameraPosition = com.google.android.gms.maps.model.CameraPosition.builder()
+            .target(LatLng(data.latLong?.lat!!,data.latLong?.lon!!))
+            .zoom(15f)
+            .bearing(90f)
+            .tilt(0f)
+            .build()
+        myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(newCameraPosition))
     }
 
     fun updateFeaturePlaceAddressWithLatLong(location:TomTomPlacesResult){
