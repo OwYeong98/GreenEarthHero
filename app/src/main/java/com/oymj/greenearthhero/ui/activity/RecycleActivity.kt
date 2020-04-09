@@ -161,6 +161,7 @@ class RecycleActivity : AppCompatActivity() {
 
             myGoogleMap.isMyLocationEnabled = true
             myGoogleMap.uiSettings.isMyLocationButtonEnabled = false
+            myGoogleMap.uiSettings.isCompassEnabled = false
 
             if (LocationUtils?.getLastKnownLocation() != null) {
 

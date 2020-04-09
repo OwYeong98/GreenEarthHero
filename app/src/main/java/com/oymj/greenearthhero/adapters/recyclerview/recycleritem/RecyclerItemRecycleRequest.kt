@@ -3,16 +3,16 @@ package com.oymj.greenearthhero.adapters.recyclerview.recycleritem
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalRecyclerItem
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalViewHolder
-import com.oymj.greenearthhero.data.TomTomPlacesResult
+import com.oymj.greenearthhero.data.RecycleRequest
 import com.oymj.greenearthhero.utils.RippleUtil
 
-class RecyclerItemFeaturePlaces : UniversalRecyclerItem(TomTomPlacesResult::class.java.simpleName, R.layout.listitem_feature_places){
+class RecyclerItemRecycleRequest : UniversalRecyclerItem(RecycleRequest::class.java.simpleName, R.layout.listitem_recycle_request){
 
     override fun inflateView(parent: ViewGroup, context: Context): View {
         return super.inflateView(parent, context)
@@ -25,23 +25,34 @@ class RecyclerItemFeaturePlaces : UniversalRecyclerItem(TomTomPlacesResult::clas
     inner class ViewHolder (var view: View,var adapter: UniversalAdapter) : UniversalViewHolder(view,this) {
 
         override fun onBindViewHolder(data:Any) {
-            if(data is TomTomPlacesResult){
-                val mainContainer = view.findViewById<LinearLayout>(R.id.mainContainer)
-                val tvLocationTitle = view.findViewById<TextView>(R.id.tvLocationTitle)
-                val tvDistance = view.findViewById<TextView>(R.id.tvDistance)
+            if(data is RecycleRequest){
+                val mainContainer = view.findViewById<ConstraintLayout>(R.id.mainContainer)
+                val tvRequestingUser = view.findViewById<TextView>(R.id.tvRequestingUser)
                 val tvAddress = view.findViewById<TextView>(R.id.tvAddress)
+                val tvMetalAmount = view.findViewById<TextView>(R.id.tvMetalAmount)
+                val tvPaperAmount = view.findViewById<TextView>(R.id.tvPaperAmount)
+                val tvPlasticAmount = view.findViewById<TextView>(R.id.tvPlasticAmount)
+                val tvGlassAmount = view.findViewById<TextView>(R.id.tvGlassAmount)
+                val tvDistanceAway = view.findViewById<TextView>(R.id.tvDistanceAway)
+                val tvTotal = view.findViewById<TextView>(R.id.tvTotal)
 
                 //set data
-                tvLocationTitle.text = data.address?.street?:data.address?.taman
-                tvDistance.text = "10 km"
-                tvAddress.text = data.address?.fullAddress
+                tvRequestingUser.text = data.requestedUser.getFullName()
+                tvAddress.text = data.address
+                tvMetalAmount.text = "${data.metalWeight} KG"
+                tvPaperAmount.text = "${data.paperWeight} KG"
+                tvPlasticAmount.text = "${data.plasticWeight} KG"
+                tvGlassAmount.text = "${data.glassWeight} KG"
+                tvDistanceAway.text = "10"
+                tvTotal.text = "${data.getTotalAmount()} KG"
+
 
                 //set ripple background
                 mainContainer.background = RippleUtil.getRippleButtonOutlineDrawable(mainContainer.context,
-                    mainContainer.context.resources.getColor(R.color.transparent),
+                    mainContainer.context.resources.getColor(R.color.white),
                     mainContainer.context.resources.getColor(R.color.transparent_pressed),
                     mainContainer.context.resources.getColor(R.color.transparent),
-                    0f,0
+                    25f,0
                 )
 
                 mainContainer.setOnClickListener{

@@ -58,6 +58,7 @@ class RegisterActivity : AppCompatActivity() {
                     var user: FirebaseUser? = mAuth.getCurrentUser()
 
                     val userData = hashMapOf(
+                        "email" to email,
                         "firstName" to firstName,
                         "lastName" to lastName,
                         "phone" to phone,
