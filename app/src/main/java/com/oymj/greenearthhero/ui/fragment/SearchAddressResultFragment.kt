@@ -61,7 +61,7 @@ class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fra
         }
 
         recyclerViewAdapter = object: UniversalAdapter(placesList,context!!,myRecyclerView){
-            override fun onItemClickedListener(data: Any) {
+            override fun onItemClickedListener(data: Any, clickType:Int) {
                 if(data is TomTomPlacesResult){
                     callback(data)
                 }
@@ -75,7 +75,7 @@ class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fra
     fun searchAddressFromMapBoxApi(keyword: String){
         placesList.clear()
         zeroStateContainer.visibility = View.GONE
-        recyclerViewAdapter.startSkeletalLoading(8)
+        recyclerViewAdapter.startSkeletalLoading(8,UniversalAdapter.SKELETAL_TYPE_1)
 
         ApisImplementation().geocodingFromTomTom(context!!,keyword,callback = {
             success,response->

@@ -8,10 +8,9 @@ import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalRecyclerItem
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalViewHolder
-import com.oymj.greenearthhero.data.SkeletalEmptyModel
-import com.oymj.greenearthhero.data.TomTomPlacesResult
+import com.oymj.greenearthhero.data.SkeletalEmptyModel2
 
-class RecyclerItemSkeletalLoading : UniversalRecyclerItem(SkeletalEmptyModel::class.java.simpleName, R.layout.listitem_skeletal_loading){
+class RecyclerItemSkeletalLoadingType2 : UniversalRecyclerItem(SkeletalEmptyModel2::class.java.simpleName, R.layout.listitem_skeletal_loading_2){
 
     override fun inflateView(parent: ViewGroup, context: Context): View {
         return super.inflateView(parent, context)
@@ -22,7 +21,7 @@ class RecyclerItemSkeletalLoading : UniversalRecyclerItem(SkeletalEmptyModel::cl
         return viewHolder
     }
 
-    inner class ViewHolder (var view: View,var adapter: UniversalAdapter) : UniversalViewHolder(view,this) {
+    inner class ViewHolder (var view: View, var adapter: UniversalAdapter) : UniversalViewHolder(view,this) {
 
         override fun onBindViewHolder(data:Any) {
             var shimmerLayout = view.findViewById<ShimmerFrameLayout>(R.id.shimmer_view_container)
