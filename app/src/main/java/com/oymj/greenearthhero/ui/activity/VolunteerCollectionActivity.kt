@@ -50,6 +50,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
             when (v) {
                 btnClose->{
                     finish()
+                    overridePendingTransition(R.anim.freeze, R.anim.slide_down_slow)
                 }
                 btnBackToList->{
                     hideBackToListButton {

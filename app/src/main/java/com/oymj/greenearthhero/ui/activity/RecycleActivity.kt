@@ -92,6 +92,7 @@ class RecycleActivity : AppCompatActivity() {
                 }
                 btnVolunteerCollection -> {
                     startActivity(Intent(this@RecycleActivity, VolunteerCollectionActivity::class.java))
+                    overridePendingTransition(R.anim.slide_up_slow, R.anim.freeze)
                 }
                 btnMyRequest -> {
 
