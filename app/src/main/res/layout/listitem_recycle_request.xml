@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainContainer"
     android:layout_width="match_parent"
-    android:layout_height="130dp">
+    android:layout_height="160dp">
 
     <TextView
         android:id="@+id/tvRequestingUser"
@@ -14,7 +14,7 @@
         android:layout_marginTop="7dp"
         android:fontFamily="@font/montserrat_regular"
         android:text="John Doe"
-        android:textSize="12sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +27,7 @@
         android:layout_marginRight="20dp"
         android:fontFamily="@font/cournew_normal"
         android:text="No 2, Jalan Timur 1"
-        android:textSize="10sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/cardView"
         app:layout_constraintStart_toStartOf="@+id/tvRequestingUser"
         app:layout_constraintTop_toBottomOf="@+id/tvRequestingUser" />
@@ -50,8 +50,8 @@
 
             <ImageView
                 android:id="@+id/ivMetalIcon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/metal_icon" />
 
@@ -64,13 +64,13 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="20 KG"
                 android:textAlignment="textStart"
-                android:textSize="9sp" />
+                android:textSize="14sp" />
 
 
             <ImageView
                 android:id="@+id/ivPaperIcon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/paper_icon" />
@@ -84,7 +84,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="20 KG"
                 android:textAlignment="textStart"
-                android:textSize="9sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -97,8 +97,8 @@
 
             <ImageView
                 android:id="@+id/ivPlasticIcon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/plastic_icon" />
 
@@ -111,12 +111,12 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="2000 KG"
                 android:textAlignment="textStart"
-                android:textSize="9sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/ivGlassIcon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/glass_icon" />
@@ -130,7 +130,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="20 KG"
                 android:textAlignment="textStart"
-                android:textSize="9sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -138,8 +138,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="49dp"
-        android:layout_height="31dp"
+        android:layout_width="70dp"
+        android:layout_height="45dp"
         android:layout_marginTop="45dp"
         android:layout_marginRight="8dp"
         app:cardBackgroundColor="@color/darkgrey"
@@ -156,27 +156,30 @@
                 android:id="@+id/tvDistanceAway"
                 android:layout_width="match_parent"
                 android:layout_height="15dp"
+                android:layout_weight="1"
                 android:fontFamily="@font/montserrat"
                 android:text="1.3"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/labelKm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="5dp"
                 android:fontFamily="@font/montserrat"
                 android:text="km away"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="8sp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
-        android:layout_width="49dp"
-        android:layout_height="25dp"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="@+id/cardView"
@@ -188,11 +191,12 @@
             android:id="@+id/tvTotal"
             android:layout_width="match_parent"
             android:layout_height="15dp"
+            android:layout_weight="1"
             android:fontFamily="@font/montserrat"
-            android:text="20 KG"
+            android:text="2000 KG"
             android:textAlignment="center"
             android:textColor="@color/darkgrey"
-            android:textSize="11sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/labelTotalAmount"
@@ -202,7 +206,7 @@
             android:text="in total"
             android:textAlignment="center"
             android:textColor="@color/darkgrey"
-            android:textSize="8sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 
