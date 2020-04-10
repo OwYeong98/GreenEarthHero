@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FormUtils
@@ -68,6 +70,16 @@ class LoginActivity : AppCompatActivity() {
 
             if(task.isSuccessful){
                 loadingDialog.hide()
+
+                //update the device token to firebase so we can send notification later
+                FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                    innerTask->
+                    var token = innerTask.token
+                    var db = FirebaseFirestore.getInstance()
+                    db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid!!).update(mapOf(
+                        "cloudMessagingId" to token
+                    ))
+                }
                 //redirect to menu activity
                 var intent = Intent(this@LoginActivity, MenuActivity::class.java)
                 startActivity(intent)

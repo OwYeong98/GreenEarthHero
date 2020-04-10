@@ -9,9 +9,11 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.utils.FormUtils
 import kotlinx.android.synthetic.main.activity_register.*
 
@@ -74,6 +76,10 @@ class RegisterActivity : AppCompatActivity() {
                         .addOnFailureListener {
                                 e -> Log.d("error", "Error writing document", e) }
                 }else{
+                    if(task.exception is FirebaseAuthUserCollisionException){
+                        var errorDialog = ErrorDialog(this,"Email already in use","Please try another Email")
+                        errorDialog.show()
+                    }
                     Log.d("error",task.exception!!.toString())
                 }
             }

@@ -139,6 +139,7 @@
 
         <TextView
             android:id="@+id/btnCollect"
+            android:visibility="visible"
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_below="@+id/materialContainer"
@@ -241,6 +242,22 @@
                 android:textColor="@color/darkgrey"
                 android:textSize="10sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvCollectingBy"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:layout_below="@+id/materialContainer"
+            android:layout_alignStart="@+id/tvRequestingUser"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/montserrat"
+            android:gravity="left"
+            android:text="Collecting By: \nOw Yeong Mun Ji dasdsadasdasdasdas"
+            android:textColor="@color/darkgrey"
+            android:textSize="12dp"/>
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

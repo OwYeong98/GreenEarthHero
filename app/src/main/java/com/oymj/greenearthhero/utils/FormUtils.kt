@@ -39,7 +39,7 @@ object FormUtils {
     fun isOnlyNumber(name:String,input:String): String?{
         var error:String? = null
 
-        var onlyNumberRegex = Regex("/^[0-9]+\$/")
+        var onlyNumberRegex = Regex("^[0-9]*\$")
         if(!onlyNumberRegex.matches(input)){
             error = "$name can only contain number"
             return error

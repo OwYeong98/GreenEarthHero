@@ -39,7 +39,7 @@ class User(var userId:String, var email:String, var firstName:String,  var lastN
     }
 
     fun getFullName():String{
-        return lastName+firstName
+        return lastName+" "+firstName
     }
 
 
