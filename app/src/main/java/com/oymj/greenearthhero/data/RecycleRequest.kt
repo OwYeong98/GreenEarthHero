@@ -16,7 +16,8 @@ class RecycleRequest(
     var glassWeight:Int,
     var plasticWeight:Int,
     var metalWeight:Int,
-    var paperWeight:Int
+    var paperWeight:Int,
+    var acceptedCollectUser: User?
 ) {
 
     companion object{
@@ -68,7 +69,7 @@ class RecycleRequest(
                                     }
                                 }
 
-                                var newRecycleRequest = RecycleRequest(id,dateRequested!!,userRequestedObj!!,address!!,location!!,glassWeight!!,plasticWeight!!, metalWeight!!, paperWeight!!)
+                                var newRecycleRequest = RecycleRequest(id,dateRequested!!,userRequestedObj!!,address!!,location!!,glassWeight!!,plasticWeight!!, metalWeight!!, paperWeight!!, acceptedCollectUserObj)
                                 recycleRequestList.add(newRecycleRequest)
                             }
 

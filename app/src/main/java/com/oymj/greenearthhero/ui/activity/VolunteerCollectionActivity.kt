@@ -12,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,6 +30,9 @@ import com.oymj.greenearthhero.data.User
 import com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
+import com.oymj.greenearthhero.ui.dialog.SuccessDialog
+import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
+import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_volunteer_collection.*
@@ -72,8 +76,25 @@ class VolunteerCollectionActivity : AppCompatActivity(){
         setupBottomSheet()
         setupGoogleMap()
         getRecyclerRequestFromFirebase()
+        listenToFirebaseCollectionChangesAndUpdateUI()
 
 
+    }
+
+    private fun listenToFirebaseCollectionChangesAndUpdateUI(){
+        var db = FirebaseFirestore.getInstance()
+
+        db.collection("Recycle_Request").addSnapshotListener{
+            snapshot,e->
+            if (e != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null ) {
+                //update the UI
+                getRecyclerRequestFromFirebase()
+            }
+        }
     }
 
     private fun linkAllButtonWithOnClickListener() {
@@ -114,9 +135,20 @@ class VolunteerCollectionActivity : AppCompatActivity(){
                 myGoogleMap.clear()
                 //loop each recycle request and add marker in google map
                 for(recycleRequest in data!!){
+                    var markerIcon = 0
+
+                    if(recycleRequest.requestedUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)){
+                        markerIcon = R.drawable.ic_recycler_marker_blue
+                    }else if(recycleRequest.acceptedCollectUser != null){
+                        markerIcon = R.drawable.ic_recycler_marker_red
+                    }else{
+                        markerIcon = R.drawable.ic_recycler_marker
+                    }
+
+
                     var marker = myGoogleMap.addMarker(MarkerOptions()
                         .position(LatLng(recycleRequest.location.latitude,recycleRequest.location.longitude))
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_recycler_marker)))
+                        .icon(BitmapDescriptorFactory.fromResource(markerIcon)))
 
                     //set the request detail into the tag so we can retrive later
                     marker.tag = recycleRequest
@@ -261,9 +293,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
         var tvPaperAmount = customView.findViewById<TextView>(R.id.tvPaperAmount)
         var tvDistanceAway = customView.findViewById<TextView>(R.id.tvDistanceAway)
         var tvTotal = customView.findViewById<TextView>(R.id.tvTotal)
-
-
-
+        var tvCollectingBy = customView.findViewById<TextView>(R.id.tvCollectingBy)
 
         var chatButtonListener = object: InfoWindowElementTouchListener(btnChat){
             override fun onClickConfirmed(v: View?, marker: Marker?) {
@@ -275,7 +305,29 @@ class VolunteerCollectionActivity : AppCompatActivity(){
 
         var collectButtonListener = object: InfoWindowElementTouchListener(btnCollect){
             override fun onClickConfirmed(v: View?, marker: Marker?) {
-                Toast.makeText(this@VolunteerCollectionActivity,"collect button pressed title: ${marker!!.title}",Toast.LENGTH_SHORT).show()
+
+                var confirmationDialog = YesOrNoDialog(this@VolunteerCollectionActivity,"Are you sure you want to collect material from this request?",callback = {
+                    isYes->
+
+                    //if user pressed yes
+                    if(isYes){
+                        var recycleRequest = marker?.tag as RecycleRequest
+
+                        //update firebase that this user accept the request
+                        var db = FirebaseFirestore.getInstance()
+                        db.collection("Recycle_Request").document(recycleRequest.id).update(mapOf(
+                            "accepted_collect_by" to FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@VolunteerCollectionActivity)!!
+                        )).addOnSuccessListener {
+                            var successDialog = SuccessDialog(this@VolunteerCollectionActivity,"Success","Successfully notify the request owner that you are going to collect her request!")
+                            successDialog.show()
+                        }.addOnFailureListener {
+                            exception ->
+                            var failureDialog = ErrorDialog(this@VolunteerCollectionActivity,"Error","We have encountered some error when connecting to Firebase! Please check ur internet connection.")
+                            failureDialog.show()
+                        }
+                    }
+                })
+                confirmationDialog.show()
             }
         }
         btnCollect.setOnTouchListener(collectButtonListener)
@@ -309,6 +361,25 @@ class VolunteerCollectionActivity : AppCompatActivity(){
                 tvPlasticAmount.text = "${recycleRequest.plasticWeight} KG"
                 tvDistanceAway.text = "10 KG"
                 tvTotal.text = "${recycleRequest.getTotalAmount()} KG"
+
+                //if this request is request by the current logged in user
+                //hide the Collect button and chat button
+                if(recycleRequest.requestedUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@VolunteerCollectionActivity)){
+                    btnCollect.visibility = View.INVISIBLE
+                    btnChat.visibility = View.INVISIBLE
+                }else{
+                    btnChat.visibility = View.VISIBLE
+
+                    //if someone accept the request show collecting by who
+                    if(recycleRequest.acceptedCollectUser != null){
+                        tvCollectingBy.text = "Collecting By:\n${recycleRequest.acceptedCollectUser!!.getFullName()}"
+                        tvCollectingBy.visibility = View.VISIBLE
+                        btnCollect.visibility = View.INVISIBLE
+                    }else{
+                        tvCollectingBy.visibility = View.GONE
+                        btnCollect.visibility = View.VISIBLE
+                    }
+                }
 
                 if(LocationUtils.getLastKnownLocation() != null){
                     var userCurrentLoc = LocationUtils.getLastKnownLocation()
