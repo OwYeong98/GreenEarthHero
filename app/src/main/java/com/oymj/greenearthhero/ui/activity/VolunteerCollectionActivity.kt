@@ -1,6 +1,7 @@
 package com.oymj.greenearthhero.ui.activity
 
 import android.content.Context
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -103,6 +104,8 @@ class VolunteerCollectionActivity : AppCompatActivity(){
 
                 //add the data retrived from firebase
                 recycleRequestList.addAll(data!!)
+                //sort by near to far
+                recycleRequestList.sortBy { obj-> (obj as RecycleRequest).getDistanceBetween() }
 
                 //refresh recyclerview
                 recyclerViewAdapter.notifyDataSetChanged()
@@ -239,13 +242,6 @@ class VolunteerCollectionActivity : AppCompatActivity(){
                     .build()
                 myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(newCameraPosition))
 
-                var marker = myGoogleMap.addMarker(MarkerOptions()
-                    .position(LatLng(userCurrentLocationLatLng.latitude!!,userCurrentLocationLatLng.longitude!!-0.05))
-                    .title("hehe"))
-
-                var marker2 = myGoogleMap.addMarker(MarkerOptions()
-                    .position(LatLng(userCurrentLocationLatLng.latitude!!,userCurrentLocationLatLng.longitude!!+0.05))
-                    .title("lol"))
             }
         }
     }
@@ -313,6 +309,16 @@ class VolunteerCollectionActivity : AppCompatActivity(){
                 tvPlasticAmount.text = "${recycleRequest.plasticWeight} KG"
                 tvDistanceAway.text = "10 KG"
                 tvTotal.text = "${recycleRequest.getTotalAmount()} KG"
+
+                if(LocationUtils.getLastKnownLocation() != null){
+                    var userCurrentLoc = LocationUtils.getLastKnownLocation()
+                    var results: FloatArray = FloatArray(2)
+                    Location.distanceBetween(userCurrentLoc?.latitude!!,userCurrentLoc?.longitude!!,
+                        recycleRequest.location.latitude,recycleRequest.location.longitude,results)
+                    tvDistanceAway.text = String.format("%.2f",results[0]/1000)
+                }else{
+                    tvDistanceAway.text = "N/A"
+                }
 
 
 

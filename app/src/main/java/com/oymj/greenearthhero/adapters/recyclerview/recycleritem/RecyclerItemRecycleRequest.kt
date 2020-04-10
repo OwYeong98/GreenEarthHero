@@ -1,6 +1,7 @@
 package com.oymj.greenearthhero.adapters.recyclerview.recycleritem
 
 import android.content.Context
+import android.location.Location
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -10,6 +11,7 @@ import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalRecyclerItem
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalViewHolder
 import com.oymj.greenearthhero.data.RecycleRequest
+import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 
 class RecyclerItemRecycleRequest : UniversalRecyclerItem(RecycleRequest::class.java.simpleName, R.layout.listitem_recycle_request){
@@ -43,8 +45,14 @@ class RecyclerItemRecycleRequest : UniversalRecyclerItem(RecycleRequest::class.j
                 tvPaperAmount.text = "${data.paperWeight} KG"
                 tvPlasticAmount.text = "${data.plasticWeight} KG"
                 tvGlassAmount.text = "${data.glassWeight} KG"
-                tvDistanceAway.text = "10"
                 tvTotal.text = "${data.getTotalAmount()} KG"
+
+                if(LocationUtils.getLastKnownLocation() != null){
+                    var userCurrentLoc = LocationUtils.getLastKnownLocation()
+                    tvDistanceAway.text = String.format("%.2f",data.getDistanceBetween()/1000)
+                }else{
+                    tvDistanceAway.text = "N/A"
+                }
 
 
                 //set ripple background

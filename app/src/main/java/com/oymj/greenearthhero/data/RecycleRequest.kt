@@ -1,7 +1,9 @@
 package com.oymj.greenearthhero.data
 
+import android.location.Location
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
+import com.oymj.greenearthhero.utils.LocationUtils
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -85,6 +87,18 @@ class RecycleRequest(
 
     fun getTotalAmount(): Int{
         return metalWeight+paperWeight+plasticWeight+glassWeight
+    }
+
+    fun getDistanceBetween(): Float{
+        if(LocationUtils.getLastKnownLocation() != null){
+            var userCurrentLoc = LocationUtils.getLastKnownLocation()
+            var results: FloatArray = FloatArray(2)
+            Location.distanceBetween(userCurrentLoc?.latitude!!,userCurrentLoc?.longitude!!,
+                location.latitude,location.longitude,results)
+            return results[0]
+        }else{
+            return -1f
+        }
     }
 
 
