@@ -1,10 +1,7 @@
 package com.oymj.greenearthhero.adapters.recyclerview
 
-import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemFeaturePlaces
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalRecyclerItem
-import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemRecycleRequest
-import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemSkeletalLoading
-import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemSkeletalLoadingType2
+import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.*
 
 object UniversalAdapterRepo {
 
@@ -21,6 +18,7 @@ object UniversalAdapterRepo {
         registerRecyclerItem(RecyclerItemSkeletalLoading())
         registerRecyclerItem(RecyclerItemRecycleRequest())
         registerRecyclerItem(RecyclerItemSkeletalLoadingType2())
+        registerRecyclerItem(RecyclerItemSkeletalLoadingType3())
     }
 
     fun registerRecyclerItem(recyclerItem: UniversalRecyclerItem){
