@@ -146,6 +146,21 @@
             android:text="Cancel Volunteer"/>
 
         <TextView
+            android:id="@+id/btnMarkAsCollected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:paddingLeft="15dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingRight="15dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:text="Mark as collected"/>
+
+        <TextView
             android:id="@+id/btnCancelRequest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -186,7 +201,7 @@
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
+            android:id="@+id/tvDistanceAwayContainer"
             android:layout_width="100dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
@@ -194,7 +209,6 @@
             app:cardCornerRadius="5dp">
 
             <LinearLayout
-                android:id="@+id/tvDistanceAwayContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">

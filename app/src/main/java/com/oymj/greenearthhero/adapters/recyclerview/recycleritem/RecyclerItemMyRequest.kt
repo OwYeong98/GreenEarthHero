@@ -11,15 +11,9 @@ import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalRecyclerItem
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalViewHolder
 import com.oymj.greenearthhero.data.RecycleRequest
-import com.oymj.greenearthhero.utils.FirebaseUtil
-import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 
-class RecyclerItemMyVolunteerCollectionRequest : UniversalRecyclerItem(RecycleRequest::class.java.simpleName, R.layout.listitem_collecting_recycle_request_with_status){
-
-    override fun inflateView(parent: ViewGroup, context: Context): View {
-        return super.inflateView(parent, context)
-    }
+class RecyclerItemMyRequest : UniversalRecyclerItem(RecycleRequest::class.java.simpleName, R.layout.listitem_collecting_recycle_request_with_status){
 
     override fun getViewHolder(parent: ViewGroup, context: Context, adapter: UniversalAdapter) : UniversalViewHolder {
         return ViewHolder(inflateView(parent,context),adapter)
@@ -55,33 +49,27 @@ class RecyclerItemMyVolunteerCollectionRequest : UniversalRecyclerItem(RecycleRe
                 tvPlasticAmount.text = "${data.plasticWeight} KG"
                 tvGlassAmount.text = "${data.glassWeight} KG"
                 tvTotal.text = "${data.getTotalAmount()} KG"
-                btnChat.text = "Chat with the Request Owner"
-                tvStatus.text ="Status: In Collection"
+                btnChat.text = "Chat with the Collector"
 
-                btnCancelRequest.visibility = View.GONE
-
-                if(LocationUtils.getLastKnownLocation() != null){
-                    var userCurrentLoc = LocationUtils.getLastKnownLocation()
-                    tvDistanceAway.text = String.format("%.2f",data.getDistanceBetween()/1000)
+                if(data.acceptedCollectUser == null){
+                    tvStatus.text ="Status: Pending for Collection"
                 }else{
-                    tvDistanceAway.text = "N/A"
+                    tvStatus.text ="Status: Collecting By ${data.acceptedCollectUser!!.getFullName()}"
                 }
 
 
-                //set ripple background
-                btnCancelVolunteer.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
-                    view.context.resources.getColor(R.color.red),
-                    view.context.resources.getColor(R.color.transparent_pressed),
-                    view.context.resources.getColor(R.color.transparent),
-                    30f,0
-                )
 
-                btnMarkAsCollected.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
-                    view.context.resources.getColor(R.color.lightgreen),
-                    view.context.resources.getColor(R.color.transparent_pressed),
-                    view.context.resources.getColor(R.color.transparent),
-                    30f,0
-                )
+                //hide
+                tvDistanceAwayContainer.visibility = View.GONE
+                totalContainer.visibility = View.GONE
+
+                //hide chat button if there are no anyone accepted the request
+                if(data.acceptedCollectUser == null){
+                    btnChat.visibility = View.GONE
+                }
+
+                btnCancelVolunteer.visibility = View.GONE
+                btnMarkAsCollected.visibility = View.GONE
 
                 //set ripple background
                 btnCancelRequest.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
@@ -99,16 +87,12 @@ class RecyclerItemMyVolunteerCollectionRequest : UniversalRecyclerItem(RecycleRe
                     25f,0
                 )
 
-                btnCancelVolunteer.setOnClickListener{
+                btnCancelRequest.setOnClickListener{
                     adapter.onItemClickedListener(data,1)
                 }
 
-                btnMarkAsCollected.setOnClickListener {
-                    adapter.onItemClickedListener(data,2)
-                }
-
                 btnChat.setOnClickListener{
-                    adapter.onItemClickedListener(data,3)
+                    adapter.onItemClickedListener(data,2)
                 }
             }
         }

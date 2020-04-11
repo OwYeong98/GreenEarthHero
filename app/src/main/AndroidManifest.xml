@@ -62,6 +62,7 @@
         <activity android:name=".ui.activity.RecycleActivity" />
         <activity android:name=".ui.activity.VolunteerCollectionActivity" />
         <activity android:name=".ui.activity.MyVolunteerActivity" />
+        <activity android:name=".ui.activity.MyRequestAndRequestHistoryActivity" />
     </application>
 
 </manifest>
