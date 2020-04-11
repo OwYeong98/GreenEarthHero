@@ -71,4 +71,8 @@ dependencies {
     //cloud messaging service for receiving notification
     implementation 'com.google.firebase:firebase-messaging:20.1.5'
     implementation 'android.arch.work:work-runtime:1.0.1'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+
+    //tablayout
+    implementation 'com.android.support:design:28.1.0'
 }

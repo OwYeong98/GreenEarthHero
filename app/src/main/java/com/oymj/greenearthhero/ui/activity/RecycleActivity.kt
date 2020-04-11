@@ -95,7 +95,8 @@ class RecycleActivity : AppCompatActivity() {
                     overridePendingTransition(R.anim.slide_up_slow, R.anim.freeze)
                 }
                 btnMyRequest -> {
-
+                    startActivity(Intent(this@RecycleActivity, MyRequestAndRequestHistoryActivity::class.java))
+                    overridePendingTransition(R.anim.slide_up_slow, R.anim.freeze)
                 }
                 btnMyVolunteer -> {
                     startActivity(Intent(this@RecycleActivity, MyVolunteerActivity::class.java))
@@ -349,15 +350,15 @@ class RecycleActivity : AppCompatActivity() {
 
                 //create a firebase document
                 val recycleRequestDocument = hashMapOf(
-                "userId" to FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this),
-                "date_requested" to currentDateTime,
-                "address" to address,
-                "location" to GeoPoint(latLong?.lat!!,latLong?.lon!!),
-                "glass_weight" to glassAmount,
-                "metal_weight" to metalAmount,
-                "plastic_weight" to plasticAmount,
-                "paper_weight" to paperAmount,
-                "accepted_collect_by" to ""
+                    "userId" to FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this),
+                    "date_requested" to currentDateTime,
+                    "address" to address,
+                    "location" to GeoPoint(latLong?.lat!!,latLong?.lon!!),
+                    "glass_weight" to glassAmount,
+                    "metal_weight" to metalAmount,
+                    "plastic_weight" to plasticAmount,
+                    "paper_weight" to paperAmount,
+                    "accepted_collect_by" to ""
                 )
 
                 var loadingDialog = LoadingDialog(this)
