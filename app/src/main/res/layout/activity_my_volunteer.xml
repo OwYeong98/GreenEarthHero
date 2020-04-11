@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="My Volunteer"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myVolunteerRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="25dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/btnBackToHome"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/darkgrey"
+        android:fontFamily="@font/montserrat_regular"
+        android:textColor="@color/white"
+        android:text="Back To Home"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+</LinearLayout>

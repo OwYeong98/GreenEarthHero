@@ -61,6 +61,7 @@
             android:theme="@style/AppTheme.Transparent" />
         <activity android:name=".ui.activity.RecycleActivity" />
         <activity android:name=".ui.activity.VolunteerCollectionActivity" />
+        <activity android:name=".ui.activity.MyVolunteerActivity" />
     </application>
 
 </manifest>

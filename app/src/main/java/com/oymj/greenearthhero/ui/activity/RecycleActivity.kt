@@ -98,7 +98,8 @@ class RecycleActivity : AppCompatActivity() {
 
                 }
                 btnMyVolunteer -> {
-
+                    startActivity(Intent(this@RecycleActivity, MyVolunteerActivity::class.java))
+                    overridePendingTransition(R.anim.slide_up_slow, R.anim.freeze)
                 }
                 btnRecycleNow -> {
                     sendRecycleRequestToFirebase()

@@ -432,4 +432,8 @@ class VolunteerCollectionActivity : AppCompatActivity(){
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        overridePendingTransition(R.anim.freeze, R.anim.slide_down_slow)
+    }
 }
