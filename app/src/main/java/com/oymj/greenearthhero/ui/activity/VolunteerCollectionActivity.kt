@@ -21,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.googlemap.InfoWindowElementTouchListener
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
@@ -43,6 +44,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
     private var infoButtonListenerList = ArrayList<InfoWindowElementTouchListener>()
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
+    private lateinit var listener:ListenerRegistration
 
     private var recycleRequestList = ArrayList<Any>()
     private var listOfMarkerInMap = ArrayList<Marker>()
@@ -75,16 +77,23 @@ class VolunteerCollectionActivity : AppCompatActivity(){
         setupRecyclerView()
         setupBottomSheet()
         setupGoogleMap()
-        getRecyclerRequestFromFirebase()
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         listenToFirebaseCollectionChangesAndUpdateUI()
+    }
 
-
+    override fun onStop() {
+        super.onStop()
+        listener.remove()
     }
 
     private fun listenToFirebaseCollectionChangesAndUpdateUI(){
         var db = FirebaseFirestore.getInstance()
 
-        db.collection("Recycle_Request").addSnapshotListener{
+        listener = db.collection("Recycle_Request").addSnapshotListener{
             snapshot,e->
             if (e != null) {
                 return@addSnapshotListener
@@ -96,6 +105,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
             }
         }
     }
+
 
     private fun linkAllButtonWithOnClickListener() {
         //all button with onClick listener should be registered in this list
@@ -124,6 +134,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
                 recyclerViewAdapter.stopSkeletalLoading()
 
                 //add the data retrived from firebase
+                Log.d("gaga","size: ${data!!.size} | after: ${recycleRequestList.size}")
                 recycleRequestList.addAll(data!!)
                 //sort by near to far
                 recycleRequestList.sortBy { obj-> (obj as RecycleRequest).getDistanceBetween() }
@@ -278,7 +289,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
         }
     }
 
-    fun setupInfoWindow(){
+    private fun setupInfoWindow(){
         var layoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         var customView = layoutInflater.inflate(R.layout.googlemap_recycle_infowindow, null)

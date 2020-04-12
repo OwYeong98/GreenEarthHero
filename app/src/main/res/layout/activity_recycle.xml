@@ -6,12 +6,18 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <fragment
+
+    <com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
+        android:id="@+id/mapWrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.activity.RecycleActivity"
-        android:id="@+id/googleMapFragmentView"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        android:layout_height="match_parent">
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.activity.RecycleActivity"
+            android:id="@+id/googleMapFragmentView"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+    </com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -700,6 +706,6 @@
                 app:layout_constraintGuide_end="16dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-        
 
+    <include layout="@layout/activity_menu"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

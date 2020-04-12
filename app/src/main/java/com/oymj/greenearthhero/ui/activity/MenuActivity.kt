@@ -3,6 +3,9 @@ package com.oymj.greenearthhero.ui.activity
 import android.animation.Animator
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -17,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
+import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
 import com.oymj.greenearthhero.utils.LottieUtils
 import kotlinx.android.synthetic.main.activity_menu.*
 
@@ -87,6 +91,24 @@ class MenuActivity : AppCompatActivity() {
             }
         }
         animateMenuIcon()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onResume() {
+        super.onResume()
+        overridePendingTransition(
+            R.anim.freeze,
+            R.anim.freeze
+        )
+
+        menu_bg.post {
+            runOnUiThread{
+                circularRevealActivity()
+            }
+        }
+
+        animateMenuIcon()
+
     }
 
     private fun linkAllButtonWithOnClickListener() {
@@ -201,11 +223,18 @@ class MenuActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            revertCircularRevealActivity()
-        } else {
-            super.onBackPressed()
-        }
+        var confirmDialog = YesOrNoDialog(this,"Are you sure you want to Logout?", callback = {
+            isYesPressed->
+
+            if (isYesPressed == true){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    revertCircularRevealActivity()
+                } else {
+                    super.onBackPressed()
+                }
+            }
+        })
+        confirmDialog.show()
     }
 
 }
