@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemMyRequest
@@ -19,6 +21,7 @@ class CurrentRequestFragment : Fragment() {
 
     var currentRequestList = ArrayList<Any>()
     lateinit var recyclerViewAdapter: UniversalAdapter
+    lateinit var listener: ListenerRegistration
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -66,8 +69,35 @@ class CurrentRequestFragment : Fragment() {
         myRecyclerView.layoutManager = LinearLayoutManager(view.context)
         myRecyclerView.adapter = recyclerViewAdapter
 
-        getRecyclerRequestFromFirebase()
+//        listenToFirebaseCollectionChangesAndUpdateUI()
+        //getRecyclerRequestFromFirebase()
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        listenToFirebaseCollectionChangesAndUpdateUI()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        listener.remove()
+    }
+
+    private fun listenToFirebaseCollectionChangesAndUpdateUI(){
+        var db = FirebaseFirestore.getInstance()
+
+        listener = db.collection("Recycle_Request").whereEqualTo("userId",FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)).addSnapshotListener{
+                snapshot,e->
+            if (e != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null ) {
+                //update the UI
+                getRecyclerRequestFromFirebase()
+            }
+        }
     }
 
     private fun getRecyclerRequestFromFirebase(){
@@ -107,6 +137,7 @@ class CurrentRequestFragment : Fragment() {
 
 
     }
+
 
 
 }

@@ -7,7 +7,7 @@ import com.oymj.greenearthhero.utils.LocationUtils
 import java.text.SimpleDateFormat
 import java.util.Date
 
-open class RecycleRequest(
+class RecycleRequest(
     var id:String,
     var dateRequested: Date,
     var requestedUser: User,
@@ -101,9 +101,4 @@ open class RecycleRequest(
             return -1f
         }
     }
-
-
-
-
-
 }

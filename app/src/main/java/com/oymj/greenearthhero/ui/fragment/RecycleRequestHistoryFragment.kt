@@ -7,15 +7,25 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemMyRequest
 import com.oymj.greenearthhero.data.RecycleRequest
+import com.oymj.greenearthhero.data.RecycleRequestHistory
+import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.utils.FirebaseUtil
+import kotlinx.android.synthetic.main.fragment_current_request.*
+import kotlinx.android.synthetic.main.fragment_current_request.swipeLayout
+import kotlinx.android.synthetic.main.fragment_recycle_request_history.*
+import okhttp3.internal.notify
 
 class RecycleRequestHistoryFragment : Fragment() {
 
-    var currentRequestList = ArrayList<Any>()
+    var recycleHistoryList = ArrayList<Any>()
     lateinit var recyclerViewAdapter: UniversalAdapter
+    lateinit var listener: ListenerRegistration
 
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -30,7 +40,7 @@ class RecycleRequestHistoryFragment : Fragment() {
         var myRecyclerView = view.findViewById<RecyclerView>(R.id.recycleRequestHistoryRecyclerView)
 
 
-        recyclerViewAdapter = object: UniversalAdapter(currentRequestList,context!!,myRecyclerView){
+        recyclerViewAdapter = object: UniversalAdapter(recycleHistoryList,context!!,myRecyclerView){
             override fun getVerticalSpacing(): Int {
                 //20px spacing
                 return 10
@@ -63,11 +73,84 @@ class RecycleRequestHistoryFragment : Fragment() {
         myRecyclerView.layoutManager = LinearLayoutManager(view.context)
         myRecyclerView.adapter = recyclerViewAdapter
 
-        getRecycleHistoryFromFirebase()
+    }
 
+    override fun onStart() {
+        super.onStart()
+        listenToFirebaseCollectionChangesAndUpdateUI()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        listener.remove()
+    }
+
+    private fun listenToFirebaseCollectionChangesAndUpdateUI(){
+        var db = FirebaseFirestore.getInstance()
+
+        listener = db.collection("Recycle_Request_History").whereEqualTo("user_requested.userId",FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)).addSnapshotListener{
+                snapshot,e->
+            if (e != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null ) {
+                //update the UI
+                getRecycleHistoryFromFirebase()
+            }
+        }
     }
 
     private fun getRecycleHistoryFromFirebase(){
+        recycleHistoryList.clear()
+        recyclerViewAdapter.startSkeletalLoading(6,UniversalAdapter.SKELETAL_TYPE_3)
 
+        RecycleRequestHistory.getRecycleRequestHistoryFromFirebase(callback = {
+            success,message,data->
+
+            if(success){
+                recyclerViewAdapter.stopSkeletalLoading()
+                swipeLayout.isRefreshing = false
+
+                var totalMetal = 0
+                var totalGlass = 0
+                var totalPlastic = 0
+                var totalPaper = 0
+
+
+                for(history in data!!){
+                    if(history.userRequested.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
+                        totalMetal += history.metalWeight
+                        totalGlass += history.glassWeight
+                        totalPlastic += history.plasticWeight
+                        totalPaper += history.paperWeight
+                        recycleHistoryList.add(history)
+                    }
+                }
+
+                //update the total recycler material
+                tvPlasticAmount.text = "$totalPlastic KG"
+                tvGlassAmount.text = "$totalGlass KG"
+                tvMetalAmount.text = "$totalMetal KG"
+                tvPaperAmount.text = "$totalPaper KG"
+
+
+                recycleHistoryList.sortBy { data-> (data as RecycleRequestHistory).dateCollected.time }
+                recyclerViewAdapter.notifyDataSetChanged()
+
+
+
+
+            }else{
+                recyclerViewAdapter.stopSkeletalLoading()
+                swipeLayout.isRefreshing = false
+
+                var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
+                errorDialog.show()
+
+            }
+        })
     }
+
+
 }

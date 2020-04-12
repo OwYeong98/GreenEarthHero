@@ -1,5 +1,6 @@
 package com.oymj.greenearthhero.ui.activity
 
+import android.net.sip.SipSession
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapterRepo
@@ -30,6 +32,7 @@ import kotlin.collections.ArrayList
 class MyVolunteerActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewAdapter: UniversalAdapter
+    private lateinit var listener: ListenerRegistration
 
     private var myVolunteerList = ArrayList<Any>()
 
@@ -53,13 +56,22 @@ class MyVolunteerActivity : AppCompatActivity() {
 
         setupRecyclerView()
         linkAllButtonWithOnClickListener()
-        getRecyclerRequestFromFirebase()
+        listenToFirebaseCollectionChangesAndUpdateUI()
 
         swipeLayout.setOnRefreshListener {
             getRecyclerRequestFromFirebase()
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        listenToFirebaseCollectionChangesAndUpdateUI()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        listener.remove()
+    }
 
 
 
@@ -71,6 +83,22 @@ class MyVolunteerActivity : AppCompatActivity() {
 
         for (view in actionButtonViewList) {
             view.setOnClickListener(myOnClickListener)
+        }
+    }
+
+    private fun listenToFirebaseCollectionChangesAndUpdateUI(){
+        var db = FirebaseFirestore.getInstance()
+
+        listener = db.collection("Recycle_Request").whereEqualTo("accepted_collect_by",FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)).addSnapshotListener{
+                snapshot,e->
+            if (e != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null ) {
+                //update the UI
+                getRecyclerRequestFromFirebase()
+            }
         }
     }
 
@@ -191,10 +219,21 @@ class MyVolunteerActivity : AppCompatActivity() {
 
         FirebaseFirestore.getInstance().collection("Recycle_Request_History").add(recycleHistoryDocument)
             .addOnSuccessListener {
-                loadingDialog.hide()
 
-                var successDialog = SuccessDialog(this,"Success","The request is marked as Collected Successfully!")
-                successDialog.show()
+
+                FirebaseFirestore.getInstance().collection("Recycle_Request").document(data.id).delete()
+                    .addOnSuccessListener {
+                        loadingDialog.hide()
+
+                        var successDialog = SuccessDialog(this,"Success","The request is marked as Collected Successfully!")
+                        successDialog.show()
+                    }
+                    .addOnFailureListener {
+                        loadingDialog.hide()
+
+                        var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+                        errorDialog.show()
+                    }
             }
             .addOnFailureListener {
                     e ->

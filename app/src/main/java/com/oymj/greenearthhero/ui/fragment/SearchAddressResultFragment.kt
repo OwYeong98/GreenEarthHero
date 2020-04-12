@@ -3,6 +3,7 @@ package com.oymj.greenearthhero.ui.fragment
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -75,7 +76,9 @@ class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fra
     fun searchAddressFromMapBoxApi(keyword: String){
         placesList.clear()
         zeroStateContainer.visibility = View.GONE
-        recyclerViewAdapter.startSkeletalLoading(8,UniversalAdapter.SKELETAL_TYPE_1)
+        recyclerViewAdapter.startSkeletalLoading(7,UniversalAdapter.SKELETAL_TYPE_1)
+
+        Log.d("asd","places size: ${placesList.size}")
 
         ApisImplementation().geocodingFromTomTom(context!!,keyword,callback = {
             success,response->
