@@ -36,6 +36,34 @@ class User(var userId:String, var email:String, var firstName:String,  var lastN
                     callback(false,exception.message,null)
                 }
         }
+
+        fun getSpecificUserFromFirebase(userId:String,callback: (Boolean,String?,User?)->Unit){
+            var fireStoreDB = FirebaseFirestore.getInstance()
+
+            var userList = ArrayList<User>()
+            fireStoreDB.collection("Users").document(userId).get()
+                .addOnSuccessListener { userDoc ->
+
+                    var userId = userDoc.id
+                    var email = userDoc.getString("email")
+                    var firstName = userDoc.getString("firstName")
+                    var lastName = userDoc.getString("lastName")
+                    var phone = userDoc.getString("phone")
+                    var dateOfBirth = SimpleDateFormat("dd/MM/yyyy").parse(userDoc.getString("dateOfBirth"))
+
+                    var newUser = User(userId, email!!,firstName!!,lastName!!,phone!!,dateOfBirth!!)
+
+
+                    //callback after done getting list
+                    callback(true,null,newUser)
+
+                }.addOnFailureListener {
+                        exception ->
+
+                    //pass failure and exception
+                    callback(false,exception.message,null)
+                }
+        }
     }
 
     fun getFullName():String{

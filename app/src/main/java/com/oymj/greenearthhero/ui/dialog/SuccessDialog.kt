@@ -42,7 +42,7 @@ class SuccessDialog(context: Context, var title:String, var desc:String) : Dialo
             50f,0, GradientDrawable.Orientation.LEFT_RIGHT
         )
         btnAction.setOnClickListener{
-            this.hide()
+            this.dismiss()
         }
 
     }

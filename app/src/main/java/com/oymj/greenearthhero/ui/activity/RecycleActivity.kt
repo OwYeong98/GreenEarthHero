@@ -819,8 +819,6 @@ class RecycleActivity : AppCompatActivity() {
                 circularReveal.start()
             }
         }
-
-
     }
 
     private fun getDips(dps: Int): Int {

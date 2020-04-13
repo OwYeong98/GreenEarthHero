@@ -43,7 +43,7 @@ class ErrorDialog(context: Context,var title:String,var desc:String) : Dialog(co
         )
 
         btnAction.setOnClickListener{
-            this.hide()
+            this.dismiss()
         }
 
     }
