@@ -73,6 +73,10 @@ class RecycleRequestHistoryFragment : Fragment() {
         myRecyclerView.layoutManager = LinearLayoutManager(view.context)
         myRecyclerView.adapter = recyclerViewAdapter
 
+        swipeLayout.setOnRefreshListener {
+            getRecycleHistoryFromFirebase()
+        }
+
     }
 
     override fun onStart() {

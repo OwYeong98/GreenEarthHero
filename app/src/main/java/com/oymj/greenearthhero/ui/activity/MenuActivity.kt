@@ -27,6 +27,8 @@ import kotlinx.android.synthetic.main.activity_menu.*
 
 class MenuActivity : AppCompatActivity() {
 
+    private var isFromLogin = false
+
     //Better control of onClickListener
     //all button action will be registered here
     private var myOnClickListener = object: View.OnClickListener {
@@ -34,7 +36,7 @@ class MenuActivity : AppCompatActivity() {
         override fun onClick(v: View?) {
             when (v) {
                 menu_cross_icon -> {
-                    revertCircularRevealActivity()
+                    this@MenuActivity.onBackPressed()
                 }
                 menu_notification_icon -> {
                     SuccessDialog(this@MenuActivity,"Success","Your Recycle request is submitted successfully! Please wait for someone to collect ur request").show()
@@ -48,8 +50,12 @@ class MenuActivity : AppCompatActivity() {
 
                 }
                 menu_recycle_icon -> {
+                    if(!isFromLogin){
+                        finish()
+                    }
                     var intent = Intent(this@MenuActivity, RecycleActivity::class.java)
                     startActivity(intent)
+
                 }
                 menu_food_donation_icon -> {
 
@@ -76,6 +82,8 @@ class MenuActivity : AppCompatActivity() {
             R.anim.freeze
         )
         setContentView(R.layout.activity_menu)
+
+        isFromLogin = intent.getBooleanExtra("callFromLogin",false)
 
         linkAllButtonWithOnClickListener()
         if (savedInstanceState == null) {
@@ -223,18 +231,27 @@ class MenuActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        var confirmDialog = YesOrNoDialog(this,"Are you sure you want to Logout?", callback = {
-            isYesPressed->
+        if(isFromLogin){
+            var confirmDialog = YesOrNoDialog(this,"Are you sure you want to Logout?", callback = {
+                    isYesPressed->
 
-            if (isYesPressed == true){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    revertCircularRevealActivity()
-                } else {
-                    super.onBackPressed()
+                if (isYesPressed == true){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        revertCircularRevealActivity()
+                    } else {
+                        super.onBackPressed()
+                    }
                 }
+            })
+            confirmDialog.show()
+        }else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revertCircularRevealActivity()
+            } else {
+                super.onBackPressed()
             }
-        })
-        confirmDialog.show()
+        }
+
     }
 
 }

@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
@@ -15,12 +14,12 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -52,7 +51,7 @@ import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.FormUtils
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
-import kotlinx.android.synthetic.main.activity_menu.*
+import kotlinx.android.synthetic.main.activity_menu.menu_bg
 import kotlinx.android.synthetic.main.activity_recycle.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -81,7 +80,8 @@ class RecycleActivity : AppCompatActivity() {
                        myBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 recycle_menu_icon -> {
-                    finish()
+                    var intent = Intent(this@RecycleActivity, MenuActivity::class.java)
+                    startActivity(intent)
                 }
                 recycle_request_location_label -> {
                     showLocationPanel(true)
@@ -128,19 +128,14 @@ class RecycleActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        overridePendingTransition(R.anim.freeze,R.anim.freeze)
         setContentView(R.layout.activity_recycle)
 
-        menu_bg.visibility = View.INVISIBLE
-        menu_bg.post{
-            runOnUiThread {
-                this.revertCircularRevealActivity()
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            revertMenuPageCircularRevealActivity()
         }
-
 
         linkAllButtonWithOnClickListener()
         syncMaterialInfoWithEditText()
@@ -150,6 +145,14 @@ class RecycleActivity : AppCompatActivity() {
         setupGoogleMap()
         setupBottomSheet()
         setupLocationSearchPanel()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            revertMenuPageCircularRevealActivity()
+        }
     }
 
     override fun onStart() {
@@ -787,24 +790,37 @@ class RecycleActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun revertCircularRevealActivity() {
-        menu_bg.visibility = View.VISIBLE
-        val cx: Int = menu_bg.left + getDips(16) + getDips(56/2)
-        val cy: Int = menu_bg.top + getDips(16) + getDips(56/2)
-        val finalRadius: Float = Math.max(menu_bg.width, menu_bg.height).toFloat()
-        val circularReveal =
-            ViewAnimationUtils.createCircularReveal(menu_bg, cx, cy, finalRadius, 0f)
-        circularReveal.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animator: Animator) {}
-            override fun onAnimationEnd(animator: Animator) {
-                menu_bg.visibility = View.GONE
-            }
+    private fun revertMenuPageCircularRevealActivity() {
 
-            override fun onAnimationCancel(animator: Animator) {}
-            override fun onAnimationRepeat(animator: Animator) {}
-        })
-        circularReveal.duration = 1000
-        circularReveal.start()
+
+        //add menu view so that we can revert reveal it
+        var layoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        var inflatedView = layoutInflater.inflate(R.layout.activity_menu,null) as ConstraintLayout
+        inflatedView.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,ConstraintLayout.LayoutParams.MATCH_PARENT)
+        rootLayout.addView(inflatedView)
+
+        inflatedView.post {
+            runOnUiThread{
+                val cx: Int = menu_bg.left + getDips(16) + getDips(56/2)
+                val cy: Int = menu_bg.top + getDips(16) + getDips(56/2)
+                val finalRadius: Float = Math.max(inflatedView.width, inflatedView.height).toFloat()
+                val circularReveal =
+                    ViewAnimationUtils.createCircularReveal(inflatedView, cx, cy, finalRadius, 0f)
+                circularReveal.addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationStart(animator: Animator) {}
+                    override fun onAnimationEnd(animator: Animator) {
+                        rootLayout.removeView(inflatedView)
+                    }
+
+                    override fun onAnimationCancel(animator: Animator) {}
+                    override fun onAnimationRepeat(animator: Animator) {}
+                })
+                circularReveal.duration = 1000
+                circularReveal.start()
+            }
+        }
+
+
     }
 
     private fun getDips(dps: Int): Int {

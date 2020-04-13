@@ -271,7 +271,6 @@ class MyVolunteerActivity : AppCompatActivity() {
                 showBackToHomeButton()
             }
         },200)
-
     }
 
     private fun showBackToHomeButton(){

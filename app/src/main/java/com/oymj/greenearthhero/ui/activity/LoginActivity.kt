@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
             task ->
 
             if(task.isSuccessful){
-                loadingDialog.hide()
+                loadingDialog.dismiss()
 
                 //update the device token to firebase so we can send notification later
                 FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
@@ -82,9 +82,10 @@ class LoginActivity : AppCompatActivity() {
                 }
                 //redirect to menu activity
                 var intent = Intent(this@LoginActivity, MenuActivity::class.java)
+                intent.putExtra("callFromLogin",true)
                 startActivity(intent)
             }else{
-                loadingDialog.hide()
+                loadingDialog.dismiss()
                 Toast.makeText(this,"Authentication Fail! Crediential provided is not valid", Toast.LENGTH_SHORT).show()
             }
         }

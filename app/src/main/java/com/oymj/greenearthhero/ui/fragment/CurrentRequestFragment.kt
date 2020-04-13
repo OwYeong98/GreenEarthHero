@@ -15,6 +15,7 @@ import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemMy
 import com.oymj.greenearthhero.data.RecycleRequest
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
+import kotlinx.android.synthetic.main.activity_my_request_and_request_history.*
 import kotlinx.android.synthetic.main.fragment_current_request.*
 
 class CurrentRequestFragment : Fragment() {
@@ -69,8 +70,9 @@ class CurrentRequestFragment : Fragment() {
         myRecyclerView.layoutManager = LinearLayoutManager(view.context)
         myRecyclerView.adapter = recyclerViewAdapter
 
-//        listenToFirebaseCollectionChangesAndUpdateUI()
-        //getRecyclerRequestFromFirebase()
+        swipeLayout.setOnRefreshListener {
+            getRecyclerRequestFromFirebase()
+        }
 
     }
 
