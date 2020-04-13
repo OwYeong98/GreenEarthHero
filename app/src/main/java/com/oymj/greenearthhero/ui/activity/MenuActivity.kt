@@ -47,6 +47,10 @@ class MenuActivity : AppCompatActivity() {
 
                 }
                 menu_profile_icon -> {
+                    var intent = Intent(this@MenuActivity, ProfileActivity::class.java)
+                    intent.putExtra("isFromMenuActivity",true)
+                    intent.putExtra("userId","-1")
+                    startActivity(intent)
 
                 }
                 menu_recycle_icon -> {

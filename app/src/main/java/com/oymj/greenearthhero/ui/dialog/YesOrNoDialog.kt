@@ -48,14 +48,14 @@ class YesOrNoDialog(context: Context, var message:String, var callback: (Boolean
         )
 
         btnYes.setOnClickListener{
-            this.hide()
+            this.dismiss()
 
             //callback and show the result
             callback(true)
         }
 
         btnNo.setOnClickListener{
-            this.hide()
+            this.dismiss()
 
             //callback and show the result
             callback(false)

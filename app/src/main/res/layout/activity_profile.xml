@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@id/rootLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                style="@style/Widget.MaterialComponents.FloatingActionButton"
+                android:id="@+id/btnMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:backgroundTint="@color/white"
+                android:elevation="6dp"
+                android:clickable="true"
+                android:scaleType="center"
+                android:src="@drawable/menu_icon"
+                app:borderWidth="0dp"
+                app:fabSize="normal"
+                app:layout_constraintLeft_toRightOf="@id/guideline10"
+                app:layout_constraintTop_toBottomOf="@id/guideline17"
+                app:tint="@color/darkgrey" />
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:visibility="gone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:src="@drawable/back_icon" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="25dp"
+                android:text="My Profile"
+                android:textColor="@color/darkgrey"
+                android:fontFamily="@font/montserrat"
+                android:textSize="18dp"/>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivProfilePic"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:outlineProvider="none"
+                    android:elevation="1dp"
+                    android:src="@drawable/ic_profile_pic" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:layout_marginTop="-70dp"
+                    android:background="@drawable/green_gradient_color"
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="75dp"/>
+
+                    <TextView
+                        android:id="@+id/tvFullName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/montserrat"
+                        android:textAlignment="center"
+                        android:textSize="20sp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp"
+                        android:text="Paul Chan"/>
+
+                    <TextView
+                        android:id="@+id/btnMessageHim"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Message Him"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="14sp"
+                        android:textColor="@color/white"
+                        android:background="#3D90F4"
+                        android:textAlignment="center"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/recycle_grayscale_icon" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:textAlignment="center"
+                                android:text="Recycled"
+                                android:textSize="13dp"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/montserrat_regular"/>
+
+                            <TextView
+                                android:id="@+id/tvRecycledAmount"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="5kg"
+                                android:textSize="13dp"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/montserrat_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/fooddonation_grayscale_icon" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="5dp"
+                                android:text="Reduced"
+                                android:textSize="13dp"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/montserrat_regular"/>
+
+                            <TextView
+                                android:id="@+id/tvReducedAmount"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="5kg"
+                                android:textSize="13dp"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/montserrat_regular"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="20dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/goodselling_grayscale_icon" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:layout_marginTop="5dp"
+                                android:text="Reused"
+                                android:textSize="13dp"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/montserrat_regular"/>
+
+                            <TextView
+                                android:id="@+id/tvReusedAmount"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:text="5kg"
+                                android:textSize="13dp"
+                                android:textColor="@color/white"
+                                android:fontFamily="@font/montserrat_regular"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvPersonalInfo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="18sp"
+                        android:text="My Personal Information"/>
+
+                    <TextView
+                        android:id="@+id/btnEditProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:background="@drawable/green_gradient_color"
+                        android:text="Edit Info"
+                        android:layout_marginRight="10dp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/darkgrey"
+                    android:text="First Name"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textSize="16sp"/>
+                <EditText
+                    android:id="@+id/tvFirstName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:minHeight="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="@color/darkgrey"
+                    android:text=""
+                    android:background="@null"
+                    android:minWidth="150dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/darkgrey"
+                    android:text="Last Name"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textSize="16sp"/>
+                <EditText
+                    android:id="@+id/tvLastName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="20dp"
+                    android:enabled="false"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="@color/darkgrey"
+                    android:text=""
+                    android:background="@null"
+                    android:minWidth="150dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/darkgrey"
+                    android:text="Date of Birth"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textSize="16sp"/>
+                <EditText
+                    android:id="@+id/tvDateOfBirth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="20dp"
+                    android:enabled="false"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="@color/darkgrey"
+                    android:text=""
+                    android:background="@null"
+                    android:minWidth="150dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/darkgrey"
+                    android:text="Email"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textSize="16sp"/>
+                <EditText
+                    android:id="@+id/tvEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="20dp"
+                    android:enabled="false"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="@color/darkgrey"
+                    android:text=""
+                    android:background="@null"
+                    android:minWidth="150dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/darkgrey"
+                    android:text="Phone No"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textSize="16sp"/>
+                <EditText
+                    android:id="@+id/tvPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="20dp"
+                    android:enabled="false"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="@color/darkgrey"
+                    android:text=""
+                    android:background="@null"
+                    android:minWidth="150dp"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
