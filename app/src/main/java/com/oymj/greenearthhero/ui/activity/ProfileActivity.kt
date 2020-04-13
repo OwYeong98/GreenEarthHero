@@ -198,7 +198,7 @@ class ProfileActivity : AppCompatActivity(){
     }
 
     private fun disableEdit(){
-        btnEditProfile.text = "Save"
+        btnEditProfile.text = "Edit Info"
 
         tvFirstName.background = null
         tvFirstName.isEnabled = false
