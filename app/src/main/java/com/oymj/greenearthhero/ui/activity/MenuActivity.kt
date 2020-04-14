@@ -43,10 +43,16 @@ class MenuActivity : AppCompatActivity() {
 
                 }
                 menu_chat_icon -> {
-                    ErrorDialog(this@MenuActivity,"Error","You must recycle at least some material!").show()
-
+                    if(!isFromLogin){
+                        finish()
+                    }
+                    var intent = Intent(this@MenuActivity, MyChatActivity::class.java)
+                    startActivity(intent)
                 }
                 menu_profile_icon -> {
+                    if(!isFromLogin){
+                        finish()
+                    }
                     var intent = Intent(this@MenuActivity, ProfileActivity::class.java)
                     intent.putExtra("isFromMenuActivity",true)
                     intent.putExtra("userId","-1")

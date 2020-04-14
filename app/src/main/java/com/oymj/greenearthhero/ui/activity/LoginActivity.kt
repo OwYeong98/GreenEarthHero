@@ -9,7 +9,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.data.User
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
+import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.FormUtils
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -80,6 +82,14 @@ class LoginActivity : AppCompatActivity() {
                         "cloudMessagingId" to token
                     ))
                 }
+
+                User.getSpecificUserFromFirebase(FirebaseAuth.getInstance().uid!!,callback = {
+                    success,message,data->
+                    if(success){
+                        FirebaseUtil.currentUserDetail = data!!
+                    }
+                })
+
                 //redirect to menu activity
                 var intent = Intent(this@LoginActivity, MenuActivity::class.java)
                 intent.putExtra("callFromLogin",true)

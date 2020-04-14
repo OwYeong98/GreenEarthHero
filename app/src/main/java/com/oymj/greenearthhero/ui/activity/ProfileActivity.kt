@@ -95,6 +95,14 @@ class ProfileActivity : AppCompatActivity(){
         linkAllButtonWithOnClickListener()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            revertMenuPageCircularRevealActivity()
+        }
+    }
+
 
     private fun linkAllButtonWithOnClickListener() {
         //all button with onClick listener should be registered in this list

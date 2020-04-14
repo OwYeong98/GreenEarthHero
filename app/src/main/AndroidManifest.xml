@@ -63,7 +63,11 @@
         <activity android:name=".ui.activity.VolunteerCollectionActivity" />
         <activity android:name=".ui.activity.MyVolunteerActivity" />
         <activity android:name=".ui.activity.MyRequestAndRequestHistoryActivity" />
-        <activity android:name=".ui.activity.ProfileActivity" />
+        <activity android:name=".ui.activity.ProfileActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.activity.MyChatActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.activity.NewChatActivity" />
     </application>
 
 </manifest>

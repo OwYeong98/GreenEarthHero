@@ -1,6 +1,7 @@
 package com.oymj.greenearthhero.data
 
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -63,6 +64,23 @@ class User(var userId:String, var email:String, var firstName:String,  var lastN
                     //pass failure and exception
                     callback(false,exception.message,null)
                 }
+        }
+
+        suspend fun suspendGetSpecificUserFromFirebase(userId:String): User{
+            var fireStoreDB = FirebaseFirestore.getInstance()
+
+            var userList = ArrayList<User>()
+
+            var userDoc = fireStoreDB.collection("Users").document(userId).get().await()
+            var userId = userDoc.id
+            var email = userDoc.getString("email")
+            var firstName = userDoc.getString("firstName")
+            var lastName = userDoc.getString("lastName")
+            var phone = userDoc.getString("phone")
+            var dateOfBirth = SimpleDateFormat("dd/MM/yyyy").parse(userDoc.getString("dateOfBirth"))
+
+            var newUser = User(userId, email!!,firstName!!,lastName!!,phone!!,dateOfBirth!!)
+            return newUser
         }
     }
 
