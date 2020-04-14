@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Window
+import android.view.WindowManager
 import com.oymj.greenearthhero.R
 
 class LoadingDialog(context: Context) : Dialog(context) {
@@ -17,6 +18,11 @@ class LoadingDialog(context: Context) : Dialog(context) {
 
         //set default background color to transparent
         getWindow().setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        var layoutParam = getWindow().getAttributes()
+        layoutParam.dimAmount = 0.7f
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+
+        setCanceledOnTouchOutside(false)
 
     }
 }

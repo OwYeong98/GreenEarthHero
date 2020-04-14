@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.data.User
+import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.FormUtils
@@ -71,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
             task ->
 
             if(task.isSuccessful){
-                loadingDialog.dismiss()
+
 
                 //update the device token to firebase so we can send notification later
                 FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
@@ -87,16 +88,22 @@ class LoginActivity : AppCompatActivity() {
                     success,message,data->
                     if(success){
                         FirebaseUtil.currentUserDetail = data!!
+                        loadingDialog.dismiss()
+                        //redirect to menu activity
+                        var intent = Intent(this@LoginActivity, MenuActivity::class.java)
+                        intent.putExtra("callFromLogin",true)
+                        startActivity(intent)
+                    }else{
+                        var errorDialog = ErrorDialog(this,"Error","Error getting user profile!")
+                        errorDialog.show()
                     }
                 })
 
-                //redirect to menu activity
-                var intent = Intent(this@LoginActivity, MenuActivity::class.java)
-                intent.putExtra("callFromLogin",true)
-                startActivity(intent)
+
             }else{
                 loadingDialog.dismiss()
-                Toast.makeText(this,"Authentication Fail! Crediential provided is not valid", Toast.LENGTH_SHORT).show()
+                var errorDialog = ErrorDialog(this,"Authentication Fail!","Either Email or password provided is invalid")
+                errorDialog.show()
             }
         }
     }

@@ -20,6 +20,7 @@ import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.data.ChatRoom
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_my_chat.*
 import kotlinx.coroutines.GlobalScope
@@ -81,7 +82,7 @@ class MyChatActivity : AppCompatActivity() {
             chatRoomList.clear()
             recyclerViewAdapter.startSkeletalLoading(6,UniversalAdapter.SKELETAL_TYPE_4)
 
-            ChatRoom.getChatRoomListByUserId(callback = {
+            ChatRoom.getChatRoomListByUserId(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@MyChatActivity)!!,callback = {
                     success,message,data->
 
                 if(success){
@@ -133,8 +134,9 @@ class MyChatActivity : AppCompatActivity() {
             }
             override fun onItemClickedListener(data: Any, clickType:Int) {
                 if(data is ChatRoom){
-
-
+                    var intent = Intent(this@MyChatActivity, ChatRoomActivity::class.java)
+                    intent.putExtra("chatRoom",data)
+                    startActivity(intent)
                 }
             }
         }

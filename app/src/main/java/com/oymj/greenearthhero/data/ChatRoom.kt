@@ -6,6 +6,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -15,20 +16,23 @@ class ChatRoom(
     var chatUser1:User,
     var chatUser2:User,
     var messagesList:ArrayList<ChatMessage>
-) {
+):Serializable {
 
     companion object{
 
-        fun getChatRoomListByUserId(callback:(Boolean,String?,ArrayList<ChatRoom>?)->Unit){
+        fun getChatRoomListByUserId(userId:String,callback:(Boolean,String?,ArrayList<ChatRoom>?)->Unit){
             var chatRoomList = ArrayList<ChatRoom>()
-            FirebaseFirestore.getInstance().collection("Chat_Room").get()
+            FirebaseFirestore.getInstance().collection("Chat_Room").whereArrayContains("chatUsers",userId).get()
                 .addOnSuccessListener {
                     chatRoomSnapshot->
                     GlobalScope.launch {
                         for(chatRoom in chatRoomSnapshot!!){
                             var id = chatRoom.id
-                            var user1 = User.suspendGetSpecificUserFromFirebase(chatRoom.getString("chatUser1")!!)
-                            var user2 = User.suspendGetSpecificUserFromFirebase(chatRoom.getString("chatUser2")!!)
+                            var  userList = ArrayList<String>()
+                            userList = chatRoom.get("chatUsers") as ArrayList<String>
+
+                            var user1 = User.suspendGetSpecificUserFromFirebase(userList.get(0))
+                            var user2 = User.suspendGetSpecificUserFromFirebase(userList.get(1))
 
                             var messagesList = ChatMessage.suspendGetChatList(id)
                             var newChatRoom = ChatRoom(id,user1!!,user2!!,messagesList)
