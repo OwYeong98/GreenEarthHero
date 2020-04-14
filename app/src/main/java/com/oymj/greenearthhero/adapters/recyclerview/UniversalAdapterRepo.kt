@@ -19,7 +19,9 @@ object UniversalAdapterRepo {
         registerRecyclerItem(RecyclerItemRecycleRequest())
         registerRecyclerItem(RecyclerItemSkeletalLoadingType2())
         registerRecyclerItem(RecyclerItemSkeletalLoadingType3())
+        registerRecyclerItem(RecyclerItemSkeletalLoadingType4())
         registerRecyclerItem(RecyclerItemRecycleHistory())
+        registerRecyclerItem(RecyclerItemChatRoom())
     }
 
     fun registerRecyclerItem(recyclerItem: UniversalRecyclerItem){

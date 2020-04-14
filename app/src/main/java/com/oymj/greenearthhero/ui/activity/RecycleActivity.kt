@@ -81,6 +81,7 @@ class RecycleActivity : AppCompatActivity() {
                 }
                 recycle_menu_icon -> {
                     var intent = Intent(this@RecycleActivity, MenuActivity::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
                     startActivity(intent)
                 }
                 recycle_request_location_label -> {

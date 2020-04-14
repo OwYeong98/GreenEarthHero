@@ -15,6 +15,7 @@ import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.data.SkeletalEmptyModel
 import com.oymj.greenearthhero.data.SkeletalEmptyModel2
 import com.oymj.greenearthhero.data.SkeletalEmptyModel3
+import com.oymj.greenearthhero.data.SkeletalEmptyModel4
 import java.lang.Exception
 
 open class UniversalAdapter(val data : ArrayList<Any>, val context: Context,val recyclerView:RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -22,6 +23,7 @@ open class UniversalAdapter(val data : ArrayList<Any>, val context: Context,val 
         const val SKELETAL_TYPE_1:Int = 1
         const val SKELETAL_TYPE_2:Int = 2
         const val SKELETAL_TYPE_3:Int = 3
+        const val SKELETAL_TYPE_4:Int = 4
     }
 
 //    lateinit var shimmerEffectFrameLayout: ShimmerFrameLayout
@@ -111,6 +113,7 @@ open class UniversalAdapter(val data : ArrayList<Any>, val context: Context,val 
                 SKELETAL_TYPE_1-> skeletalModel = SkeletalEmptyModel()
                 SKELETAL_TYPE_2-> skeletalModel = SkeletalEmptyModel2()
                 SKELETAL_TYPE_3-> skeletalModel = SkeletalEmptyModel3()
+                SKELETAL_TYPE_4-> skeletalModel = SkeletalEmptyModel4()
             }
 
 
@@ -128,7 +131,7 @@ open class UniversalAdapter(val data : ArrayList<Any>, val context: Context,val 
 
         while (iterator.hasNext()){
             var currentItem =iterator.next()
-            if(currentItem is SkeletalEmptyModel || currentItem is SkeletalEmptyModel2 || currentItem is SkeletalEmptyModel3)
+            if(currentItem is SkeletalEmptyModel || currentItem is SkeletalEmptyModel2 || currentItem is SkeletalEmptyModel3 || currentItem is SkeletalEmptyModel4)
                 iterator.remove()
         }
 
