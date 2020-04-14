@@ -1,11 +1,13 @@
 package com.oymj.greenearthhero.data
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.tasks.await
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
-class User(var userId:String, var email:String, var firstName:String,  var lastName:String, var phone:String, var dateOfBirth: Date) {
+class User(var userId:String, var email:String, var firstName:String,  var lastName:String, var phone:String, var dateOfBirth: Date):Serializable {
 
     companion object{
         fun getUserListFromFirebase(callback: (Boolean,String?,ArrayList<User>?)->Unit){

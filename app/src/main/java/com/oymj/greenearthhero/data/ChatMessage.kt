@@ -3,6 +3,7 @@ package com.oymj.greenearthhero.data
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import java.io.Serializable
 import java.util.*
 import javax.security.auth.callback.Callback
 
@@ -11,7 +12,7 @@ class ChatMessage(
     var dateSent: Date,
     var userSend:String,
     var message:String
-    ) {
+    ):Serializable {
 
     companion object{
 

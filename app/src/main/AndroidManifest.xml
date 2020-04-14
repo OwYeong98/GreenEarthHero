@@ -68,6 +68,7 @@
         <activity android:name=".ui.activity.MyChatActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.activity.NewChatActivity" />
+        <activity android:name=".ui.activity.ChatRoomActivity" />
     </application>
 
 </manifest>
