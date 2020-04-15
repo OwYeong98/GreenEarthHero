@@ -7,8 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.*
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.data.ChatMessage
@@ -25,6 +24,7 @@ import kotlin.collections.ArrayList
 
 class ChatRoomActivity: AppCompatActivity() {
     private lateinit var chatRoomDetail: ChatRoom
+    private lateinit var listener: ListenerRegistration
 
     private var chatList = ArrayList<Any>()
     private lateinit var recyclerViewAdapter: UniversalAdapter
@@ -44,10 +44,6 @@ class ChatRoomActivity: AppCompatActivity() {
                             if(!success){
                                 var errorDialog = ErrorDialog(this@ChatRoomActivity,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
                                 errorDialog.show()
-                            }else{
-                                chatList.add(0,message)
-                                Log.d("asd","update chat")
-                                recyclerViewAdapter.notifyDataSetChanged()
                             }
                         })
                     }
@@ -61,11 +57,13 @@ class ChatRoomActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_room)
 
+        chatRoomDetail = intent.getSerializableExtra("chatRoom") as ChatRoom
+
         setupUI()
         setupRecyclerView()
         linkAllButtonWithOnClickListener()
 
-        chatRoomDetail = intent.getSerializableExtra("chatRoom") as ChatRoom
+
 
         //if room havent created then create in database
         if(chatRoomDetail.id == "-1"){
@@ -76,9 +74,9 @@ class ChatRoomActivity: AppCompatActivity() {
                 success->
 
                 if(success){
-                    Log.d("asd","haha success")
                     loadingDialog.hide()
                     loadingDialog.dismiss()
+                    listenToNewMessagesInFirebase()
                 }else{
                     loadingDialog.dismiss()
                     var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
@@ -86,17 +84,43 @@ class ChatRoomActivity: AppCompatActivity() {
                 }
             }
         }else{
-            chatList.addAll(chatRoomDetail.messagesList)
+            listenToNewMessagesInFirebase()
             recyclerViewAdapter.notifyDataSetChanged()
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        listenToNewMessagesInFirebase()
+    }
 
+    fun listenToNewMessagesInFirebase(){
+        var db = FirebaseFirestore.getInstance()
+        chatList.clear()
+
+        listener = db.collection("Chat_Room/${chatRoomDetail.id}/MessagesList").addSnapshotListener(){
+                snapshot,e->
+            if (e != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null ) {
+                getMessageFromFirebase()
+            }
+        }
 
 
 
     }
 
+
+
     fun setupUI(){
+        if(chatRoomDetail.chatUser1.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this))
+            tvTitle.text = chatRoomDetail.chatUser2.getFullName()
+        else
+            tvTitle.text = chatRoomDetail.chatUser1.getFullName()
+
         btnBack.background = RippleUtil.getRippleButtonOutlineDrawable(this,
             resources.getColor(R.color.transparent),
             resources.getColor(R.color.transparent_pressed),
@@ -147,10 +171,31 @@ class ChatRoomActivity: AppCompatActivity() {
         chatRecyclerView.adapter = recyclerViewAdapter
     }
 
+    private fun getMessageFromFirebase(){
+        chatList.clear()
+        ChatMessage.getChatList(chatRoomDetail.id,callback = {
+            success,message,messageList->
+
+            if(success){
+                //sort dateSent by ascending
+                messageList!!.sortByDescending { it.dateSent }
+                chatList.addAll(messageList!!)
+
+
+                recyclerViewAdapter.notifyDataSetChanged()
+            }else{
+                var errorDialog = ErrorDialog(this,"Error getting message","We have encountered error when contacting with firebase! Please check internet connection")
+                errorDialog.show()
+            }
+        })
+    }
+
     private fun sendMessageToChatRoom(message: ChatMessage, callback: (Boolean)->Unit){
+        var dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+        dateFormat.timeZone = TimeZone.getTimeZone("GMT+8:00")
         //create a firebase document
         val messageDocument = hashMapOf(
-            "dateSent" to SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(message.dateSent),
+            "dateSent" to dateFormat.format(message.dateSent),
             "message" to message.message,
             "userSend" to message.userSend
         )
@@ -181,6 +226,11 @@ class ChatRoomActivity: AppCompatActivity() {
                     e ->
                 callback(false)
             }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        listener.remove()
     }
 
 }

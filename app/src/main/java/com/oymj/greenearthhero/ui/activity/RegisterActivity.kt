@@ -12,8 +12,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FormUtils
 import kotlinx.android.synthetic.main.activity_register.*
 
@@ -52,6 +54,8 @@ class RegisterActivity : AppCompatActivity() {
         var phone: String = inputPhone.text.toString()
         var dateOfBirth: String = inputBirthDate.text.toString()
 
+        var loadingDialog = LoadingDialog(this)
+        loadingDialog.show()
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this){
                 task->
@@ -70,14 +74,29 @@ class RegisterActivity : AppCompatActivity() {
                     FirebaseFirestore.getInstance().collection("Users").document(user?.uid!!)
                         .set(userData)
                         .addOnSuccessListener {
+                            loadingDialog.dismiss()
+                            //update the device token to firebase so we can send notification later
+                            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                                    innerTask->
+                                var token = innerTask.token
+                                var db = FirebaseFirestore.getInstance()
+                                db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid!!).update(mapOf(
+                                    "cloudMessagingId" to token
+                                ))
+                            }
+
                             var intent = Intent(this@RegisterActivity,MenuActivity::class.java)
                             startActivity(intent)
                         }
                         .addOnFailureListener {
                                 e -> Log.d("error", "Error writing document", e) }
                 }else{
+                    loadingDialog.dismiss()
                     if(task.exception is FirebaseAuthUserCollisionException){
                         var errorDialog = ErrorDialog(this,"Email already in use","Please try another Email")
+                        errorDialog.show()
+                    }else{
+                        var errorDialog = ErrorDialog(this,"Error","We have encountered error when connecting to firebase!")
                         errorDialog.show()
                     }
                     Log.d("error",task.exception!!.toString())

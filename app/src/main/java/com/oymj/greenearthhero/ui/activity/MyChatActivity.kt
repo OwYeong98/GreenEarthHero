@@ -7,15 +7,20 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.view.inputmethod.EditorInfo
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.data.ChatRoom
@@ -30,6 +35,7 @@ class MyChatActivity : AppCompatActivity() {
 
     private var chatRoomList = ArrayList<Any>()
     private lateinit var recyclerViewAdapter: UniversalAdapter
+    private lateinit var listener: ListenerRegistration
     private var myOnClickListener = object: View.OnClickListener {
         override fun onClick(v: View?) {
             when (v) {
@@ -42,12 +48,13 @@ class MyChatActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 btnSearch->{
-
+                    getChatRoomFromFirebase()
                 }
 
             }
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_chat)
@@ -60,10 +67,19 @@ class MyChatActivity : AppCompatActivity() {
         setupRecyclerView()
         linkAllButtonWithOnClickListener()
 
-        getChatRoomFromFirebase()
+        listenToNewChatRoomListFromFirebase()
 
         swipeLayout.setOnRefreshListener {
             getChatRoomFromFirebase()
+        }
+
+        tvSearch.setOnEditorActionListener { v, actionId, event ->
+            var handled=false
+            if(actionId == EditorInfo.IME_ACTION_SEND){
+                handled = true
+                getChatRoomFromFirebase()
+            }
+            handled
         }
 
 
@@ -77,19 +93,43 @@ class MyChatActivity : AppCompatActivity() {
             20f,0)
     }
 
+
+    fun listenToNewChatRoomListFromFirebase(){
+        var db = FirebaseFirestore.getInstance()
+
+        listener = db.collection("Chat_Room").whereArrayContains("chatUsers",FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!).addSnapshotListener{
+                snapshot,e->
+            if (e != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null ) {
+                getChatRoomFromFirebase()
+            }
+        }
+    }
+
     fun getChatRoomFromFirebase(){
         GlobalScope.launch {
             chatRoomList.clear()
-            recyclerViewAdapter.startSkeletalLoading(6,UniversalAdapter.SKELETAL_TYPE_4)
+            runOnUiThread{
+                recyclerViewAdapter.startSkeletalLoading(6,UniversalAdapter.SKELETAL_TYPE_4)
+            }
 
-            ChatRoom.getChatRoomListByUserId(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@MyChatActivity)!!,callback = {
+            ChatRoom.getChatRoomListByUserIdWithoutMessages(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@MyChatActivity)!!,callback = {
                     success,message,data->
 
                 if(success){
                     recyclerViewAdapter.stopSkeletalLoading()
                     swipeLayout.isRefreshing = false
 
-                    chatRoomList.addAll(data!!)
+                    for(chatRoom in data!!){
+                        if(chatRoom.chatUser1.getFullName().toLowerCase().trim().contains(tvSearch.text.toString().toLowerCase().trim())||
+                            chatRoom.chatUser2.getFullName().toLowerCase().trim().contains(tvSearch.text.toString().toLowerCase().trim())){
+                            chatRoomList.add(chatRoom)
+                        }
+                    }
+
                     runOnUiThread{
                         recyclerViewAdapter.notifyDataSetChanged()
                     }

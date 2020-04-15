@@ -5,6 +5,7 @@
     android:layout_height="wrap_content">
 
     <Space
+        android:id="@+id/leftSpace"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:minWidth="20dp"
@@ -22,7 +23,6 @@
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
             android:padding="10dp"
             android:textColor="@color/white"
             android:fontFamily="@font/montserrat"
@@ -32,10 +32,18 @@
 
         <TextView
             android:id="@+id/tvDate"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="23/09/1998 12:12:12"/>
 
     </LinearLayout>
+
+    <Space
+        android:id="@+id/rightSpace"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:minWidth="20dp"
+        android:layout_weight="1"/>
 
 </LinearLayout>
