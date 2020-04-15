@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
                     ))
                 }
 
-                User.getSpecificUserFromFirebase(FirebaseAuth.getInstance().uid!!,callback = {
+                User.getSpecificUserFromFirebase(task.getResult()?.user?.uid!!,callback = {
                     success,message,data->
                     if(success){
                         FirebaseUtil.currentUserDetail = data!!

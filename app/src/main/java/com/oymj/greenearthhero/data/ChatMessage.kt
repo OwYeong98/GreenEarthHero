@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import java.io.Serializable
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.security.auth.callback.Callback
 
@@ -25,11 +26,11 @@ class ChatMessage(
 
                     for(chat in chatSnapshot){
                         var id = chat.id
-                        var dateSent = chat.getString("dateSent")
+                        var dateSent = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chat.getString("dateSent"))
                         var message = chat.getString("message")
                         var userSend = chat.getString("userSend")
 
-                        var newMessage = ChatMessage(id,Date(),userSend!!,message!!)
+                        var newMessage = ChatMessage(id,dateSent,userSend!!,message!!)
 
                         messageList.add(newMessage)
                     }
@@ -52,11 +53,11 @@ class ChatMessage(
             var messageList = ArrayList<ChatMessage>()
             for(chat in chatList){
                 var id = chat.id
-                var dateSent = chat.getString("dateSent")
+                var dateSent = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chat.getString("dateSent"))
                 var message = chat.getString("message")
                 var userSend = chat.getString("userSend")
 
-                var newMessage = ChatMessage(id,Date(),userSend!!,message!!)
+                var newMessage = ChatMessage(id,dateSent,userSend!!,message!!)
 
                 messageList.add(newMessage)
             }

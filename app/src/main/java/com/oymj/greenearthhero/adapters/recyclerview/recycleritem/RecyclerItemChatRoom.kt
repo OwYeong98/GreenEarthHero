@@ -35,18 +35,17 @@ class RecyclerItemChatRoom : UniversalRecyclerItem(ChatRoom::class.java.simpleNa
                     tvUserName.text = data.chatUser2.getFullName()
                     opponentUser = data.chatUser2
                 }else{
-                    tvUserName.text = data.chatUser2.getFullName()
+                    tvUserName.text = data.chatUser1.getFullName()
                     opponentUser = data.chatUser1
                 }
 
 
-                if(data.messagesList.size != 0){
-                    var message = data.messagesList.get(data.messagesList.size-1)
+                if(data.lastMessageSendBy != ""){
 
-                    if(message.userSend ==  FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(view.context)){
-                        tvMessage.text = "You: ${message.message}"
+                    if(data.lastMessageSendBy ==  FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(view.context)){
+                        tvMessage.text = "You: ${data.lastMessage}"
                     }else{
-                        tvMessage.text = "Him: ${message.message}"
+                        tvMessage.text = "Him: ${data.lastMessage}"
                     }
 
                 }else{

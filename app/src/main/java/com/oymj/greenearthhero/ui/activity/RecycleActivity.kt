@@ -389,6 +389,7 @@ class RecycleActivity : AppCompatActivity() {
             if(totalAmount > 0){
 
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                dateFormat.timeZone = TimeZone.getTimeZone("GMT+8:00")
                 val currentDateTime: String = dateFormat.format(Date()) // Find todays date
 
 

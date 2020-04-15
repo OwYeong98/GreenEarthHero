@@ -15,12 +15,14 @@ class ChatRoom(
     var id: String,
     var chatUser1:User,
     var chatUser2:User,
-    var messagesList:ArrayList<ChatMessage>
+    var messagesList:ArrayList<ChatMessage>,
+    var lastMessage: String,
+    var lastMessageSendBy: String
 ):Serializable {
 
     companion object{
 
-        fun getChatRoomListByUserId(userId:String,callback:(Boolean,String?,ArrayList<ChatRoom>?)->Unit){
+        fun getChatRoomListByUserIdWithoutMessages(userId:String,callback:(Boolean,String?,ArrayList<ChatRoom>?)->Unit){
             var chatRoomList = ArrayList<ChatRoom>()
             FirebaseFirestore.getInstance().collection("Chat_Room").whereArrayContains("chatUsers",userId).get()
                 .addOnSuccessListener {
@@ -28,14 +30,16 @@ class ChatRoom(
                     GlobalScope.launch {
                         for(chatRoom in chatRoomSnapshot!!){
                             var id = chatRoom.id
+                            var lastMessage = chatRoom.getString("lastMessage")?:""
+                            var lastMessageSendBy = chatRoom.getString("lastMessageSendBy")?:""
                             var  userList = ArrayList<String>()
                             userList = chatRoom.get("chatUsers") as ArrayList<String>
 
                             var user1 = User.suspendGetSpecificUserFromFirebase(userList.get(0))
                             var user2 = User.suspendGetSpecificUserFromFirebase(userList.get(1))
 
-                            var messagesList = ChatMessage.suspendGetChatList(id)
-                            var newChatRoom = ChatRoom(id,user1!!,user2!!,messagesList)
+                            var messagesList = ArrayList<ChatMessage>()
+                            var newChatRoom = ChatRoom(id,user1!!,user2!!,messagesList,lastMessage!!,lastMessageSendBy!!)
 
                             chatRoomList.add(newChatRoom)
                         }

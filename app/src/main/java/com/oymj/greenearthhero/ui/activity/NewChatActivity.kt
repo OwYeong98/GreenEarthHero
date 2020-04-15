@@ -57,7 +57,7 @@ class NewChatActivity : AppCompatActivity(){
 
 
         User.getUserListFromFirebase { success, message, userList ->
-            ChatRoom.getChatRoomListByUserId(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = { innersuccess, message, currentUserChatRoomList ->
+            ChatRoom.getChatRoomListByUserIdWithoutMessages(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = { innersuccess, message, currentUserChatRoomList ->
                 GlobalScope.launch {
                     if (success && innersuccess) {
                         recyclerViewAdapter.stopSkeletalLoading()
@@ -71,15 +71,19 @@ class NewChatActivity : AppCompatActivity(){
                                 var user2 = user!!
 
                                 var id = "-1"
+                                var lastMessage = ""
+                                var lastMessageSendBy = ""
                                 var messageList = ArrayList<ChatMessage>()
                                 for (room in currentUserChatRoomList!!) {
                                     if (room.chatUser1.userId == user.userId || room.chatUser2.userId == user.userId) {
                                         id = room.id
+                                        lastMessage = room.lastMessage
+                                        lastMessageSendBy = room.lastMessageSendBy
                                         messageList.addAll(room.messagesList)
                                     }
                                 }
 
-                                var chatRoom = ChatRoom(id, user1!!, user2!!, messageList)
+                                var chatRoom = ChatRoom(id, user1!!, user2!!, messageList,lastMessage,lastMessageSendBy)
                                 chatRoomList.add(chatRoom)
                             }
                         }
