@@ -68,7 +68,11 @@ class MenuActivity : AppCompatActivity() {
 
                 }
                 menu_food_donation_icon -> {
-
+                    if(!isFromLogin){
+                        finish()
+                    }
+                    var intent = Intent(this@MenuActivity, FoodDonationActivity::class.java)
+                    startActivity(intent)
                 }
                 menu_good_selling_icon -> {
 
