@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
+        android:id="@+id/mapWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.activity.FoodDonationActivity"
+            android:id="@+id/googleMapFragmentView"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+    </com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/food_action_button_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="260dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/guideline10">
+
+            <TextView
+                android:id="@+id/btnMyRequest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dark_gray_rounded_corner_bg"
+                android:fontFamily="@font/montserrat_regular"
+                android:padding="15dp"
+                android:text="My Request"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/btnFoodCollection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/dark_gray_rounded_corner_bg"
+                android:fontFamily="@font/montserrat_regular"
+                android:padding="15dp"
+                android:text="Volunteer Collection"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <!-- Floating Action Button has a normal size of 56x56 dp-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:id="@+id/btnRecenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/darkgrey"
+            android:elevation="6dp"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/my_location_icon"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:layout_constraintRight_toLeftOf="@id/guideline11"
+            app:layout_constraintBottom_toBottomOf="@id/food_action_button_wrapper"
+            app:tint="@color/white" />
+
+
+        <!-- Floating Action Button has a normal size of 56x56 dp-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:id="@+id/btnMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:elevation="6dp"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/menu_icon"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:layout_constraintLeft_toRightOf="@id/guideline10"
+            app:layout_constraintTop_toBottomOf="@id/guideline17"
+            app:tint="@color/darkgrey" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="16dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/location_select_panel"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/location_search_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/location_search_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:maxLines="1"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
+                android:textColor="@color/darkgrey"
+                android:hint="Search Here"
+                android:textColorHint="@color/lightgrey"
+                android:textAlignment="textStart"
+                android:padding="10dp"
+                android:paddingStart="50dp"
+                android:background="@drawable/darkgrey_border"
+                app:layout_constraintTop_toTopOf="parent"
+                android:imeOptions="actionSend"
+                android:inputType="text"/>
+            <ImageView
+                android:id="@+id/location_search_back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_icon"
+                android:adjustViewBounds="true"
+                android:padding="5dp"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toTopOf="@id/location_search_edittext"
+                app:layout_constraintBottom_toBottomOf="@id/location_search_edittext"
+                app:layout_constraintLeft_toLeftOf="@id/location_search_edittext"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:id="@+id/location_search_result_section"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/location_search_section"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/food_donation_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:background="@drawable/white_rounded_corner_bg_with_shadow"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        android:focusable="true">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/food_donation_bottom_sheet_collapse_view"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <TextView
+                android:id="@+id/tvFoodDonation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food Donation"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/darkgrey"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Don't Waste it, Share it"
+                android:fontFamily="@font/couriernew"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvFoodDonation" />
+
+            <TextView
+                android:id="@+id/tvDonateDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@color/darkgrey"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:text="Restaurant owner can share unsold food to\nthe community instead of  disposing eatable\nfood to dustbin, for those people who need it."
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+            <TextView
+                android:id="@+id/btnDonateNow"
+                android:layout_width="175dp"
+                android:layout_height="41dp"
+                android:text="Donate Now"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/montserrat"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:background="@drawable/green_gradient_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvDonateDescription" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
