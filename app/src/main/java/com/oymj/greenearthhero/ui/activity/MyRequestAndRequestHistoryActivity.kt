@@ -36,7 +36,6 @@ class MyRequestAndRequestHistoryActivity : AppCompatActivity()  {
     }
 
     private fun setupViewPagerAndTabLayout(){
-
         myViewPager.adapter = MyRequestAndRequestHistoryViewPagerAdapter(this,supportFragmentManager)
         tabLayout.setupWithViewPager(myViewPager)
     }

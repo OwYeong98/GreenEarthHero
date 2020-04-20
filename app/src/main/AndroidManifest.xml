@@ -72,6 +72,7 @@
         <activity android:name=".ui.activity.FoodDonationActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.activity.AddFoodDonationActivity" />
+        <activity android:name=".ui.activity.AddDonationLocationActivity" />
     </application>
 
 </manifest>

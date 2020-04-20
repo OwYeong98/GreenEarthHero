@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="40dp"
+            android:gravity="center_vertical"
+            android:elevation="2dp"
+            android:background="@color/lightestgreen"
+            android:textSize="17sp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="@color/darkgrey"
+            android:text="Add Donation Location" />
+
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="-50dp"
+            android:elevation="2dp"
+            android:outlineProvider="none"
+            android:backgroundTint="@color/transparent"
+            android:src="@drawable/ic_delete" />
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Donate Location Name"
+            android:textColor="@color/darkgrey"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/inputDonateLocationName"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/white"
+            android:background="@color/inputContainerGrey"
+            android:paddingLeft="10dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Name"
+            android:textColorHint="@color/white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Donate Location Address"
+            android:textColor="@color/darkgrey"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/inputDonateLocationAddress"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/white"
+            android:ems="10"
+            android:background="@color/inputContainerGrey"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="10dp"
+            android:elevation="10dp"
+            android:outlineProvider="none"
+            android:text="Pin The Location In Map"
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="16sp"/>
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="-30dp"
+            android:layout_weight="1"
+            tools:context=".ui.activity.AddDonationLocationActivity"
+            android:id="@+id/googleMapFragmentView"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:id="@+id/btnRecenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-70dp"
+            android:layout_marginLeft="20dp"
+            android:backgroundTint="@color/darkgrey"
+            android:elevation="6dp"
+            android:clickable="true"
+            android:scaleType="center"
+            android:src="@drawable/my_location_icon"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:layout_constraintRight_toLeftOf="@id/guideline11"
+            app:layout_constraintBottom_toBottomOf="@id/recycle_action_button_wrapper"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/btnAdd"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Add"
+            android:layout_weight="8"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/mapboxGreen"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="14sp"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"/>
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_weight="8"
+            android:layout_marginLeft="10dp"
+            android:text="Cancel"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/darkgrey"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="14sp"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
+
+
+
+
+
+</LinearLayout>

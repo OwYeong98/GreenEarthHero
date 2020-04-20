@@ -13,7 +13,8 @@
     <color name="lightgrey">#7A7C79</color>
     <color name="darkgrey">#515151</color>
     <color name="lightestgrey">#F7F7F7</color>
+    <color name="inputContainerGrey">#686868</color>
     <color name="mapboxGreen">#1B7713</color>
-    <color name="transparent">#00FFFFFF</color>
+    <color name="transparent">#00000000</color>
     <color name="transparent_pressed">#c4c2bc</color>
 </resources>
