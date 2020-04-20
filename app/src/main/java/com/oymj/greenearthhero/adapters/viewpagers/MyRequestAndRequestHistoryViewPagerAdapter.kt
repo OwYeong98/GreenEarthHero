@@ -14,7 +14,6 @@ class MyRequestAndRequestHistoryViewPagerAdapter(var context: Context, fm:Fragme
         return 2
     }
 
-
     override fun getItem(position: Int): Fragment {
         var fragment: Fragment? = null
 
@@ -29,7 +28,6 @@ class MyRequestAndRequestHistoryViewPagerAdapter(var context: Context, fm:Fragme
 
         return fragment!!
     }
-
 
     override fun getPageTitle(position: Int): CharSequence? {
         var title:String? = null
