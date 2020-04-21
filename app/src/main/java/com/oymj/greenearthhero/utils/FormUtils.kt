@@ -1,5 +1,6 @@
 package com.oymj.greenearthhero.utils
 
+import java.lang.Exception
 import java.util.regex.Pattern
 
 object FormUtils {
@@ -27,7 +28,7 @@ object FormUtils {
     fun isOnlyAlphabet(name:String,input:String): String?{
         var error:String? = null
 
-        var onlyAlphabetRegex = Regex("/^[A-Za-z]+\$/")
+        var onlyAlphabetRegex = Regex("^[A-Za-z ]+\$")
         if(!onlyAlphabetRegex.matches(input)){
             error = "$name can only contain alphabet character"
             return error
@@ -67,6 +68,43 @@ object FormUtils {
         }
     }
 
+    fun isNumberBetween(name:String,input:String,min:Int?,max:Int?): String?{
+        var error:String? = null
 
+        if(min ==null && max == null){
+            throw FormUtilIsNumberBetweenMustHaveMinOrMaxException()
+        }
+        try{
+            var number = input.toInt()
+
+            var smallerThanMin=false
+            var largerThanMax=false
+
+            if(min != null && number < min){
+                smallerThanMin = true
+            }
+
+            if(max != null && number > max){
+                largerThanMax = true
+            }
+
+            if(smallerThanMin || largerThanMax){
+                if(min!=null && max!=null){
+                    error= "$name must be a number between $min and $max!"
+                }else if(min!=null && max==null){
+                    error= "$name must be more than $min!"
+                }else if(min==null && max!=null){
+                    error= "$name must be less than $max!"
+                }
+            }else{
+                error= ""
+            }
+        }catch (e:Exception){
+            error= "$name must be a number!"
+        }
+        return error
+    }
 
 }
+
+class FormUtilIsNumberBetweenMustHaveMinOrMaxException:Exception()
