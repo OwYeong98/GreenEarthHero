@@ -1,6 +1,7 @@
 package com.oymj.greenearthhero.ui.dialog
 
 import android.app.Dialog
+import android.content.ComponentCallbacks
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,7 +13,7 @@ import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.dialog_success_error.*
 
-class SuccessDialog(context: Context, var title:String, var desc:String) : Dialog(context) {
+class SuccessDialog(context: Context, var title:String, var desc:String, var callback: ()->Unit = {}) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +44,7 @@ class SuccessDialog(context: Context, var title:String, var desc:String) : Dialo
         )
         btnAction.setOnClickListener{
             this.dismiss()
+            callback()
         }
 
     }

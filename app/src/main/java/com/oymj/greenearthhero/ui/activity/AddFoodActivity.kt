@@ -8,11 +8,14 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FormUtils
 import com.oymj.greenearthhero.utils.ImageStorageManager
 import com.oymj.greenearthhero.utils.RippleUtil
@@ -46,18 +49,21 @@ class AddFoodActivity : AppCompatActivity() {
 
 
                             var filename= "tempfoodimage.png"
-                            ImageStorageManager.saveImgToInternalStorage(this@AddFoodActivity,foodImage,filename)
 
+                            var loadingDialog = LoadingDialog(this@AddFoodActivity)
+                            loadingDialog.show()
+                            ImageStorageManager.saveImgToInternalStorage(this@AddFoodActivity,foodImage,filename,callback = {
+                                absolutePath ->
+                                loadingDialog.dismiss()
 
-                            var intent = Intent()
-                            intent.putExtra("name",name)
-                            intent.putExtra("desc",desc)
-                            intent.putExtra("quantity",quantity)
-                            intent.putExtra("foodImageUrl",filename)
-                            setResult(AddFoodDonationActivity.ADD_FOOD_REQUEST_CODE,intent)
-                            finish()
-
-
+                                var intent = Intent()
+                                intent.putExtra("name",name)
+                                intent.putExtra("desc",desc)
+                                intent.putExtra("quantity",quantity)
+                                intent.putExtra("foodImageUrl",filename)
+                                setResult(Activity.RESULT_OK,intent)
+                                finish()
+                            })
                         }
                     }
                 }
@@ -91,6 +97,28 @@ class AddFoodActivity : AppCompatActivity() {
 
         setupUI()
         linkAllButtonWithOnClickListener()
+
+        if(intent.getStringExtra("name") != null){
+            var foodName = intent.getStringExtra("name")!!
+            var foodDesc = intent.getStringExtra("desc")!!
+            var foodQty = intent.getStringExtra("quantity")!!.toInt()
+            var foodImageFileName = intent.getStringExtra("foodImageUrl")
+
+            var foodImage = ImageStorageManager.getImgFromInternalStorage(this,foodImageFileName)
+            setEditFoodPreviousData(foodName,foodDesc,foodQty,foodImage!!)
+
+        }
+    }
+
+    fun setEditFoodPreviousData(name:String,desc:String,quantity:Int,imageBitmap: Bitmap){
+        btnAdd.text = "Edit"
+        inputFoodName.setText(name)
+        inputFoodDesc.setText(desc)
+        inputFoodQuantity.setText(quantity.toString())
+        imageSelectedContainer.visibility = View.VISIBLE
+        imageSelectedContainer.setImageBitmap(imageBitmap)
+        isImageSelected=true
+
     }
 
     fun setupUI(){
