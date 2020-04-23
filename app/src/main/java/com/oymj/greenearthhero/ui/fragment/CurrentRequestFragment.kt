@@ -14,9 +14,13 @@ import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemMyRequest
 import com.oymj.greenearthhero.data.RecycleRequest
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.LoadingDialog
+import com.oymj.greenearthhero.ui.dialog.SuccessDialog
+import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import kotlinx.android.synthetic.main.activity_my_request_and_request_history.*
 import kotlinx.android.synthetic.main.fragment_current_request.*
+import java.lang.Error
 
 class CurrentRequestFragment : Fragment() {
 
@@ -46,6 +50,17 @@ class CurrentRequestFragment : Fragment() {
             override fun onItemClickedListener(data: Any, clickType:Int) {
                 if(data is RecycleRequest){
 
+                    if(clickType == 1){
+                        //cancel request
+                        var confirmDialog = YesOrNoDialog(context!!,"Are you sure you want to delete this request?",callback = {
+                            isYes->
+
+                            if(isYes)
+                                deleteRequestFromFirebase(data)
+
+                        })
+                        confirmDialog.show()
+                    }
                 }
             }
 
@@ -136,7 +151,25 @@ class CurrentRequestFragment : Fragment() {
             }
 
         }
+    }
 
+    fun deleteRequestFromFirebase(request:RecycleRequest){
+
+        var loadingDialog = LoadingDialog(context!!)
+        loadingDialog.show()
+        FirebaseFirestore.getInstance().collection("Recycle_Request").document(request.id).delete()
+            .addOnSuccessListener {
+                loadingDialog.dismiss()
+
+                var successDialog = SuccessDialog(context!!,"Successfully deleted","Your request is removed successfully!")
+                successDialog.show()
+            }
+            .addOnFailureListener {
+                loadingDialog.dismiss()
+
+                var errorDialog = ErrorDialog(context!!,"Error Occured when connecting to firebase","We ve encountered some error when connecting to firebase. Please check your internet connection!")
+                errorDialog.show()
+            }
 
     }
 

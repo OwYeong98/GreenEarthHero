@@ -370,7 +370,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
                 tvMetalAmount.text = "${recycleRequest.metalWeight} KG"
                 tvGlassAmount.text = "${recycleRequest.glassWeight} KG"
                 tvPlasticAmount.text = "${recycleRequest.plasticWeight} KG"
-                tvDistanceAway.text = "10 KG"
+                tvDistanceAway.text = String.format("%.2f",recycleRequest.getDistanceBetween()/1000)
                 tvTotal.text = "${recycleRequest.getTotalAmount()} KG"
 
                 //if this request is request by the current logged in user

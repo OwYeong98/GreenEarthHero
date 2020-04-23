@@ -94,6 +94,7 @@ class RecyclerItemMyRequest : UniversalRecyclerItem(RecycleRequest::class.java.s
                 btnChat.setOnClickListener{
                     adapter.onItemClickedListener(data,2)
                 }
+
             }
         }
     }
