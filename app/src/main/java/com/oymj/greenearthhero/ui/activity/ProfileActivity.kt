@@ -26,6 +26,7 @@ import com.oymj.greenearthhero.utils.FormUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_menu.*
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.listitem_chat_room.*
 import java.text.SimpleDateFormat
 
 class ProfileActivity : AppCompatActivity(){

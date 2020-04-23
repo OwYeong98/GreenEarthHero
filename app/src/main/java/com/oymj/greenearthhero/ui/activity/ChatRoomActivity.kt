@@ -1,5 +1,6 @@
 package com.oymj.greenearthhero.ui.activity
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Message
@@ -47,7 +48,35 @@ class ChatRoomActivity: AppCompatActivity() {
                             }
                         })
                     }
+                }
+                tvTitle->{
+                    var intent= Intent(this@ChatRoomActivity,ProfileActivity::class.java)
+                    var opponentUserId:String? = null
 
+                    //check which user is the one that we are chatting with
+                    if(chatRoomDetail.chatUser1.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@ChatRoomActivity)){
+                        opponentUserId = chatRoomDetail.chatUser2.userId
+                    }else{
+                        opponentUserId = chatRoomDetail.chatUser1.userId
+                    }
+
+                    intent.putExtra("userId",opponentUserId)
+                    startActivity(intent)
+
+                }
+                ivProfileIcon->{
+                    var intent= Intent(this@ChatRoomActivity,ProfileActivity::class.java)
+                    var opponentUserId:String? = null
+
+                    //check which user is the one that we are chatting with
+                    if(chatRoomDetail.chatUser1.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@ChatRoomActivity)){
+                        opponentUserId = chatRoomDetail.chatUser2.userId
+                    }else{
+                        opponentUserId = chatRoomDetail.chatUser1.userId
+                    }
+
+                    intent.putExtra("userId",opponentUserId)
+                    startActivity(intent)
                 }
             }
         }
@@ -144,7 +173,9 @@ class ChatRoomActivity: AppCompatActivity() {
         //all button with onClick listener should be registered in this list
         val actionButtonViewList = listOf(
             btnSend,
-            btnBack
+            btnBack,
+            tvTitle,
+            ivProfileIcon
         )
 
         for (view in actionButtonViewList) {
