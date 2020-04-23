@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
             getStartedButton.setOnClickListener{
                 if(isAllPermissionGranted()) {
+                    LocationUtils.startConstantUpdateLocation(this)
                     var intent = Intent(this, RegisterActivity::class.java)
                     startActivity(intent)
                 }
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
             loginButton.setOnClickListener{
                 if(isAllPermissionGranted()){
+                    LocationUtils.startConstantUpdateLocation(this)
                     var intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                 }

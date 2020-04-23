@@ -23,38 +23,40 @@ object LocationUtils{
     }
 
     fun startConstantUpdateLocation(context: Context){
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
-        locRequest = LocationRequest()
-        locRequest.interval = 50000
-        locRequest.fastestInterval = 50000
-        locRequest.smallestDisplacement = 170f // 170 m = 0.1 mile
-        locRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY //set according to your app function
+        if(!::locCallback.isInitialized){
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
+            locRequest = LocationRequest()
+            locRequest.interval = 50000
+            locRequest.fastestInterval = 50000
+            locRequest.smallestDisplacement = 170f // 170 m = 0.1 mile
+            locRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY //set according to your app function
 
-        locCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-                Log.d("location", "location updated")
-                if (locationResult.locations.isNotEmpty()) {
-                    //current latest location
-                    val location = locationResult.lastLocation
+            locCallback = object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult?) {
+                    locationResult ?: return
+                    Log.d("location", "location updated")
+                    if (locationResult.locations.isNotEmpty()) {
+                        //current latest location
+                        val location = locationResult.lastLocation
 
-                    Log.d("location", "new location-> lat: ${location.latitude} | long: ${location.longitude}")
-                    //update lastKnownLocation
-                    lastKnownLocation = location
+                        Log.d("location", "new location-> lat: ${location.latitude} | long: ${location.longitude}")
+                        //update lastKnownLocation
+                        lastKnownLocation = location
 
-                    for(callback in callbackRequestWhenLocationUpdatedList.values){
-                        //update all activity that request callback when location get updated
-                        callback(location)
+                        for(callback in callbackRequestWhenLocationUpdatedList.values){
+                            //update all activity that request callback when location get updated
+                            callback(location)
+                        }
                     }
                 }
             }
-        }
 
-        fusedLocationClient.requestLocationUpdates(
-            locRequest,
-            locCallback,
-            null /* Looper */
-        )
+            fusedLocationClient.requestLocationUpdates(
+                locRequest,
+                locCallback,
+                null /* Looper */
+            )
+        }
     }
 
     // stop location updates

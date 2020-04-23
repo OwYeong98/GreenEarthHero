@@ -229,6 +229,7 @@ class RecycleActivity : AppCompatActivity() {
     private fun setupBottomSheet(){
         myBottomSheetBehavior = BottomSheetBehavior.from(recycle_bottom_sheet)
 
+
         myBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 if (currentBottomSheetState == BottomSheetBehavior.STATE_EXPANDED) {
@@ -734,8 +735,6 @@ class RecycleActivity : AppCompatActivity() {
             }
 
             override fun getInfoWindow(marker: Marker?): View {
-                //hide the listview
-                myBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
                 //update currently viewing marker
                 for(listener in infoButtonListenerList){
