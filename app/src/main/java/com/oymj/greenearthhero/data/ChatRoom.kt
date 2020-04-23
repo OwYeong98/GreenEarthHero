@@ -1,6 +1,7 @@
 package com.oymj.greenearthhero.data
 
 import android.util.Log
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.GlobalScope
@@ -49,6 +50,56 @@ class ChatRoom(
                 }
                 .addOnFailureListener {
                     ex->
+                    callback(false,ex.toString(),null)
+                }
+        }
+
+        fun getSpecificChatRoomProvidingTwoUser(user1Id:String, user2Id:String,callback:(Boolean,String?,ChatRoom?)->Unit){
+            FirebaseFirestore.getInstance().collection("Chat_Room").whereArrayContains("chatUsers",user1Id).get()
+                .addOnSuccessListener {
+                        chatRoomSnapshot->
+                    FirebaseFirestore.getInstance().collection("Chat_Room").whereArrayContains("chatUsers",user2Id).get()
+                        .addOnSuccessListener {
+                            innerChatRoomSnapshot->
+                            GlobalScope.launch {
+                                if(chatRoomSnapshot.size() == 0 && innerChatRoomSnapshot.size() == 0){
+                                    callback(true,null,null)
+                                }else{
+                                    var foundChatRoom:ChatRoom? = null
+                                    for(chatRoom in chatRoomSnapshot){
+                                        for(innerChatRoom in innerChatRoomSnapshot){
+                                            if(chatRoom.id == innerChatRoom.id){
+
+                                                var id = chatRoom.id
+                                                var lastMessage = chatRoom.getString("lastMessage")?:""
+                                                var lastMessageSendBy = chatRoom.getString("lastMessageSendBy")?:""
+                                                var  userList = ArrayList<String>()
+                                                userList = chatRoom.get("chatUsers") as ArrayList<String>
+
+                                                var user1 = User.suspendGetSpecificUserFromFirebase(userList.get(0))
+                                                var user2 = User.suspendGetSpecificUserFromFirebase(userList.get(1))
+
+                                                var messagesList = ArrayList<ChatMessage>()
+                                                foundChatRoom = ChatRoom(id,user1!!,user2!!,messagesList,lastMessage!!,lastMessageSendBy!!)
+                                                break
+                                            }
+                                        }
+                                        if(foundChatRoom != null)
+                                            break
+                                    }
+
+
+                                    callback(true,null,foundChatRoom)
+                                }
+                            }
+                        }
+                        .addOnFailureListener {
+                            ex->
+                            callback(false,ex.toString(),null)
+                        }
+                }
+                .addOnFailureListener {
+                        ex->
                     callback(false,ex.toString(),null)
                 }
         }

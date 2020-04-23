@@ -366,17 +366,6 @@
                 app:layout_constraintRight_toLeftOf="@id/guideline14"
                 app:layout_constraintWidth_percent="0.5" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/montserrat_regular"
-                android:text="Total Earnings: RM 200"
-                android:textColor="@color/darkgrey"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toTopOf="@id/btnRecycleNow"
-                app:layout_constraintEnd_toEndOf="@id/btnRecycleNow"
-                app:layout_constraintStart_toStartOf="@id/btnRecycleNow" />
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline13"
                 android:layout_width="wrap_content"
@@ -678,19 +667,6 @@
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total Earning:  RM 20"
-                android:textColor="@color/darkgrey"
-                android:textSize="20sp"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="center"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toTopOf="@id/recycle_expanded_closebtn"
-                app:layout_constraintLeft_toRightOf="@id/guideline15"
-                app:layout_constraintRight_toLeftOf="@id/guideline16"
-                android:layout_marginBottom="5dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline15"

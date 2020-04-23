@@ -15,6 +15,7 @@ import com.oymj.greenearthhero.data.ChatMessage
 import com.oymj.greenearthhero.data.ChatRoom
 import com.oymj.greenearthhero.data.User
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_my_chat.*
@@ -57,60 +58,51 @@ class NewChatActivity : AppCompatActivity(){
 
 
         User.getUserListFromFirebase { success, message, userList ->
-            ChatRoom.getChatRoomListByUserIdWithoutMessages(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = { innersuccess, message, currentUserChatRoomList ->
-                GlobalScope.launch {
-                    if (success && innersuccess) {
+            GlobalScope.launch {
+                if (success ) {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    swipeLayout.isRefreshing = false
+
+
+                    for (user in userList!!) {
+                        if (user.userId != FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@NewChatActivity) && user.getFullName().toLowerCase().contains(keyword.toLowerCase())) {
+                            var user1 =
+                                User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().uid!!) //currentlogged in user
+                            var user2 = user!!
+
+                            var id = "-1"
+                            var lastMessage = ""
+                            var lastMessageSendBy = ""
+                            var messageList = ArrayList<ChatMessage>()
+
+                            var chatRoom = ChatRoom(id, user1!!, user2!!, messageList,lastMessage,lastMessageSendBy)
+                            chatRoomList.add(chatRoom)
+                        }
+                    }
+
+                    runOnUiThread {
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }
+
+                } else {
+                    runOnUiThread {
                         recyclerViewAdapter.stopSkeletalLoading()
                         swipeLayout.isRefreshing = false
 
-
-                        for (user in userList!!) {
-                            if (user.userId != FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@NewChatActivity) && user.getFullName().toLowerCase().contains(keyword.toLowerCase())) {
-                                var user1 =
-                                    User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().uid!!) //currentlogged in user
-                                var user2 = user!!
-
-                                var id = "-1"
-                                var lastMessage = ""
-                                var lastMessageSendBy = ""
-                                var messageList = ArrayList<ChatMessage>()
-                                for (room in currentUserChatRoomList!!) {
-                                    if (room.chatUser1.userId == user.userId || room.chatUser2.userId == user.userId) {
-                                        id = room.id
-                                        lastMessage = room.lastMessage
-                                        lastMessageSendBy = room.lastMessageSendBy
-                                        messageList.addAll(room.messagesList)
-                                    }
-                                }
-
-                                var chatRoom = ChatRoom(id, user1!!, user2!!, messageList,lastMessage,lastMessageSendBy)
-                                chatRoomList.add(chatRoom)
-                            }
-                        }
-
-                        runOnUiThread {
-                            recyclerViewAdapter.notifyDataSetChanged()
-                        }
-
-                    } else {
-                        runOnUiThread {
-                            recyclerViewAdapter.stopSkeletalLoading()
-                            swipeLayout.isRefreshing = false
-
-                            var errorDialog = ErrorDialog(
-                                this@NewChatActivity,
-                                "Oops",
-                                "Sorry, We have encountered some error when connecting with Firebase."
-                            )
-                            errorDialog.show()
-                        }
+                        var errorDialog = ErrorDialog(
+                            this@NewChatActivity,
+                            "Oops",
+                            "Sorry, We have encountered some error when connecting with Firebase."
+                        )
+                        errorDialog.show()
                     }
                 }
-            })
+            }
         }
     }
 
     fun setupUI(){
+        tvRecentChat.text = "Search Result"
         tvTitle.text = "New Chat"
         btnNewChat.visibility =  View.GONE
         btnMenu.setImageResource(R.drawable.back_icon)
@@ -151,9 +143,30 @@ class NewChatActivity : AppCompatActivity(){
             }
             override fun onItemClickedListener(data: Any, clickType:Int) {
                 if(data is ChatRoom){
-                    var intent = Intent(this@NewChatActivity,ChatRoomActivity::class.java)
-                    intent.putExtra("chatRoom",data)
-                    startActivity(intent)
+                    var loadingDialog = LoadingDialog(this@NewChatActivity)
+                    loadingDialog.show()
+
+                    ChatRoom.getSpecificChatRoomProvidingTwoUser(data.chatUser1.userId,data.chatUser2.userId,callback = {
+                        success,message,chatRoomRef->
+
+                        if(success){
+                            loadingDialog.dismiss()
+
+                            var intent = Intent(this@NewChatActivity,ChatRoomActivity::class.java)
+
+                            //if chat room found we pass the previous chat room
+                            if(chatRoomRef!=null){
+                                intent.putExtra("chatRoom",chatRoomRef)
+                            }else{
+                                intent.putExtra("chatRoom",data)
+                            }
+
+                            startActivity(intent)
+                        }else{
+
+                        }
+                    })
+
                 }
             }
         }

@@ -33,14 +33,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.googlemap.InfoWindowElementTouchListener
 import com.oymj.greenearthhero.api.ApisImplementation
-import com.oymj.greenearthhero.data.RecycleRequest
-import com.oymj.greenearthhero.data.TomTomPlacesResult
+import com.oymj.greenearthhero.data.*
 import com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
@@ -53,6 +53,8 @@ import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_menu.menu_bg
 import kotlinx.android.synthetic.main.activity_recycle.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,6 +68,7 @@ class RecycleActivity : AppCompatActivity() {
     private var currentPinnedLocation: TomTomPlacesResult? = null
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
     private var isLocationPanelOpened = false
+    private var isLoadingChat = false
 
     private var infoButtonListenerList = ArrayList<InfoWindowElementTouchListener>()
     private lateinit var listener:ListenerRegistration
@@ -412,7 +415,19 @@ class RecycleActivity : AppCompatActivity() {
 
                 FirebaseFirestore.getInstance().collection("Recycle_Request").add(recycleRequestDocument)
                     .addOnSuccessListener {
+                        recyle_glass_edittext.setText("0")
+                        recyle_plastic_edittext.setText("0")
+                        recyle_paper_edittext.setText("0")
+                        recyle_metal_edittext.setText("0")
+                        recycle_metal_info_textview.text = "0 KG"
+                        recycle_glass_info_textview.text = "0 KG"
+                        recycle_plastic_info_textview.text = "0 KG"
+                        recycle_paper_info_textview.text = "0 KG"
+                        currentPinnedLocation=null
+                        recycle_request_location_label.text = "Select A Pick Up Location"
                         loadingDialog.hide()
+
+
 
                         var successDialog = SuccessDialog(this,"Success","You request is made successfully!")
                         successDialog.show()
@@ -690,8 +705,46 @@ class RecycleActivity : AppCompatActivity() {
 
         var chatButtonListener = object: InfoWindowElementTouchListener(btnChat){
             override fun onClickConfirmed(v: View?, marker: Marker?) {
-                Toast.makeText(this@RecycleActivity,"chat button pressed title: ${marker!!.title}",
-                    Toast.LENGTH_SHORT).show()
+                if(!isLoadingChat){
+                    isLoadingChat= true
+
+                    var loadingDialog = LoadingDialog(this@RecycleActivity)
+                    loadingDialog.show()
+
+                    var recycleRequest = marker?.tag as RecycleRequest
+                    var requesterUserId = recycleRequest.requestedUser.userId
+                    Log.d("wtf","user1: ${FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@RecycleActivity)!!} | user2: ${requesterUserId}")
+                    ChatRoom.getSpecificChatRoomProvidingTwoUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@RecycleActivity)!!,requesterUserId, callback = {
+                            success,message,chatRoomRef->
+
+                        GlobalScope.launch {
+                            if(chatRoomRef!=null){
+                                loadingDialog.dismiss()
+                                isLoadingChat= false
+                                //if found we return previous activity
+                                var intent = Intent(this@RecycleActivity,ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoom",chatRoomRef)
+                                startActivity(intent)
+                            }else{
+                                loadingDialog.dismiss()
+                                isLoadingChat= false
+
+                                var user1 = User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().currentUser?.uid!!) //currentlogged in user
+                                var user2 = recycleRequest.requestedUser
+
+                                var id = "-1"
+                                var lastMessage = ""
+                                var lastMessageSendBy = ""
+                                var messageList = ArrayList<ChatMessage>()
+
+                                var newChatRoom = ChatRoom(id, user1!!, user2!!, messageList, lastMessage,lastMessageSendBy)
+                                var intent = Intent(this@RecycleActivity,ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoom",newChatRoom)
+                                startActivity(intent)
+                            }
+                        }
+                    })
+                }
             }
         }
         btnChat.setOnTouchListener(chatButtonListener)

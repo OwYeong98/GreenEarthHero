@@ -172,11 +172,11 @@ class ChatRoomActivity: AppCompatActivity() {
     }
 
     private fun getMessageFromFirebase(){
-        chatList.clear()
         ChatMessage.getChatList(chatRoomDetail.id,callback = {
             success,message,messageList->
 
             if(success){
+                chatList.clear()
                 //sort dateSent by ascending
                 messageList!!.sortByDescending { it.dateSent }
                 chatList.addAll(messageList!!)

@@ -110,9 +110,10 @@
                     android:src="@android:drawable/ic_search_category_default" />
         </LinearLayout>
         <TextView
+            android:id="@+id/tvRecentChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recent"
+            android:text="Recent Chat"
             android:textColor="@color/darkgrey"
             android:fontFamily="@font/montserrat"
             android:textSize="20sp"

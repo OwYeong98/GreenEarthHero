@@ -1,6 +1,7 @@
 package com.oymj.greenearthhero.ui.activity
 
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -20,14 +21,13 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.googlemap.InfoWindowElementTouchListener
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
-import com.oymj.greenearthhero.data.RecycleRequest
-import com.oymj.greenearthhero.data.SkeletalEmptyModel
-import com.oymj.greenearthhero.data.User
+import com.oymj.greenearthhero.data.*
 import com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
@@ -37,6 +37,8 @@ import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_volunteer_collection.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 class VolunteerCollectionActivity : AppCompatActivity(){
@@ -49,6 +51,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
     private var recycleRequestList = ArrayList<Any>()
     private var listOfMarkerInMap = ArrayList<Marker>()
     private lateinit var recyclerViewAdapter: UniversalAdapter
+    private var isLoadingChat = false
 
     //Better control of onClickListener
     //all button action will be registered here
@@ -308,7 +311,46 @@ class VolunteerCollectionActivity : AppCompatActivity(){
 
         var chatButtonListener = object: InfoWindowElementTouchListener(btnChat){
             override fun onClickConfirmed(v: View?, marker: Marker?) {
-                Toast.makeText(this@VolunteerCollectionActivity,"chat button pressed title: ${marker!!.title}",Toast.LENGTH_SHORT).show()
+                if(!isLoadingChat){
+                    isLoadingChat= true
+
+                    var loadingDialog = LoadingDialog(this@VolunteerCollectionActivity)
+                    loadingDialog.show()
+
+                    var recycleRequest = marker?.tag as RecycleRequest
+                    var requesterUserId = recycleRequest.requestedUser.userId
+                    Log.d("wtf","user1: ${FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@VolunteerCollectionActivity)!!} | user2: ${requesterUserId}")
+                    ChatRoom.getSpecificChatRoomProvidingTwoUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@VolunteerCollectionActivity)!!,requesterUserId, callback = {
+                            success,message,chatRoomRef->
+
+                        GlobalScope.launch {
+                            if(chatRoomRef!=null){
+                                loadingDialog.dismiss()
+                                isLoadingChat= false
+                                //if found we return previous activity
+                                var intent = Intent(this@VolunteerCollectionActivity,ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoom",chatRoomRef)
+                                startActivity(intent)
+                            }else{
+                                loadingDialog.dismiss()
+                                isLoadingChat= false
+
+                                var user1 = User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().currentUser?.uid!!) //currentlogged in user
+                                var user2 = recycleRequest.requestedUser
+
+                                var id = "-1"
+                                var lastMessage = ""
+                                var lastMessageSendBy = ""
+                                var messageList = ArrayList<ChatMessage>()
+
+                                var newChatRoom = ChatRoom(id, user1!!, user2!!, messageList, lastMessage,lastMessageSendBy)
+                                var intent = Intent(this@VolunteerCollectionActivity,ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoom",newChatRoom)
+                                startActivity(intent)
+                            }
+                        }
+                    })
+                }
             }
         }
         btnChat.setOnTouchListener(chatButtonListener)
@@ -316,7 +358,7 @@ class VolunteerCollectionActivity : AppCompatActivity(){
 
         var collectButtonListener = object: InfoWindowElementTouchListener(btnCollect){
             override fun onClickConfirmed(v: View?, marker: Marker?) {
-
+                Log.d("wtf","collect button clicked")
                 var confirmationDialog = YesOrNoDialog(this@VolunteerCollectionActivity,"Are you sure you want to collect material from this request?",callback = {
                     isYes->
 
