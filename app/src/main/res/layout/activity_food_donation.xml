@@ -51,7 +51,7 @@
                 android:background="@drawable/dark_gray_rounded_corner_bg"
                 android:fontFamily="@font/montserrat_regular"
                 android:padding="15dp"
-                android:text="Volunteer Collection"
+                android:text="Food Collection"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
         </LinearLayout>

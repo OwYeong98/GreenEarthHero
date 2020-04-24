@@ -24,6 +24,7 @@ object UniversalAdapterRepo {
         registerRecyclerItem(RecyclerItemChatRoom())
         registerRecyclerItem(RecyclerItemChatMessage())
         registerRecyclerItem(RecyclerItemFoodEditable())
+        registerRecyclerItem(RecyclerItemFoodDonation())
     }
 
     fun registerRecyclerItem(recyclerItem: UniversalRecyclerItem){

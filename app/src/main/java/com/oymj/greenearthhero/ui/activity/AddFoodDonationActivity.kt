@@ -119,7 +119,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
                         var loadingDialog = LoadingDialog(this@AddFoodDonationActivity)
                         loadingDialog.show()
 
-                        ImageStorageManager.saveImgToInternalStorage(this@AddFoodDonationActivity,data.imageBitmap,filename,callback = {
+                        ImageStorageManager.saveImgToInternalStorage(this@AddFoodDonationActivity,data.imageBitmap!!,filename,callback = {
                             loadingDialog.dismiss()
 
                             startActivityForResult(intent, EDIT_FOOD_REQUEST_CODE)
@@ -268,7 +268,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
 
                     var foodImage = ImageStorageManager.getImgFromInternalStorage(this,foodImageFileName)
 
-                    val newFood = Food(foodName,foodDesc,foodQty,"",foodImage!!)
+                    val newFood = Food("-1",foodName,foodDesc,foodQty,"",foodImage!!)
                     foodList.add(newFood)
                     recyclerViewAdapter.notifyDataSetChanged()
 
@@ -321,7 +321,8 @@ class AddFoodDonationActivity : AppCompatActivity() {
             "datePosted" to dateFormat.format(Date()),
             "donateLocationId" to donateLocationId,
             "donatorUserId" to FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this),
-            "minutesAvailable" to minutesAvailable
+            "minutesAvailable" to minutesAvailable,
+            "totalFoodAmount" to foodList.fold(0,{prev,curr-> prev + (curr as Food).foodQuantity})
         )
 
         var loadingDialog = LoadingDialog(this)
@@ -346,7 +347,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
                         val newRef = storageRef.child(imgPath)
 
                         val baos = ByteArrayOutputStream()
-                        food.imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        food.imageBitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                         val data = baos.toByteArray()
 
                         var uploadTask = newRef.putBytes(data)
@@ -384,14 +385,15 @@ class AddFoodDonationActivity : AppCompatActivity() {
 
                                 }
                         }.addOnFailureListener {
-                            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                            // ...
+                            var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+                            errorDialog.show()
                         }
                     }
                 }
             }
             .addOnFailureListener {
-
+                var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+                errorDialog.show()
             }
 
     }

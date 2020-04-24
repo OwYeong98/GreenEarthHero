@@ -1,6 +1,7 @@
 package com.oymj.greenearthhero.data
 
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import java.io.Serializable
 import java.util.ArrayList
 
@@ -43,7 +44,25 @@ class DonateLocation(
                         ex->
                     callback(true,ex.toString(),null)
                 }
+        }
 
+        suspend fun getDonateLocationById(donationLocationId:String): DonateLocation? {
+            var donateLocationSnapshot = FirebaseFirestore.getInstance().collection("Donate_Location").document(donationLocationId).get().await()
+
+            var id = donateLocationSnapshot.id
+            var name = donateLocationSnapshot.getString("name")
+            var userId = donateLocationSnapshot.getString("userId")
+            var address = donateLocationSnapshot.getString("address")
+            var location = donateLocationSnapshot.getGeoPoint("location")
+
+            var tomTomPosition = TomTomPosition()
+            tomTomPosition.lat = location?.latitude!!
+            tomTomPosition.lon = location?.longitude!!
+
+            var foundDonateLocation = DonateLocation(id,userId!!,name!!,address!!,tomTomPosition)
+
+
+            return foundDonateLocation!!
         }
 
     }
