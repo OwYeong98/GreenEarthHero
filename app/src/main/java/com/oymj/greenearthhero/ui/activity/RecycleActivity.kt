@@ -787,58 +787,72 @@ class RecycleActivity : AppCompatActivity() {
                 return null
             }
 
-            override fun getInfoWindow(marker: Marker?): View {
+            override fun getInfoWindow(marker: Marker?): View? {
 
-                //update currently viewing marker
-                for(listener in infoButtonListenerList){
-                    listener.setMarker(marker!!)
-                }
-                //update currently viewing marker
-                mapWrapper.setMarkerWithInfoWindow(marker!!, customView)
-
-                //set marker data based on request that stored in tag
-                var recycleRequest = marker.tag as RecycleRequest
-                tvRequestingUser.text = recycleRequest.requestedUser.getFullName()
-                tvAddress.text = recycleRequest.address
-                tvPaperAmount.text = "${recycleRequest.paperWeight} KG"
-                tvMetalAmount.text = "${recycleRequest.metalWeight} KG"
-                tvGlassAmount.text = "${recycleRequest.glassWeight} KG"
-                tvPlasticAmount.text = "${recycleRequest.plasticWeight} KG"
-                tvDistanceAway.text = String.format("%.2f",recycleRequest.getDistanceBetween()/1000)
-                tvTotal.text = "${recycleRequest.getTotalAmount()} KG"
-
-                //if this request is request by the current logged in user
-                //hide the Collect button and chat button
-                if(recycleRequest.requestedUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@RecycleActivity)){
-                    btnCollect.visibility = View.INVISIBLE
-                    btnChat.visibility = View.INVISIBLE
-                }else{
-                    btnChat.visibility = View.VISIBLE
-
-                    //if someone accept the request show collecting by who
-                    if(recycleRequest.acceptedCollectUser != null){
-                        tvCollectingBy.text = "Collecting By:\n${recycleRequest.acceptedCollectUser!!.getFullName()}"
-                        tvCollectingBy.visibility = View.VISIBLE
-                        btnCollect.visibility = View.INVISIBLE
-                    }else{
-                        tvCollectingBy.visibility = View.GONE
-                        btnCollect.visibility = View.VISIBLE
+                if(marker?.tag != null) {
+                    //update currently viewing marker
+                    for (listener in infoButtonListenerList) {
+                        listener.setMarker(marker!!)
                     }
-                }
+                    //update currently viewing marker
+                    mapWrapper.setMarkerWithInfoWindow(marker!!, customView)
 
-                if(LocationUtils.getLastKnownLocation() != null){
-                    var userCurrentLoc = LocationUtils.getLastKnownLocation()
-                    var results: FloatArray = FloatArray(2)
-                    Location.distanceBetween(userCurrentLoc?.latitude!!,userCurrentLoc?.longitude!!,
-                        recycleRequest.location.latitude,recycleRequest.location.longitude,results)
-                    tvDistanceAway.text = String.format("%.2f",results[0]/1000)
+                    //set marker data based on request that stored in tag
+                    var recycleRequest = marker.tag as RecycleRequest
+                    tvRequestingUser.text = recycleRequest.requestedUser.getFullName()
+                    tvAddress.text = recycleRequest.address
+                    tvPaperAmount.text = "${recycleRequest.paperWeight} KG"
+                    tvMetalAmount.text = "${recycleRequest.metalWeight} KG"
+                    tvGlassAmount.text = "${recycleRequest.glassWeight} KG"
+                    tvPlasticAmount.text = "${recycleRequest.plasticWeight} KG"
+                    tvDistanceAway.text =
+                        String.format("%.2f", recycleRequest.getDistanceBetween() / 1000)
+                    tvTotal.text = "${recycleRequest.getTotalAmount()} KG"
+
+                    //if this request is request by the current logged in user
+                    //hide the Collect button and chat button
+                    if (recycleRequest.requestedUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(
+                            this@RecycleActivity
+                        )
+                    ) {
+                        btnCollect.visibility = View.INVISIBLE
+                        btnChat.visibility = View.INVISIBLE
+                    } else {
+                        btnChat.visibility = View.VISIBLE
+
+                        //if someone accept the request show collecting by who
+                        if (recycleRequest.acceptedCollectUser != null) {
+                            tvCollectingBy.text =
+                                "Collecting By:\n${recycleRequest.acceptedCollectUser!!.getFullName()}"
+                            tvCollectingBy.visibility = View.VISIBLE
+                            btnCollect.visibility = View.INVISIBLE
+                        } else {
+                            tvCollectingBy.visibility = View.GONE
+                            btnCollect.visibility = View.VISIBLE
+                        }
+                    }
+
+                    if (LocationUtils.getLastKnownLocation() != null) {
+                        var userCurrentLoc = LocationUtils.getLastKnownLocation()
+                        var results: FloatArray = FloatArray(2)
+                        Location.distanceBetween(
+                            userCurrentLoc?.latitude!!,
+                            userCurrentLoc?.longitude!!,
+                            recycleRequest.location.latitude,
+                            recycleRequest.location.longitude,
+                            results
+                        )
+                        tvDistanceAway.text = String.format("%.2f", results[0] / 1000)
+                    } else {
+                        tvDistanceAway.text = "N/A"
+                    }
+
+
+
+                    return customView
                 }else{
-                    tvDistanceAway.text = "N/A"
+                    return null
                 }
-
-
-
-                return customView
             }
         })
     }

@@ -45,6 +45,10 @@ class FoodDonationActivity : AppCompatActivity() {
                 btnDonateNow->{
                     myBottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                 }
+                btnFoodCollection->{
+                    var intent = Intent(this@FoodDonationActivity , FoodCollectionActivity::class.java)
+                    startActivity(intent)
+                }
 
             }
         }
@@ -173,7 +177,8 @@ class FoodDonationActivity : AppCompatActivity() {
         //all button with onClick listener should be registered in this list
         val actionButtonViewList = listOf(
             btnMenu,
-            btnDonateNow
+            btnDonateNow,
+            btnFoodCollection
         )
 
         for (view in actionButtonViewList) {
