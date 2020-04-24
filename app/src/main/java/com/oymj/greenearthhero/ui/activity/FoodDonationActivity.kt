@@ -12,25 +12,49 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.adapters.googlemap.InfoWindowElementTouchListener
+import com.oymj.greenearthhero.data.ChatMessage
+import com.oymj.greenearthhero.data.ChatRoom
+import com.oymj.greenearthhero.data.FoodDonation
+import com.oymj.greenearthhero.data.User
 import com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
+import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.LoadingDialog
+import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_food_donation.*
 import kotlinx.android.synthetic.main.activity_food_donation.mapWrapper
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 class FoodDonationActivity : AppCompatActivity() {
 
     private lateinit var myGoogleMap: GoogleMap
     private lateinit var myBottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
     private var currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
+
+    private var listener:ListenerRegistration? = null
+    private var infoButtonListenerList = ArrayList<InfoWindowElementTouchListener>()
+    private var listOfMarkerInMap = ArrayList<Marker>()
+    private var isLoadingChat = false
 
     //Better control of onClickListener
     //all button action will be registered here
@@ -67,6 +91,81 @@ class FoodDonationActivity : AppCompatActivity() {
         linkAllButtonWithOnClickListener()
         setupGoogleMap()
         setupBottomSheet()
+        listenToFirebaseCollectionChangesAndUpdateUI()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        listenToFirebaseCollectionChangesAndUpdateUI()
+        currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
+        myBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    override fun onPause() {
+        super.onPause()
+        listener?.remove()
+    }
+
+    private fun listenToFirebaseCollectionChangesAndUpdateUI(){
+        var db = FirebaseFirestore.getInstance()
+
+        listener = db.collection("Food_Donation").addSnapshotListener{
+                snapshot,e->
+            if (e != null) {
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null ) {
+                //update the UI
+                getFoodDonationFromFirebase()
+            }
+        }
+    }
+
+    private fun getFoodDonationFromFirebase(){
+        //clear previous data first
+        listOfMarkerInMap.clear()
+
+        FoodDonation.getFoodDonationListWithoutFoodListFromFirebase(callback = {
+                success,message,foodDonationList->
+
+            runOnUiThread {
+
+                if (success) {
+                    //clear existing marker first
+                    myGoogleMap.clear()
+                    //loop each recycle request and add marker in google map
+                    for (foodDonation in foodDonationList!!) {
+                        var markerIcon = 0
+
+                        if (foodDonation.donatorUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)) {
+                            markerIcon = R.drawable.ic_food_donation_marker_blue
+                        } else {
+                            markerIcon = R.drawable.ic_food_donation_marker_green
+                        }
+
+
+                        var marker = myGoogleMap.addMarker(
+                            MarkerOptions()
+                                .position(LatLng(foodDonation.donateLocation.location.lat!!,foodDonation.donateLocation.location.lon!!))
+                                .icon(BitmapDescriptorFactory.fromResource(markerIcon))
+                        )
+
+                        //set the request detail into the tag so we can retrive later
+                        marker.tag = foodDonation
+
+                        listOfMarkerInMap.add(marker)
+                    }
+                } else {
+                    var errorDialog = ErrorDialog(
+                        this,
+                        "Error when getting data from Firebase",
+                        "Contact the developer. Error Code: $message"
+                    )
+                    errorDialog.show()
+                }
+            }
+        })
     }
 
     private fun setupUI(){
@@ -157,15 +256,121 @@ class FoodDonationActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun setupInfoWindow(){
+        var layoutInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
-        myBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
+        var customView = layoutInflater.inflate(R.layout.googlemap_food_donation_infowindow, null)
 
-    fun setupInfoWindow(){
+        var btnCheckDonation = customView.findViewById<TextView>(R.id.btnCheckDonation)
+        var btnChat = customView.findViewById<ImageButton>(R.id.btnChat)
+        var tvRestaurantName = customView.findViewById<TextView>(R.id.tvRestaurantName)
+        var tvAddress = customView.findViewById<TextView>(R.id.tvAddress)
+        var tvDonatorUser = customView.findViewById<TextView>(R.id.tvDonatorUser)
+        var tvTotal = customView.findViewById<TextView>(R.id.tvTotal)
+        var tvDistanceAway = customView.findViewById<TextView>(R.id.tvDistanceAway)
+        var tvTimeLeft = customView.findViewById<TextView>(R.id.tvTimeLeft)
 
+
+        var chatButtonListener = object: InfoWindowElementTouchListener(btnChat){
+            override fun onClickConfirmed(v: View?, marker: Marker?) {
+                if(!isLoadingChat){
+                    isLoadingChat= true
+
+                    var loadingDialog = LoadingDialog(this@FoodDonationActivity)
+                    loadingDialog.show()
+
+                    var foodDonation = marker?.tag as FoodDonation
+                    var requesterUserId = foodDonation.donatorUser.userId
+
+                    ChatRoom.getSpecificChatRoomProvidingTwoUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@FoodDonationActivity)!!,requesterUserId, callback = {
+                            success,message,chatRoomRef->
+
+                        GlobalScope.launch {
+                            if(chatRoomRef!=null){
+                                loadingDialog.dismiss()
+                                isLoadingChat= false
+                                //if found we return previous activity
+                                var intent = Intent(this@FoodDonationActivity,ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoom",chatRoomRef)
+                                startActivity(intent)
+                            }else{
+                                loadingDialog.dismiss()
+                                isLoadingChat= false
+
+                                var user1 = User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().currentUser?.uid!!) //currentlogged in user
+                                var user2 = foodDonation.donatorUser
+
+                                var id = "-1"
+                                var lastMessage = ""
+                                var lastMessageSendBy = ""
+                                var messageList = ArrayList<ChatMessage>()
+
+                                var newChatRoom = ChatRoom(id, user1!!, user2!!, messageList, lastMessage,lastMessageSendBy)
+                                var intent = Intent(this@FoodDonationActivity,ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoom",newChatRoom)
+                                startActivity(intent)
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        btnChat.setOnTouchListener(chatButtonListener)
+        infoButtonListenerList.add(chatButtonListener)
+
+        var checkDonationButtonListener = object: InfoWindowElementTouchListener(btnCheckDonation){
+            override fun onClickConfirmed(v: View?, marker: Marker?) {
+
+
+            }
+        }
+        btnCheckDonation.setOnTouchListener(checkDonationButtonListener)
+        infoButtonListenerList.add(checkDonationButtonListener)
+
+
+
+        myGoogleMap.setInfoWindowAdapter(object: GoogleMap.InfoWindowAdapter{
+            override fun getInfoContents(p0: Marker?): View? {
+                return null
+            }
+
+            override fun getInfoWindow(marker: Marker?): View? {
+                if(marker?.tag != null){
+                    //update currently viewing marker
+                    for(listener in infoButtonListenerList){
+                        listener.setMarker(marker!!)
+                    }
+                    //update currently viewing marker
+                    mapWrapper.setMarkerWithInfoWindow(marker!!, customView)
+
+                    //set marker data based on request that stored in tag
+                    var foodDonation = marker.tag as FoodDonation
+                    tvDonatorUser.text = foodDonation.donatorUser.getFullName()
+                    tvAddress.text = foodDonation.donateLocation.address
+                    tvRestaurantName.text = foodDonation.donateLocation.name
+                    tvTotal.text = "Total Food Quantity: ${foodDonation.totalFoodAmount}"
+
+                    if(LocationUtils.getLastKnownLocation() != null){
+                        tvDistanceAway.text = String.format("%.2f",foodDonation.getDistanceBetween()/1000)
+                    }else{
+                        tvDistanceAway.text = "N/A"
+                    }
+                    var dateformatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+                    tvTimeLeft.text = "Donation End Date:\n ${dateformatter.format(foodDonation.getDonationEndTime())}"
+
+                    if(foodDonation.donatorUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@FoodDonationActivity)){
+                        btnChat.visibility = View.GONE
+                    }else{
+                        btnChat.visibility = View.VISIBLE
+                    }
+
+                    return customView
+                }else{
+                    return null
+                }
+
+            }
+        })
     }
 
     private fun getPixelsFromDp(context: Context, dp: Float): Int{

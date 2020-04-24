@@ -53,13 +53,23 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/tvTotal"
+            android:id="@+id/tvTimeLeft"
             android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvAddress"
             android:layout_alignStart="@+id/tvDonatorUser"
             android:layout_marginStart="1dp"
             android:layout_marginTop="20dp"
+            android:text="Time Left: a"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvTotal"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvTimeLeft"
+            android:layout_alignStart="@+id/tvDonatorUser"
+            android:layout_marginStart="1dp"
             android:text="Total Food Quantity: 10"
             android:textSize="12sp" />
 
