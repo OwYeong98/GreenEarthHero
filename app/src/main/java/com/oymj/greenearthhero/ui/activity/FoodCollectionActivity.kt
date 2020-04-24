@@ -40,6 +40,9 @@ import kotlinx.android.synthetic.main.activity_food_collection.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.timer
 
 class FoodCollectionActivity : AppCompatActivity(){
     private lateinit var myGoogleMap: GoogleMap
@@ -306,6 +309,7 @@ class FoodCollectionActivity : AppCompatActivity(){
         var tvDonatorUser = customView.findViewById<TextView>(R.id.tvDonatorUser)
         var tvTotal = customView.findViewById<TextView>(R.id.tvTotal)
         var tvDistanceAway = customView.findViewById<TextView>(R.id.tvDistanceAway)
+        var tvTimeLeft = customView.findViewById<TextView>(R.id.tvTimeLeft)
 
 
         var chatButtonListener = object: InfoWindowElementTouchListener(btnChat){
@@ -395,7 +399,14 @@ class FoodCollectionActivity : AppCompatActivity(){
                     }else{
                         tvDistanceAway.text = "N/A"
                     }
+                    var dateformatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+                    tvTimeLeft.text = "Donation End Date:\n ${dateformatter.format(foodDonation.getDonationEndTime())}"
 
+                    if(foodDonation.donatorUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@FoodCollectionActivity)){
+                        btnChat.visibility = View.GONE
+                    }else{
+                        btnChat.visibility = View.VISIBLE
+                    }
 
                     return customView
                 }else{

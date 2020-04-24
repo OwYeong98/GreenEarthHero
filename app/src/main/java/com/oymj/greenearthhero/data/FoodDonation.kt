@@ -109,5 +109,13 @@ class FoodDonation(
         }
     }
 
+    fun getDonationEndTime():Date{
+        var calendar = Calendar.getInstance()
+        calendar.time = datePosted
+        calendar.add(Calendar.MINUTE,minutesAvailable)
+
+        return calendar.time
+    }
+
 
 }
