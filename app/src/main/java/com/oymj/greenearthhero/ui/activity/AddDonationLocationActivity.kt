@@ -1,5 +1,6 @@
 package com.oymj.greenearthhero.ui.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -161,7 +162,7 @@ class AddDonationLocationActivity: AppCompatActivity() {
 
                         var intent = Intent()
                         intent.putExtra("id",currentEditingDonateLocation.id)
-                        setResult(2,intent)
+                        setResult(Activity.RESULT_OK,intent)
                         finish()
                     }
                     .addOnFailureListener {
@@ -176,7 +177,7 @@ class AddDonationLocationActivity: AppCompatActivity() {
 
                         var intent = Intent()
                         intent.putExtra("id",doc.id)
-                        setResult(2,intent)
+                        setResult(Activity.RESULT_OK,intent)
                         finish()
                     }
                     .addOnFailureListener {
@@ -195,7 +196,7 @@ class AddDonationLocationActivity: AppCompatActivity() {
                 doc->
 
                 var intent = Intent()
-                setResult(2,intent)
+                setResult(Activity.RESULT_OK,intent)
                 finish()
             }
             .addOnFailureListener {

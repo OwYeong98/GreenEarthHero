@@ -27,6 +27,7 @@ import com.oymj.greenearthhero.data.TomTomPosition
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
+import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.ImageStorageManager
 import com.oymj.greenearthhero.utils.RippleUtil
@@ -78,7 +79,9 @@ class AddFoodDonationActivity : AppCompatActivity() {
                         addDonationRequestToFirebase()
                     }
                 }
-
+                btnCancel->{
+                    finish()
+                }
             }
         }
     }
@@ -128,9 +131,16 @@ class AddFoodDonationActivity : AppCompatActivity() {
 
 
                     }else if(clickType == 2){
-                        //delete item pressed
-                        foodList.remove(data)
-                        recyclerViewAdapter.notifyDataSetChanged()
+                        var confirmationDialog = YesOrNoDialog(this@AddFoodDonationActivity,"Are you sure you want to delete this item? It cannot be undone", callback = {
+                            isYesPressed->
+
+                            if(isYesPressed){
+                                //delete item pressed
+                                foodList.remove(data)
+                                recyclerViewAdapter.notifyDataSetChanged()
+                            }
+                        })
+                        confirmationDialog.show()
                     }
                 }
             }
@@ -169,9 +179,10 @@ class AddFoodDonationActivity : AppCompatActivity() {
                     btnDonateLocationEdit.visibility = View.GONE
 
                     if(donateLocationList.get(position).id == "-1"){
+                        donateLocationSpinner.setSelection(0)
                         //if add new location is selected
                         var intent = Intent(this@AddFoodDonationActivity,AddDonationLocationActivity::class.java)
-                        startActivityForResult(intent,2)
+                        startActivityForResult(intent, ADD_DONATE_LOCATION_REQUEST_CODE)
                     }
 
                 }else{
@@ -256,6 +267,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
         if(resultCode == Activity.RESULT_OK){
             when(requestCode){
                 ADD_DONATE_LOCATION_REQUEST_CODE->{
+                    Log.d("wtf","runned donate location")
                     val donateLocationId = data?.getStringExtra("id")
 
                     getListOfDonateLocationFromFirebase(donateLocationId)
@@ -268,7 +280,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
 
                     var foodImage = ImageStorageManager.getImgFromInternalStorage(this,foodImageFileName)
 
-                    val newFood = Food("-1",foodName,foodDesc,foodQty,"",foodImage!!)
+                    val newFood = Food("-1",foodName,foodDesc,foodQty,0,"",foodImage!!)
                     foodList.add(newFood)
                     recyclerViewAdapter.notifyDataSetChanged()
 
@@ -301,7 +313,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
             tvTitle,
             btnDonateLocationEdit,
             btnAdd,
-            btnDonateNow
+            btnDonateNow,btnCancel
         )
 
         for (view in actionButtonViewList) {
@@ -361,6 +373,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
                                 "foodName" to foodName,
                                 "foodDesc" to foodDesc,
                                 "foodQuantity" to foodQuantity,
+                                "claimedFoodQuantity" to 0,
                                 "imageUrl" to imgPath
                             )
 

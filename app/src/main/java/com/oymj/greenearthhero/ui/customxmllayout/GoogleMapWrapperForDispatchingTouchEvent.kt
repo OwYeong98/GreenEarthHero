@@ -33,7 +33,6 @@ class GoogleMapWrapperForDispatchingTouchEvent : RelativeLayout {
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         var isDispatchSuccessful = false
         if(marker != null && marker?.isInfoWindowShown()?:false && googleMap != null && infoWindow != null){
-            Log.d("gaga","dispatched")
             var pointTouched = googleMap.projection.toScreenLocation(marker!!.position)
 
             var copyEvent = MotionEvent.obtain(ev)

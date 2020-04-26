@@ -58,7 +58,7 @@ class FoodDonation(
             FirebaseFirestore.getInstance().collection("Food_Donation").get()
                 .addOnSuccessListener {
                         foodDonationSnapshot->
-                    DonateLocation.getDonateLocationListOfUser(FirebaseAuth.getInstance().currentUser?.uid!!,callback = {
+                    DonateLocation.getDonateLocationList(callback = {
                         success,message,donateLocationList->
 
                         if(success){
@@ -87,6 +87,36 @@ class FoodDonation(
                         }
                     })
 
+                }
+                .addOnFailureListener {
+                        ex->
+                    callback(false,ex.toString(),null)
+                }
+        }
+
+        fun getFoodDonationDetailByIdFromFirebase(foodDonationId:String, callback: (Boolean,String?,FoodDonation?)->Unit){
+
+            FirebaseFirestore.getInstance().collection("Food_Donation").document(foodDonationId).get()
+                .addOnSuccessListener {
+                        foodDonationSnapshot->
+
+                    GlobalScope.launch {
+                        var id = foodDonationSnapshot.id
+                        var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonationSnapshot.getString("datePosted"))
+                        var donateLocationId = foodDonationSnapshot.getString("donateLocationId")!!
+                        var donateLocation  = DonateLocation.getDonateLocationById(donateLocationId)
+
+                        var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonationSnapshot.getString("donatorUserId")!!)
+                        var minutesAvailable = foodDonationSnapshot.getLong("minutesAvailable")?.toInt()
+                        var totalFoodAmount = foodDonationSnapshot.getLong("totalFoodAmount")!!.toInt()
+
+                        var foodList = ArrayList<Food>()
+
+                        var newFoodDonation = FoodDonation(id,donatorUserRef,datePosted,donateLocation!!,minutesAvailable!!,foodList,totalFoodAmount!!)
+
+
+                        callback(true,null,newFoodDonation)
+                    }
                 }
                 .addOnFailureListener {
                         ex->

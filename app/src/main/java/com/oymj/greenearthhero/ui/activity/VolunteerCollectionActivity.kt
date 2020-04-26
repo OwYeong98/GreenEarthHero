@@ -137,7 +137,6 @@ class VolunteerCollectionActivity : AppCompatActivity(){
                 recyclerViewAdapter.stopSkeletalLoading()
 
                 //add the data retrived from firebase
-                Log.d("gaga","size: ${data!!.size} | after: ${recycleRequestList.size}")
                 recycleRequestList.addAll(data!!)
                 //sort by near to far
                 recycleRequestList.sortBy { obj-> (obj as RecycleRequest).getDistanceBetween() }
