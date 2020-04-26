@@ -79,6 +79,7 @@
         <activity android:name=".ui.activity.AddDonationLocationActivity" />
         <activity android:name=".ui.activity.AddFoodActivity" />
         <activity android:name=".ui.activity.FoodCollectionActivity" />
+        <activity android:name=".ui.activity.FoodDonationDetailActivity" />
     </application>
 
 </manifest>

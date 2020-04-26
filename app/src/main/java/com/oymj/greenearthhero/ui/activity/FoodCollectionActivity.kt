@@ -185,9 +185,6 @@ class FoodCollectionActivity : AppCompatActivity(){
                 }
             }
         })
-
-
-
     }
 
     private fun setupRecyclerView(){
@@ -361,8 +358,14 @@ class FoodCollectionActivity : AppCompatActivity(){
 
         var checkDonationButtonListener = object: InfoWindowElementTouchListener(btnCheckDonation){
             override fun onClickConfirmed(v: View?, marker: Marker?) {
+                if(marker?.tag != null){
+                    var foodDonation = marker?.tag as FoodDonation
 
-
+                    var intent = Intent(this@FoodCollectionActivity,FoodDonationDetailActivity::class.java)
+                    intent.putExtra("foodDonationId",foodDonation.id)
+                    startActivity(intent)
+                    overridePendingTransition(R.anim.slide_up_slow,R.anim.freeze)
+                }
             }
         }
         btnCheckDonation.setOnTouchListener(checkDonationButtonListener)

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/topContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/slightdarkgreen">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRestaurantName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/lightestgreen"
+                android:text="Restaurant John Doe" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ivLocation"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="3dp"
+                    android:tint="@color/white"
+                    android:src="@drawable/location_icon_transparent_center" />
+                <TextView
+                    android:id="@+id/tvAddress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="No 2, Jalan Durian, 57000 Puchong, Selangor,"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ivTime"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:tint="@color/white"
+                    android:src="@drawable/ic_time" />
+                <TextView
+                    android:id="@+id/tvTimeLeft"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:text="3 hours until this donation ends"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Food Offered"
+        android:textColor="@color/darkgrey"
+        android:fontFamily="@font/montserrat_regular"
+        android:textSize="16sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/foodOfferedRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/btnClaim"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/slightdarkgreen"
+        android:fontFamily="@font/montserrat"
+        android:textSize="20sp"
+        android:text="Claim Item"
+        android:textColor="@color/white"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/darkgrey"
+        android:fontFamily="@font/montserrat"
+        android:textSize="20sp"
+        android:text="Back"
+        android:textColor="@color/white"
+        android:gravity="center"/>
+
+
+</LinearLayout>

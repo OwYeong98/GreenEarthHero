@@ -109,6 +109,7 @@
                         android:src="@android:drawable/arrow_up_float" />
 
                     <TextView
+                        android:id="@+id/tvCurrentAmount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"

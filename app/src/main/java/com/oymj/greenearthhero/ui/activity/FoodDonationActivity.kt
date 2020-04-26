@@ -73,6 +73,25 @@ class FoodDonationActivity : AppCompatActivity() {
                     var intent = Intent(this@FoodDonationActivity , FoodCollectionActivity::class.java)
                     startActivity(intent)
                 }
+                btnRecenter -> {
+                    if(LocationUtils?.getLastKnownLocation() != null) {
+                        if(::myGoogleMap != null){
+                            var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
+                            var newCameraPosition = com.google.android.gms.maps.model.CameraPosition.builder()
+                                .target(
+                                    com.google.android.gms.maps.model.LatLng(
+                                        userCurrentLocationLatLng.latitude!!,
+                                        userCurrentLocationLatLng.longitude!!
+                                    )
+                                )
+                                .zoom(15f)
+                                .bearing(90f)
+                                .tilt(0f)
+                                .build()
+                            myGoogleMap.animateCamera(com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(newCameraPosition))
+                        }
+                    }
+                }
 
             }
         }
@@ -320,8 +339,14 @@ class FoodDonationActivity : AppCompatActivity() {
 
         var checkDonationButtonListener = object: InfoWindowElementTouchListener(btnCheckDonation){
             override fun onClickConfirmed(v: View?, marker: Marker?) {
+                if(marker?.tag != null){
+                    var foodDonation = marker?.tag as FoodDonation
 
-
+                    var intent = Intent(this@FoodDonationActivity,FoodDonationDetailActivity::class.java)
+                    intent.putExtra("foodDonationId",foodDonation.id)
+                    startActivity(intent)
+                    overridePendingTransition(R.anim.slide_up_slow,R.anim.freeze)
+                }
             }
         }
         btnCheckDonation.setOnTouchListener(checkDonationButtonListener)
@@ -383,7 +408,8 @@ class FoodDonationActivity : AppCompatActivity() {
         val actionButtonViewList = listOf(
             btnMenu,
             btnDonateNow,
-            btnFoodCollection
+            btnFoodCollection,
+            btnRecenter
         )
 
         for (view in actionButtonViewList) {
