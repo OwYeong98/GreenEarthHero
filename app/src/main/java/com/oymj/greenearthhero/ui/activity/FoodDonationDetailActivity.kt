@@ -1,21 +1,30 @@
 package com.oymj.greenearthhero.ui.activity
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
+import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemClaimFood
+import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemFoodEditable
+import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemFoodEditableAmount
 import com.oymj.greenearthhero.data.ClaimFood
 import com.oymj.greenearthhero.data.Food
 import com.oymj.greenearthhero.data.FoodDonation
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.ExtendsFoodDonationDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
+import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
+import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_food_donation_detail.*
 import java.lang.Exception
 import java.text.DecimalFormat
@@ -34,14 +43,98 @@ class FoodDonationDetailActivity : AppCompatActivity() {
                     this@FoodDonationDetailActivity.onBackPressed()
                 }
                 btnClaim->{
+                    var totalClaimFoodAmt = foodOfferedList.fold(0,{prev,obj-> prev + (obj as ClaimFood).claimAmount})
+
+                    if(totalClaimFoodAmt > 0){
+                        if(isOwner){
+                            var loadingDialog = LoadingDialog(this@FoodDonationDetailActivity)
+                            loadingDialog.show()
+                            FirebaseFirestore.getInstance().runBatch {
+                                    batch->
+                                for(claimFood in foodOfferedList){
+                                    var claimFood = claimFood as ClaimFood
+
+                                    if(claimFood.claimAmount >0){
+                                        val docRef = FirebaseFirestore.getInstance().collection("Food_Donation/$currentViewingFoodDonationId/Food_List").document(claimFood.food.id)
+                                        batch.update(docRef, "foodQuantity", claimFood.food.foodQuantity + claimFood.claimAmount)
+                                    }
+                                }
+                            }.addOnSuccessListener {
+                                loadingDialog.dismiss()
+                                for(claimFood in foodOfferedList){
+                                    (claimFood as ClaimFood).claimAmount = 0
+                                }
+                                recyclerViewAdapter.notifyDataSetChanged()
+                                var successDialog = SuccessDialog(this@FoodDonationDetailActivity,"Successfully added amount of the Food","Thank for participating in reducing food waste.")
+                                successDialog.show()
+                            }.addOnFailureListener {
+                                    ex->
+                                loadingDialog.dismiss()
+                                var failureDialog = ErrorDialog(this@FoodDonationDetailActivity,"Error","We have encountered some error when connecting to Firebase! Please check ur internet connection.")
+                                failureDialog.show()
+                            }
+                        }else{
+                            var loadingDialog = LoadingDialog(this@FoodDonationDetailActivity)
+                            loadingDialog.show()
+                            FirebaseFirestore.getInstance().runBatch {
+                                    batch->
+                                for(claimFood in foodOfferedList){
+                                    var claimFood = claimFood as ClaimFood
+
+                                    if(claimFood.claimAmount >0){
+                                        val docRef = FirebaseFirestore.getInstance().collection("Food_Donation/$currentViewingFoodDonationId/Food_List").document(claimFood.food.id)
+                                        batch.update(docRef, "claimedFoodQuantity", claimFood.claimAmount + claimFood.food.claimedFoodQuantity)
+                                    }
+                                }
+                            }.addOnSuccessListener {
+                                loadingDialog.dismiss()
+                                for(claimFood in foodOfferedList){
+                                    (claimFood as ClaimFood).claimAmount = 0
+                                }
+                                recyclerViewAdapter.notifyDataSetChanged()
+                                var successDialog = SuccessDialog(this@FoodDonationDetailActivity,"Successfully claimed the Food","Thank for participating in reducing food waste.")
+                                successDialog.show()
+                            }.addOnFailureListener {
+                                    ex->
+                                loadingDialog.dismiss()
+                                var failureDialog = ErrorDialog(this@FoodDonationDetailActivity,"Error","We have encountered some error when connecting to Firebase! Please check ur internet connection.")
+                                failureDialog.show()
+                            }
+                        }
+
+
+
+                    }else{
+                        var errorDialog = ErrorDialog(this@FoodDonationDetailActivity, "No Food selected","You should at least add 1 amount to any food")
+                        errorDialog.show()
+                    }
+                }
+                btnExtends->{
+                    var dialog = ExtendsFoodDonationDialog(this@FoodDonationDetailActivity,callback = {
+                        minutesAdded->
+
+                        var newMinutes = foodDonationDetail.minutesAvailable + minutesAdded
+                        FirebaseFirestore.getInstance().collection("Food_Donation").document(currentViewingFoodDonationId).update("minutesAvailable",newMinutes)
+                            .addOnSuccessListener {
+                                var successDialog = SuccessDialog(this@FoodDonationDetailActivity,"Successfully extended the hour","Your food donation will be available to the public!")
+                                successDialog.show()
+                            }.addOnFailureListener {
+                                var failureDialog = ErrorDialog(this@FoodDonationDetailActivity,"Error","We have encountered some error when connecting to Firebase! Please check ur internet connection.")
+                                failureDialog.show()
+                            }
+                    })
+                    dialog.show()
 
                 }
+                btnEndDonation->{
 
+                }
             }
         }
     }
 
     private lateinit var currentViewingFoodDonationId: String
+    private lateinit var foodDonationDetail:FoodDonation
 
     private lateinit var recyclerViewAdapter: UniversalAdapter
     private var foodOfferedList = ArrayList<Any>()
@@ -51,6 +144,7 @@ class FoodDonationDetailActivity : AppCompatActivity() {
     private var timeLeftUpdaterThread:Thread? = null
     private var isFirstTimeLoad:Boolean= true
     private var isFirstTimeLoadFoodList:Boolean= true
+    private var isOwner:Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,8 +154,30 @@ class FoodDonationDetailActivity : AppCompatActivity() {
         currentViewingFoodDonationId = intent.getStringExtra("foodDonationId")
 
         linkAllButtonWithOnClickListener()
-        setupRecyclerView()
+        setupUI()
+    }
 
+    private fun setupUI(){
+        btnClaim.background = RippleUtil.getRippleButtonOutlineDrawable(this,
+            resources.getColor(R.color.mapboxGreen),
+            resources.getColor(R.color.transparent_pressed),
+            resources.getColor(R.color.transparent),
+            20f,0
+        )
+
+        btnEndDonation.background = RippleUtil.getRippleButtonOutlineDrawable(this,
+            resources.getColor(R.color.colorAccent),
+            resources.getColor(R.color.transparent_pressed),
+            resources.getColor(R.color.transparent),
+            20f,0
+        )
+
+        btnExtends.background = RippleUtil.getRippleButtonOutlineDrawable(this,
+            Color.parseColor("#EFA037"),
+            resources.getColor(R.color.transparent_pressed),
+            resources.getColor(R.color.transparent),
+            20f,0
+        )
     }
 
     private fun listenToDonationDetailChangesAndUpdateUI(){
@@ -85,6 +201,21 @@ class FoodDonationDetailActivity : AppCompatActivity() {
                     if(isFirstTimeLoad){
                         loadingDialog!!.dismiss()
                         isFirstTimeLoad=false
+                    }
+                    foodDonationDetail = foodDonation!!
+                    isOwner = foodDonation?.donatorUser?.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@FoodDonationDetailActivity)!!
+
+                    runOnUiThread {
+                        setupRecyclerView(isOwner)
+                        listenToFoodListChangesAndUpdateUI()
+
+                        if(isOwner){
+                            btnClaim.text = "Edit Food Amount"
+                            btnExtends.visibility = View.VISIBLE
+                        }else{
+                            btnClaim.text = "Claim Food"
+                            btnExtends.visibility = View.GONE
+                        }
                     }
 
                     //update the UI
@@ -156,7 +287,7 @@ class FoodDonationDetailActivity : AppCompatActivity() {
                     Food.getFoodListOfFoodDonation(currentViewingFoodDonationId,callback = {
                         success,message,foodList->
 
-                        if(isFirstTimeLoad){
+                        if(isFirstTimeLoadFoodList){
                             recyclerViewAdapter.stopSkeletalLoading()
                             isFirstTimeLoadFoodList = false
                         }
@@ -168,6 +299,17 @@ class FoodDonationDetailActivity : AppCompatActivity() {
 
                                 //if found then update
                                 if(foundFoodInList!=null){
+                                    var availableFood = food.foodQuantity - food.claimedFoodQuantity
+                                    if(isOwner){
+                                        if(foundFoodInList.claimAmount * -1 > availableFood){
+                                            foundFoodInList.claimAmount = availableFood *-1
+                                        }
+                                    }else{
+                                        if(foundFoodInList.claimAmount > availableFood)
+                                            foundFoodInList.claimAmount = availableFood
+                                    }
+
+
                                     foundFoodInList.food = food
                                 }else{
                                     foodOfferedList.add(ClaimFood(food,0))
@@ -187,7 +329,6 @@ class FoodDonationDetailActivity : AppCompatActivity() {
         super.onResume()
 
         listenToDonationDetailChangesAndUpdateUI()
-        listenToFoodListChangesAndUpdateUI()
     }
 
     override fun onPause() {
@@ -198,7 +339,7 @@ class FoodDonationDetailActivity : AppCompatActivity() {
         timeLeftUpdaterThread?.interrupt()
     }
 
-    private fun setupRecyclerView(){
+    private fun setupRecyclerView(isOwner:Boolean){
         recyclerViewAdapter = object: UniversalAdapter(foodOfferedList,this@FoodDonationDetailActivity,foodOfferedRecyclerView){
             override fun getVerticalSpacing(): Int {
                 //20px spacing
@@ -207,6 +348,24 @@ class FoodDonationDetailActivity : AppCompatActivity() {
             override fun onItemClickedListener(data: Any, clickType:Int) {
                 if(data is ClaimFood){
 
+                }
+            }
+
+            override fun getItemViewType(position: Int): Int {
+                return if(data.get(position)::class.java.simpleName == "ClaimFood"){
+                    -1
+                }else {
+                    super.getItemViewType(position)
+                }
+            }
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                return if(viewType == -1 && isOwner){
+                    RecyclerItemFoodEditableAmount().getViewHolder(parent,context,this)
+                }else if (viewType == -1 && !isOwner){
+                    RecyclerItemClaimFood().getViewHolder(parent,context,this)
+                }else{
+                    super.onCreateViewHolder(parent, viewType)
                 }
             }
         }
@@ -218,7 +377,9 @@ class FoodDonationDetailActivity : AppCompatActivity() {
         //all button with onClick listener should be registered in this list
         val actionButtonViewList = listOf(
             btnBack,
-            btnClaim
+            btnClaim,
+            btnExtends,
+            btnEndDonation
         )
 
         for (view in actionButtonViewList) {
