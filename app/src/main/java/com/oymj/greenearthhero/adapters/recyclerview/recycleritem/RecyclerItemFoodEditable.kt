@@ -27,6 +27,7 @@ class RecyclerItemFoodEditable : UniversalRecyclerItem(Food::class.java.simpleNa
                 var tvFoodName = view.findViewById<TextView>(R.id.tvFoodName)
                 var tvFoodDesc = view.findViewById<TextView>(R.id.tvFoodDesc)
                 var tvFoodQuantity = view.findViewById<TextView>(R.id.tvFoodQuantity)
+                var tvFoodLeft = view.findViewById<TextView>(R.id.tvFoodLeft)
                 var btnEdit = view.findViewById<LinearLayout>(R.id.btnEdit)
                 var btnDelete = view.findViewById<LinearLayout>(R.id.btnDelete)
                 var collectContainer = view.findViewById<LinearLayout>(R.id.collectContainer)
@@ -34,6 +35,8 @@ class RecyclerItemFoodEditable : UniversalRecyclerItem(Food::class.java.simpleNa
                 btnEdit.visibility = View.VISIBLE
                 btnDelete.visibility = View.VISIBLE
                 collectContainer.visibility = View.GONE
+                tvFoodLeft.visibility = View.GONE
+
 
                 ivFoodImage.setImageBitmap(data.imageBitmap)
                 tvFoodName.text = data.foodName

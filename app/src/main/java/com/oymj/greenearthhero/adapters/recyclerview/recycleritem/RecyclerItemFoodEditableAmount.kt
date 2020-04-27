@@ -2,23 +2,21 @@ package com.oymj.greenearthhero.adapters.recyclerview.recycleritem
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.storage.FirebaseStorage
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalRecyclerItem
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalViewHolder
 import com.oymj.greenearthhero.data.ClaimFood
-import com.oymj.greenearthhero.data.Food
 
-class RecyclerItemClaimFood : UniversalRecyclerItem(ClaimFood::class.java.simpleName, R.layout.listitem_food){
+class RecyclerItemFoodEditableAmount : UniversalRecyclerItem(ClaimFood::class.java.simpleName, R.layout.listitem_food){
 
     override fun getViewHolder(parent: ViewGroup, context: Context, adapter: UniversalAdapter) : UniversalViewHolder {
         this.viewHolder = ViewHolder(inflateView(parent,context),adapter)
@@ -51,7 +49,7 @@ class RecyclerItemClaimFood : UniversalRecyclerItem(ClaimFood::class.java.simple
                 val TEN_MEGABYTE: Long = 1024 * 1024 * 10
                 foodImageRef.getBytes(TEN_MEGABYTE)
                     .addOnSuccessListener {
-                        imageData->
+                            imageData->
 
                         if(imageData != null){
                             var foodImage = BitmapFactory.decodeByteArray(imageData!!,0,imageData.size)
@@ -76,14 +74,12 @@ class RecyclerItemClaimFood : UniversalRecyclerItem(ClaimFood::class.java.simple
                 }
 
                 btnAddQuantity.setOnClickListener {
-                    if(data.claimAmount < data.food.foodQuantity - data.food.claimedFoodQuantity)
-                        data.claimAmount++
-
+                    data.claimAmount++
                     tvCurrentAmount.text = data.claimAmount.toString()
                 }
 
                 btnMinusQuantity.setOnClickListener {
-                    if(data.claimAmount > 0)
+                    if(data.claimAmount * -1 < data.food.foodQuantity - data.food.claimedFoodQuantity)
                         data.claimAmount--
 
                     tvCurrentAmount.text = data.claimAmount.toString()
