@@ -13,7 +13,7 @@ class ImageStorageManager {
         fun saveImgToInternalStorage(context: Context, bitmapImage: Bitmap, imageFileName: String,callback:(absolutePath:String)->Unit) {
             GlobalScope.async{
                 context.openFileOutput(imageFileName, Context.MODE_PRIVATE).use { outputStream ->
-                    bitmapImage.compress(Bitmap.CompressFormat.PNG, 25, outputStream)
+                    bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
                 }
                 callback(context.filesDir.absolutePath)
             }
