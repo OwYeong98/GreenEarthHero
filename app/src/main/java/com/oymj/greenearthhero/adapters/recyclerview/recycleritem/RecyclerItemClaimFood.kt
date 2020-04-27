@@ -1,12 +1,16 @@
 package com.oymj.greenearthhero.adapters.recyclerview.recycleritem
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.signin.internal.Storage
+import com.google.firebase.storage.FirebaseStorage
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalRecyclerItem
@@ -40,6 +44,20 @@ class RecyclerItemClaimFood : UniversalRecyclerItem(ClaimFood::class.java.simple
                 btnDelete.visibility = View.GONE
                 collectContainer.visibility = View.VISIBLE
 
+                var storageRef = FirebaseStorage.getInstance().reference
+                var foodImageRef = storageRef.child(data.food.imageUrl)
+
+                val TEN_MEGABYTE: Long = 1024 * 1024 * 10
+                foodImageRef.getBytes(TEN_MEGABYTE)
+                    .addOnSuccessListener {
+                        imageData->
+
+                        if(imageData != null){
+                            var foodImage = BitmapFactory.decodeByteArray(imageData!!,0,imageData.size)
+                            ivFoodImage.setImageBitmap(foodImage)
+                        }
+
+                    }
                 ivFoodImage.setImageBitmap(data.food.imageBitmap)
                 tvFoodName.text = data.food.foodName
                 tvFoodDesc.text = data.food.foodDesc

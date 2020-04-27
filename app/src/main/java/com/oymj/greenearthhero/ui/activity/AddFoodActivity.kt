@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
@@ -40,6 +41,10 @@ class AddFoodActivity : AppCompatActivity() {
                     if(validate()){
                         if(isImageSelected == false){
                             var errorDialog = ErrorDialog(this@AddFoodActivity,"Image Cannot be null","Please input Food Image by either select from phone or take picture!")
+                            errorDialog.show()
+                        }else if((imageSelectedContainer.drawable as BitmapDrawable).bitmap.byteCount > 1024 * 1024 * 10){
+                            //if image size larger than 10MB
+                            var errorDialog = ErrorDialog(this@AddFoodActivity,"Image Size is too large","Image Size cannot be more than 10 MegaByte!")
                             errorDialog.show()
                         }else{
                             var name:String = inputFoodName.text.toString()

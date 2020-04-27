@@ -267,7 +267,6 @@ class AddFoodDonationActivity : AppCompatActivity() {
         if(resultCode == Activity.RESULT_OK){
             when(requestCode){
                 ADD_DONATE_LOCATION_REQUEST_CODE->{
-                    Log.d("wtf","runned donate location")
                     val donateLocationId = data?.getStringExtra("id")
 
                     getListOfDonateLocationFromFirebase(donateLocationId)
