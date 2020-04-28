@@ -2,6 +2,7 @@ package com.oymj.greenearthhero.ui.activity
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.functions.FirebaseFunctions
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemClaimFood
@@ -19,18 +21,18 @@ import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemFo
 import com.oymj.greenearthhero.data.ClaimFood
 import com.oymj.greenearthhero.data.Food
 import com.oymj.greenearthhero.data.FoodDonation
-import com.oymj.greenearthhero.ui.dialog.ErrorDialog
-import com.oymj.greenearthhero.ui.dialog.ExtendsFoodDonationDialog
-import com.oymj.greenearthhero.ui.dialog.LoadingDialog
-import com.oymj.greenearthhero.ui.dialog.SuccessDialog
+import com.oymj.greenearthhero.ui.dialog.*
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_food_donation_detail.*
+import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class FoodDonationDetailActivity : AppCompatActivity() {
 
@@ -127,7 +129,13 @@ class FoodDonationDetailActivity : AppCompatActivity() {
 
                 }
                 btnEndDonation->{
+                    var confirmDialog = YesOrNoDialog(this@FoodDonationDetailActivity,"Are you sure you want to end this donation?",callback = {
+                        isYesPressed->
 
+                        if(isYesPressed)
+                            updateFirebaseDonationIsDone(foodDonationDetail)
+                    })
+                    confirmDialog.show()
                 }
             }
         }
@@ -293,6 +301,7 @@ class FoodDonationDetailActivity : AppCompatActivity() {
                         }
 
                         if(success){
+                            foodDonationDetail.foodList = foodList!!
                             for(food in foodList!!){
 
                                 var foundFoodInList = foodOfferedList.fold(null as ClaimFood?, {prev,obj -> if((obj as ClaimFood).food.id == food.id) obj else prev })
@@ -371,6 +380,116 @@ class FoodDonationDetailActivity : AppCompatActivity() {
         }
         foodOfferedRecyclerView.layoutManager = LinearLayoutManager(this)
         foodOfferedRecyclerView.adapter = recyclerViewAdapter
+    }
+
+    private fun updateFirebaseDonationIsDone(data: FoodDonation){
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        dateFormat.timeZone = TimeZone.getTimeZone("GMT+8:00")
+        val currentDateTime: String = dateFormat.format(Date()) // Find todays date
+
+
+        //create a firebase document
+        val donationHistoryDocument = hashMapOf(
+            "date_started" to dateFormat.format(data.datePosted),
+            "date_ended" to currentDateTime,
+            "donateLocation" to data.donateLocation,
+            "donatorUser" to data.donatorUser,
+            "minutesAvailable" to data.minutesAvailable,
+            "totalFoodAmount" to data.totalFoodAmount
+        )
+
+        var loadingDialog = LoadingDialog(this)
+        loadingDialog.show()
+
+        //stop listener
+        foodListListener.remove()
+        donationDetailListener.remove()
+
+        FirebaseFirestore.getInstance().collection("Food_Donation_History").add(donationHistoryDocument)
+            .addOnSuccessListener { docRef ->
+
+                var docId = docRef.id
+
+                FirebaseFirestore.getInstance().runBatch { batch ->
+                    //add food to subcollection
+                    for (index in data.foodList.indices) {
+                        if (data.foodList[index] is Food) {
+                            var food = data.foodList[index] as Food
+
+                            val foodImageData = hashMapOf(
+                                "foodName" to food.foodName,
+                                "foodDesc" to food.foodDesc,
+                                "foodQuantity" to food.foodQuantity,
+                                "claimedFoodQuantity" to food.claimedFoodQuantity,
+                                "imageUrl" to food.imageUrl
+                            )
+
+                            val docRef = FirebaseFirestore.getInstance()
+                                .collection("Food_Donation_History/$docId/Food_List").document()
+                            batch.set(docRef, foodImageData)
+                        }
+                    }
+
+                }.addOnSuccessListener {
+                    //remove the food donation in Food_Donation
+
+                    FirebaseFirestore.getInstance().runBatch { batch ->
+                        for(food in data.foodList){
+                            val docRef = FirebaseFirestore.getInstance().collection("Food_Donation/${data.id}/Food_List").document(food.id)
+                            batch.delete(docRef)
+                        }
+
+                    }.addOnSuccessListener {
+                        FirebaseFirestore.getInstance().collection("Food_Donation").document(data.id)
+                            .delete()
+                            .addOnSuccessListener {
+                                loadingDialog.dismiss()
+                                var successDialog = SuccessDialog(
+                                    this@FoodDonationDetailActivity,
+                                    "Successfully End the donation",
+                                    "The donation is now ended, It will not be available to the public for claiming."
+                                )
+                                successDialog.show()
+                            }
+                            .addOnFailureListener {
+                                loadingDialog.dismiss()
+                                var failureDialog = ErrorDialog(
+                                    this@FoodDonationDetailActivity,
+                                    "Error",
+                                    "We have encountered some error when connecting to Firebase! Please check ur internet connection."
+                                )
+                                failureDialog.show()
+                            }
+                    }.addOnFailureListener {
+                        loadingDialog.dismiss()
+                        var failureDialog = ErrorDialog(
+                            this@FoodDonationDetailActivity,
+                            "Error",
+                            "We have encountered some error when connecting to Firebase! Please check ur internet connection."
+                        )
+                        failureDialog.show()
+                    }
+
+
+
+
+                }.addOnFailureListener { ex ->
+                    loadingDialog.dismiss()
+                    var failureDialog = ErrorDialog(
+                        this@FoodDonationDetailActivity,
+                        "Error",
+                        "We have encountered some error when connecting to Firebase! Please check ur internet connection."
+                    )
+                    failureDialog.show()
+                }
+            }.addOnFailureListener {
+                loadingDialog.dismiss()
+                var failureDialog = ErrorDialog(this@FoodDonationDetailActivity,
+                    "Error",
+                    "We have encountered some error when connecting to Firebase! Please check ur internet connection."
+                )
+                failureDialog.show()
+            }
     }
 
     private fun linkAllButtonWithOnClickListener() {

@@ -101,6 +101,7 @@ class FoodDonation(
                         foodDonationSnapshot->
 
                     GlobalScope.launch {
+
                         var id = foodDonationSnapshot.id
                         var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonationSnapshot.getString("datePosted"))
                         var donateLocationId = foodDonationSnapshot.getString("donateLocationId")!!
