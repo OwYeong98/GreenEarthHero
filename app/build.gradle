@@ -84,4 +84,7 @@ dependencies {
     //upload image
     implementation 'com.google.firebase:firebase-storage:19.1.1'
     implementation 'com.firebaseui:firebase-ui-storage:6.2.0'
+
+    //cloud function
+    implementation 'com.google.firebase:firebase-functions:19.0.2'
 }
