@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -27,6 +29,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.googlemap.InfoWindowElementTouchListener
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
+import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemFoodDonation
 import com.oymj.greenearthhero.data.*
 import com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
@@ -214,6 +217,23 @@ class FoodCollectionActivity : AppCompatActivity(){
                             break
                         }
                     }
+                }
+            }
+
+            //override the view type to return -1 cause we want to choose recycler item mannually
+            override fun getItemViewType(position: Int): Int {
+                return if(data.get(position)::class.java.simpleName == "FoodDonation"){
+                    -1
+                }else {
+                    super.getItemViewType(position)
+                }
+            }
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                return if(viewType == -1){
+                    RecyclerItemFoodDonation().getViewHolder(parent,context,this)
+                }else{
+                    super.onCreateViewHolder(parent, viewType)
                 }
             }
         }

@@ -33,13 +33,13 @@
             app:layout_constraintLeft_toRightOf="@id/guideline10">
 
             <TextView
-                android:id="@+id/btnMyRequest"
+                android:id="@+id/btnMyDonation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/dark_gray_rounded_corner_bg"
                 android:fontFamily="@font/montserrat_regular"
                 android:padding="15dp"
-                android:text="My Request"
+                android:text="My Donation"
                 android:textColor="@color/white"
                 android:textSize="15sp" />
 
