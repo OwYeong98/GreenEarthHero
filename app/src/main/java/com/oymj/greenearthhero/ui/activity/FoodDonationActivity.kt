@@ -92,7 +92,10 @@ class FoodDonationActivity : AppCompatActivity() {
                         }
                     }
                 }
-
+                btnMyDonation->{
+                    var intent = Intent(this@FoodDonationActivity , MyDonationAndDonationHistoryActivity::class.java)
+                    startActivity(intent)
+                }
             }
         }
     }
@@ -409,7 +412,8 @@ class FoodDonationActivity : AppCompatActivity() {
             btnMenu,
             btnDonateNow,
             btnFoodCollection,
-            btnRecenter
+            btnRecenter,
+            btnMyDonation
         )
 
         for (view in actionButtonViewList) {

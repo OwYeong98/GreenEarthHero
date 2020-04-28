@@ -94,6 +94,47 @@ class FoodDonation(
                 }
         }
 
+        fun getFoodDonationListWithoutFoodListByUserFromFirebase(userId:String,callback: (Boolean,String?,ArrayList<FoodDonation>?)->Unit){
+            var foodDonationList = ArrayList<FoodDonation>()
+            FirebaseFirestore.getInstance().collection("Food_Donation").whereEqualTo("donatorUserId",userId).get()
+                .addOnSuccessListener {
+                        foodDonationSnapshot->
+                    DonateLocation.getDonateLocationList(callback = {
+                            success,message,donateLocationList->
+
+                        if(success){
+                            GlobalScope.launch {
+                                for(foodDonation in foodDonationSnapshot!!){
+                                    var id = foodDonation.id
+                                    var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonation.getString("datePosted"))
+                                    var donateLocationId = foodDonation.getString("donateLocationId")!!
+                                    var donateLocation  = donateLocationList?.fold(null as DonateLocation?,{prev,curr-> if(curr.id == donateLocationId) curr else prev})
+
+                                    var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonation.getString("donatorUserId")!!)
+                                    var minutesAvailable = foodDonation.getLong("minutesAvailable")?.toInt()
+                                    var totalFoodAmount = foodDonation.getLong("totalFoodAmount")!!.toInt()
+
+                                    var foodList = ArrayList<Food>()
+
+                                    var newFoodDonation = FoodDonation(id,donatorUserRef,datePosted,donateLocation!!,minutesAvailable!!,foodList,totalFoodAmount!!)
+
+                                    foodDonationList.add(newFoodDonation)
+                                }
+
+                                callback(true,null,foodDonationList)
+                            }
+                        }else{
+                            callback(false,message,null)
+                        }
+                    })
+
+                }
+                .addOnFailureListener {
+                        ex->
+                    callback(false,ex.toString(),null)
+                }
+        }
+
         fun getFoodDonationDetailByIdFromFirebase(foodDonationId:String, callback: (Boolean,String?,FoodDonation?)->Unit){
 
             FirebaseFirestore.getInstance().collection("Food_Donation").document(foodDonationId).get()

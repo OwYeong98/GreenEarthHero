@@ -68,6 +68,26 @@ class Food(
 
             return foodList
         }
+
+        suspend fun suspendGetHistoryFoodList(foodDonationHistoryId:String): ArrayList<Food> {
+            var foodListSnapshot = FirebaseFirestore.getInstance().collection("Food_Donation/$foodDonationHistoryId/Food_List").get().await()
+
+            var foodList = ArrayList<Food>()
+            for(food in foodListSnapshot){
+                var id = food.id
+                var foodDesc = food.getString("foodDesc")
+                var foodName = food.getString("foodName")
+                var foodQty = food.getLong("foodQuantity")?.toInt()
+                var claimedFoodQty = food.getLong("claimedFoodQuantity")?.toInt()
+                var imgUrl = food.getString("imageUrl")
+
+                var newFood = Food(id,foodName!!,foodDesc!!,foodQty!!,claimedFoodQty!!,imgUrl!!,null)
+
+                foodList.add(newFood)
+            }
+
+            return foodList
+        }
     }
 
 

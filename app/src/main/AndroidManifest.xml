@@ -80,6 +80,7 @@
         <activity android:name=".ui.activity.AddFoodActivity" />
         <activity android:name=".ui.activity.FoodCollectionActivity" />
         <activity android:name=".ui.activity.FoodDonationDetailActivity" />
+        <activity android:name=".ui.activity.MyDonationAndDonationHistoryActivity" />
     </application>
 
 </manifest>

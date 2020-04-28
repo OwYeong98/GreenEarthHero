@@ -47,68 +47,73 @@ class FoodDonationDetailActivity : AppCompatActivity() {
                 btnClaim->{
                     var totalClaimFoodAmt = foodOfferedList.fold(0,{prev,obj-> prev + (obj as ClaimFood).claimAmount})
 
-                    if(totalClaimFoodAmt > 0){
-                        if(isOwner){
-                            var loadingDialog = LoadingDialog(this@FoodDonationDetailActivity)
-                            loadingDialog.show()
-                            FirebaseFirestore.getInstance().runBatch {
-                                    batch->
-                                for(claimFood in foodOfferedList){
-                                    var claimFood = claimFood as ClaimFood
-
-                                    if(claimFood.claimAmount >0){
-                                        val docRef = FirebaseFirestore.getInstance().collection("Food_Donation/$currentViewingFoodDonationId/Food_List").document(claimFood.food.id)
-                                        batch.update(docRef, "foodQuantity", claimFood.food.foodQuantity + claimFood.claimAmount)
-                                    }
-                                }
-                            }.addOnSuccessListener {
-                                loadingDialog.dismiss()
-                                for(claimFood in foodOfferedList){
-                                    (claimFood as ClaimFood).claimAmount = 0
-                                }
-                                recyclerViewAdapter.notifyDataSetChanged()
-                                var successDialog = SuccessDialog(this@FoodDonationDetailActivity,"Successfully added amount of the Food","Thank for participating in reducing food waste.")
-                                successDialog.show()
-                            }.addOnFailureListener {
-                                    ex->
-                                loadingDialog.dismiss()
-                                var failureDialog = ErrorDialog(this@FoodDonationDetailActivity,"Error","We have encountered some error when connecting to Firebase! Please check ur internet connection.")
-                                failureDialog.show()
-                            }
-                        }else{
-                            var loadingDialog = LoadingDialog(this@FoodDonationDetailActivity)
-                            loadingDialog.show()
-                            FirebaseFirestore.getInstance().runBatch {
-                                    batch->
-                                for(claimFood in foodOfferedList){
-                                    var claimFood = claimFood as ClaimFood
-
-                                    if(claimFood.claimAmount >0){
-                                        val docRef = FirebaseFirestore.getInstance().collection("Food_Donation/$currentViewingFoodDonationId/Food_List").document(claimFood.food.id)
-                                        batch.update(docRef, "claimedFoodQuantity", claimFood.claimAmount + claimFood.food.claimedFoodQuantity)
-                                    }
-                                }
-                            }.addOnSuccessListener {
-                                loadingDialog.dismiss()
-                                for(claimFood in foodOfferedList){
-                                    (claimFood as ClaimFood).claimAmount = 0
-                                }
-                                recyclerViewAdapter.notifyDataSetChanged()
-                                var successDialog = SuccessDialog(this@FoodDonationDetailActivity,"Successfully claimed the Food","Thank for participating in reducing food waste.")
-                                successDialog.show()
-                            }.addOnFailureListener {
-                                    ex->
-                                loadingDialog.dismiss()
-                                var failureDialog = ErrorDialog(this@FoodDonationDetailActivity,"Error","We have encountered some error when connecting to Firebase! Please check ur internet connection.")
-                                failureDialog.show()
-                            }
-                        }
-
-
-
-                    }else{
-                        var errorDialog = ErrorDialog(this@FoodDonationDetailActivity, "No Food selected","You should at least add 1 amount to any food")
+                    if(Date().after(foodDonationDetail.getDonationEndTime())){
+                        var errorDialog = ErrorDialog(this@FoodDonationDetailActivity,"Offer Ended","Sorry this food donation is already ended! It will be closed soon unless owner extends it.")
                         errorDialog.show()
+                    }else{
+                        if(totalClaimFoodAmt > 0){
+                            if(isOwner){
+                                var loadingDialog = LoadingDialog(this@FoodDonationDetailActivity)
+                                loadingDialog.show()
+                                FirebaseFirestore.getInstance().runBatch {
+                                        batch->
+                                    for(claimFood in foodOfferedList){
+                                        var claimFood = claimFood as ClaimFood
+
+                                        if(claimFood.claimAmount >0){
+                                            val docRef = FirebaseFirestore.getInstance().collection("Food_Donation/$currentViewingFoodDonationId/Food_List").document(claimFood.food.id)
+                                            batch.update(docRef, "foodQuantity", claimFood.food.foodQuantity + claimFood.claimAmount)
+                                        }
+                                    }
+                                }.addOnSuccessListener {
+                                    loadingDialog.dismiss()
+                                    for(claimFood in foodOfferedList){
+                                        (claimFood as ClaimFood).claimAmount = 0
+                                    }
+                                    recyclerViewAdapter.notifyDataSetChanged()
+                                    var successDialog = SuccessDialog(this@FoodDonationDetailActivity,"Successfully added amount of the Food","Thank for participating in reducing food waste.")
+                                    successDialog.show()
+                                }.addOnFailureListener {
+                                        ex->
+                                    loadingDialog.dismiss()
+                                    var failureDialog = ErrorDialog(this@FoodDonationDetailActivity,"Error","We have encountered some error when connecting to Firebase! Please check ur internet connection.")
+                                    failureDialog.show()
+                                }
+                            }else{
+                                var loadingDialog = LoadingDialog(this@FoodDonationDetailActivity)
+                                loadingDialog.show()
+                                FirebaseFirestore.getInstance().runBatch {
+                                        batch->
+                                    for(claimFood in foodOfferedList){
+                                        var claimFood = claimFood as ClaimFood
+
+                                        if(claimFood.claimAmount >0){
+                                            val docRef = FirebaseFirestore.getInstance().collection("Food_Donation/$currentViewingFoodDonationId/Food_List").document(claimFood.food.id)
+                                            batch.update(docRef, "claimedFoodQuantity", claimFood.claimAmount + claimFood.food.claimedFoodQuantity)
+                                        }
+                                    }
+                                }.addOnSuccessListener {
+                                    loadingDialog.dismiss()
+                                    for(claimFood in foodOfferedList){
+                                        (claimFood as ClaimFood).claimAmount = 0
+                                    }
+                                    recyclerViewAdapter.notifyDataSetChanged()
+                                    var successDialog = SuccessDialog(this@FoodDonationDetailActivity,"Successfully claimed the Food","Thank for participating in reducing food waste.")
+                                    successDialog.show()
+                                }.addOnFailureListener {
+                                        ex->
+                                    loadingDialog.dismiss()
+                                    var failureDialog = ErrorDialog(this@FoodDonationDetailActivity,"Error","We have encountered some error when connecting to Firebase! Please check ur internet connection.")
+                                    failureDialog.show()
+                                }
+                            }
+
+
+
+                        }else{
+                            var errorDialog = ErrorDialog(this@FoodDonationDetailActivity, "No Food selected","You should at least add 1 amount to any food")
+                            errorDialog.show()
+                        }
                     }
                 }
                 btnExtends->{
@@ -447,7 +452,10 @@ class FoodDonationDetailActivity : AppCompatActivity() {
                                 var successDialog = SuccessDialog(
                                     this@FoodDonationDetailActivity,
                                     "Successfully End the donation",
-                                    "The donation is now ended, It will not be available to the public for claiming."
+                                    "The donation is now ended, It will not be available to the public for claiming.",
+                                    callback = {
+                                        finish()
+                                    }
                                 )
                                 successDialog.show()
                             }
