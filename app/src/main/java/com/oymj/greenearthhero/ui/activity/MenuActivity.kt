@@ -75,7 +75,11 @@ class MenuActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 menu_good_selling_icon -> {
-
+                    if(!isFromLogin){
+                        finish()
+                    }
+                    var intent = Intent(this@MenuActivity, SecondHandPlatformActivity::class.java)
+                    startActivity(intent)
                 }
                 menu_request_icon-> {
 

@@ -394,7 +394,8 @@ class AddFoodDonationActivity : AppCompatActivity() {
                                     }
                                 }
                                 .addOnFailureListener {
-
+                                    var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+                                    errorDialog.show()
                                 }
                         }.addOnFailureListener {
                             var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")

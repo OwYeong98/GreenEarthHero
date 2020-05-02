@@ -29,8 +29,8 @@ class FoodDonationHistory(
                     GlobalScope.launch {
                         for(foodDonation in foodDonationHistorySnapshot!!){
                             var id = foodDonation.id
-                            var dateStarted = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(foodDonation.getString("date_started"))
-                            var dateEnded = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(foodDonation.getString("date_ended"))
+                            var dateStarted = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(foodDonation.getString("date_started"))
+                            var dateEnded = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(foodDonation.getString("date_ended"))
                             var minutesAvailable =foodDonation.getLong("minutesAvailable")!!.toInt()
                             var totalFoodAmount =foodDonation.getLong("totalFoodAmount")!!.toInt()
 

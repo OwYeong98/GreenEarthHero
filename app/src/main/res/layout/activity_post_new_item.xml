@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="40dp"
+            android:gravity="center_vertical"
+            android:elevation="2dp"
+            android:background="@color/lightestgreen"
+            android:textSize="17sp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="@color/darkgrey"
+            android:text="Post Item For Sale" />
+
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="-50dp"
+            android:elevation="2dp"
+            android:outlineProvider="none"
+            android:backgroundTint="@color/transparent"
+            android:src="@drawable/ic_delete" />
+
+
+    </LinearLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Item Name"
+                android:textColor="@color/darkgrey"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="18sp"/>
+
+            <EditText
+                android:id="@+id/inputItemName"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:background="@color/inputContainerGrey"
+                android:paddingLeft="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:hint="Name"
+                android:textColorHint="@color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Item Description"
+                android:textColor="@color/darkgrey"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="18sp"/>
+
+            <EditText
+                android:id="@+id/inputItemDesc"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="5dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"
+                android:gravity="left"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:background="@color/inputContainerGrey"
+                android:inputType="textMultiLine"
+                android:hint="Description" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Item Price"
+                android:textColor="@color/darkgrey"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="18sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="RM"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/darkgrey"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textSize="18sp"/>
+
+                <EditText
+                    android:id="@+id/inputPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:ems="10"
+                    android:background="@color/inputContainerGrey"
+                    android:inputType="number"
+                    android:hint="Price" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Item Image"
+                android:textColor="@color/darkgrey"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/btnBrowseFromYourPhone"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/white"
+                android:layout_marginTop="15dp"
+                android:background="@color/lightgrey"
+                android:text="Browse From your Phone" />
+            <TextView
+                android:id="@+id/btnTakePhoto"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/white"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightgrey"
+                android:text="Take Photo With Camera" />
+
+
+            <ImageView
+                android:id="@+id/imageSelectedContainer"
+                android:visibility="gone"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                app:srcCompat="@drawable/green_gradient_color" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/btnPost"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Post"
+            android:layout_weight="8"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/mapboxGreen"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="14sp"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"/>
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_weight="8"
+            android:layout_marginLeft="10dp"
+            android:text="Cancel"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/darkgrey"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="14sp"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>
