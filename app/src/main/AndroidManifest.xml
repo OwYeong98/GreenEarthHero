@@ -62,17 +62,25 @@
         <activity
             android:name=".ui.activity.MenuActivity"
             android:theme="@style/AppTheme.Transparent" />
+        <activity android:name=".ui.activity.ProfileActivity"
+            android:launchMode="singleTop"/>
+
+        <!--   Recycle Platform Activity   -->
         <activity android:name=".ui.activity.RecycleActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.activity.VolunteerCollectionActivity" />
         <activity android:name=".ui.activity.MyVolunteerActivity" />
         <activity android:name=".ui.activity.MyRequestAndRequestHistoryActivity" />
-        <activity android:name=".ui.activity.ProfileActivity"
-            android:launchMode="singleTop"/>
+        <!--   End Recycle Platform Activity   -->
+
+        <!--   Chat Platform Activity   -->
         <activity android:name=".ui.activity.MyChatActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.activity.NewChatActivity" />
         <activity android:name=".ui.activity.ChatRoomActivity" />
+        <!--   End Chat Platform Activity   -->
+
+        <!--   Food Donation Platform Activity   -->
         <activity android:name=".ui.activity.FoodDonationActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.activity.AddFoodDonationActivity" />
@@ -81,6 +89,13 @@
         <activity android:name=".ui.activity.FoodCollectionActivity" />
         <activity android:name=".ui.activity.FoodDonationDetailActivity" />
         <activity android:name=".ui.activity.MyDonationAndDonationHistoryActivity" />
+        <!--   End Food Donation Platform   -->
+
+        <!--   Second-hand Platform Activity-->
+        <activity android:name=".ui.activity.SecondHandPlatformActivity" />
+        <activity android:name=".ui.activity.CurrentPostAndSalesHistoryActivity" />
+        <activity android:name=".ui.activity.PostNewItemActivity" />
+        <!--   End Second-hand Donation Platform   -->
     </application>
 
 </manifest>

@@ -59,7 +59,6 @@ class RecyclerItemClaimFood : UniversalRecyclerItem(ClaimFood::class.java.simple
                         }
 
                     }
-                ivFoodImage.setImageBitmap(data.food.imageBitmap)
                 tvFoodName.text = data.food.foodName
                 tvFoodDesc.text = data.food.foodDesc
                 tvFoodQuantity.text = "Total Quantity: ${data.food.foodQuantity}"
