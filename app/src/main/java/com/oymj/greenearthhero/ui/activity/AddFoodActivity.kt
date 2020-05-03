@@ -201,7 +201,7 @@ class AddFoodActivity : AppCompatActivity() {
 
         descError+= "${FormUtils.isNull("Description",desc)?:""}|"
         descError+= "${FormUtils.isLengthBetween("Description",desc,10,100)?:""}|"
-        descError+= "${FormUtils.isOnlyAlphabet("Description",desc)?:""}|"
+        descError+= "${FormUtils.isOnlyAlphabetNumberWithComaAndDotSymbol("Description",desc)?:""}|"
 
         quantityError+= "${FormUtils.isNull("Quantity",quantity)?:""}|"
         quantityError+= "${FormUtils.isOnlyNumber("Quantity",quantity)?:""}|"

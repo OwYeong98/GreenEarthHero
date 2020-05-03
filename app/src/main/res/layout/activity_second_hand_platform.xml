@@ -22,13 +22,13 @@
                 android:id="@+id/btnMenu"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:backgroundTint="@color/transparent"
                 android:src="@drawable/menu_icon" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Second Hand Platform"
+                android:hint="Search"
                 android:textSize="16sp"
                 android:fontFamily="@font/montserrat_regular"
                 android:textColor="@color/darkgrey"
@@ -38,12 +38,11 @@
 
             <ImageButton
                 android:id="@+id/btnSearch"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:scaleType="fitXY"
                 android:tint="@color/darkgrey"
-                android:backgroundTint="@color/transparent"
-                android:src="@android:drawable/ic_menu_search" />
+                android:src="@android:drawable/ic_search_category_default" />
 
         </LinearLayout>
 
@@ -106,7 +105,7 @@
 
                 <Spinner
                     android:id="@+id/sortBySpinner"
-                    android:layout_width="80dp"
+                    android:layout_width="140dp"
                     android:layout_height="20dp"
                     android:popupBackground="@color/darkgrey"
                     android:dropDownSelector="@color/darkgrey"
@@ -153,6 +152,7 @@
             android:id="@+id/tvSearchedKeyword"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginTop="5dp"
             android:textColor="@color/lightgrey"
             android:fontFamily="@font/montserrat_regular"
@@ -172,6 +172,48 @@
                 android:layout_height="match_parent"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/searchContainer"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:elevation="4dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/inputSearch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColorHint="@color/darkgrey"
+            android:imeOptions="actionSend"
+            android:hint="Search ..."
+            android:inputType="text"
+            android:fontFamily="@font/montserrat_regular" />
+
+        <ImageButton
+            android:id="@+id/btnConfirmSearch"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center_vertical"
+            android:tint="@color/darkgrey"
+            android:src="@android:drawable/ic_search_category_default" />
+
+        <ImageButton
+            android:id="@+id/btnCancel"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            android:tint="@color/darkgrey"
+            android:src="@drawable/cross_icon" />
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
