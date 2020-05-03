@@ -87,7 +87,7 @@ class PostNewItemActivity : AppCompatActivity() {
                                         //update image url
                                         docRef.update(mapOf("imageUrl" to imgPath)).addOnSuccessListener {
                                             loadingDialog.dismiss()
-                                            var successDialog = SuccessDialog(this@PostNewItemActivity,"Successfully uploading your food donation!","The public will be able to view your donation and approach your location to claim your donation",callback = {
+                                            var successDialog = SuccessDialog(this@PostNewItemActivity,"Successfully uploaded your Item Post!","The public will be able to view your post and purchase it.",callback = {
                                                 finish()
                                             })
                                             successDialog.show()
@@ -236,7 +236,7 @@ class PostNewItemActivity : AppCompatActivity() {
 
         descError+= "${FormUtils.isNull("Description",desc)?:""}|"
         descError+= "${FormUtils.isLengthBetween("Description",desc,10,100)?:""}|"
-        descError+= "${FormUtils.isOnlyAlphabet("Description",desc)?:""}|"
+        descError+= "${FormUtils.isOnlyAlphabetNumberWithComaAndDotSymbol("Description",desc)?:""}|"
 
         priceError+= "${FormUtils.isNull("Price",price)?:""}|"
         priceError+= "${FormUtils.isOnlyNumber("Price",price)?:""}|"

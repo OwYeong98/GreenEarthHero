@@ -71,8 +71,6 @@ class User(var userId:String, var email:String, var firstName:String,  var lastN
         suspend fun suspendGetSpecificUserFromFirebase(userId:String): User{
             var fireStoreDB = FirebaseFirestore.getInstance()
 
-            var userList = ArrayList<User>()
-
             var userDoc = fireStoreDB.collection("Users").document(userId).get().await()
             var userId = userDoc.id
             var email = userDoc.getString("email")

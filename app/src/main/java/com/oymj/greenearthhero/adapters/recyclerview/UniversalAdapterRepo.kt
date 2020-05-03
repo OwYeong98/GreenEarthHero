@@ -20,6 +20,7 @@ object UniversalAdapterRepo {
         registerRecyclerItem(RecyclerItemSkeletalLoadingType2())
         registerRecyclerItem(RecyclerItemSkeletalLoadingType3())
         registerRecyclerItem(RecyclerItemSkeletalLoadingType4())
+        registerRecyclerItem(RecyclerItemSkeletalLoadingType5())
         registerRecyclerItem(RecyclerItemRecycleHistory())
         registerRecyclerItem(RecyclerItemChatRoom())
         registerRecyclerItem(RecyclerItemChatMessage())

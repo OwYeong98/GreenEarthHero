@@ -37,6 +37,18 @@ object FormUtils {
         }
     }
 
+    fun isOnlyAlphabetNumberWithComaAndDotSymbol(name:String,input:String): String?{
+        var error:String? = null
+
+        var onlyAlphabetRegex = Regex("^[A-Za-z0-9 .,]+\$")
+        if(!onlyAlphabetRegex.matches(input)){
+            error = "$name can only contain alphabet character,number, coma, and dot."
+            return error
+        }else{
+            return ""
+        }
+    }
+
     fun isOnlyNumber(name:String,input:String): String?{
         var error:String? = null
 
