@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
@@ -15,6 +16,7 @@ import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemCurrentItemPost
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemSecondHandItem
 import com.oymj.greenearthhero.data.SecondHandItem
+import com.oymj.greenearthhero.ui.activity.CurrentPostDetailActivity
 import com.oymj.greenearthhero.ui.activity.PostNewItemActivity
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
@@ -47,7 +49,9 @@ class CurrentPostFragment : Fragment() {
 
             override fun onItemClickedListener(data: Any, clickType:Int) {
                 if(data is SecondHandItem){
-
+                    var intent = Intent(context!!,CurrentPostDetailActivity::class.java)
+                    intent.putExtra("itemId",data.id)
+                    activity!!.startActivity(intent)
                 }
             }
 
@@ -118,24 +122,26 @@ class CurrentPostFragment : Fragment() {
                 success,message,data ->
 
             if(success){
-                recyclerViewAdapter.stopSkeletalLoading()
-                swipeLayout.isRefreshing = false
+                activity?.runOnUiThread {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    view?.findViewById<SwipeRefreshLayout>(R.id.swipeLayout)?.isRefreshing = false
 
-                data!!.forEach { item-> currentPostList.add(item) }
+                    data!!.forEach { item-> currentPostList.add(item) }
 
-                currentPostList.sortByDescending { item-> if(item is SecondHandItem) item.datePosted.time else 0 }
+                    currentPostList.sortByDescending { item-> if(item is SecondHandItem) item.datePosted.time else 0 }
 
-                //refresh recyclerview
-                activity!!.runOnUiThread {
+                    //refresh recyclerview
                     recyclerViewAdapter.notifyDataSetChanged()
                 }
 
             }else{
-                recyclerViewAdapter.stopSkeletalLoading()
-                swipeLayout.isRefreshing = false
+                activity?.runOnUiThread {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    view?.findViewById<SwipeRefreshLayout>(R.id.swipeLayout)?.isRefreshing = false
 
-                var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
-                errorDialog.show()
+                    var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
+                    errorDialog.show()
+                }
             }
 
         }

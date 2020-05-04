@@ -17,13 +17,14 @@ import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.api.ApisImplementation
 import com.oymj.greenearthhero.data.TomTomPlacesResult
 import com.oymj.greenearthhero.data.TomTomPosition
+import com.oymj.greenearthhero.ui.activity.RecycleActivity
 import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import io.supercharge.shimmerlayout.ShimmerLayout
 import kotlinx.android.synthetic.main.fragment_search_address_result.*
 
 
-class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fragment() {
+class SearchAddressResultFragment() : Fragment() {
 
     var placesList = ArrayList<Any>()
     lateinit var recyclerViewAdapter: UniversalAdapter
@@ -58,13 +59,13 @@ class SearchAddressResultFragment(var callback:(TomTomPlacesResult)->Unit) : Fra
 
             currentLocation.latLong = currentLatLong
 
-            callback(currentLocation)
+            (activity as RecycleActivity).selectLocationFromSearchPanel(currentLocation)
         }
 
         recyclerViewAdapter = object: UniversalAdapter(placesList,context!!,myRecyclerView){
             override fun onItemClickedListener(data: Any, clickType:Int) {
                 if(data is TomTomPlacesResult){
-                    callback(data)
+                    (activity as RecycleActivity).selectLocationFromSearchPanel(data)
                 }
             }
         }

@@ -21,9 +21,9 @@ class SecondHandItem(
 
     companion object{
 
-        fun getItemListFromFirebase(callback:(Boolean,String?,ArrayList<SecondHandItem>?)->Unit){
+        fun getItemOnSaleListFromFirebase(callback:(Boolean,String?,ArrayList<SecondHandItem>?)->Unit){
             var itemList = ArrayList<SecondHandItem>()
-            FirebaseFirestore.getInstance().collection("Second_Hand_Item").get()
+            FirebaseFirestore.getInstance().collection("Second_Hand_Item").whereEqualTo("boughtBy","").get()
                 .addOnSuccessListener {
                         itemSnapshot->
 

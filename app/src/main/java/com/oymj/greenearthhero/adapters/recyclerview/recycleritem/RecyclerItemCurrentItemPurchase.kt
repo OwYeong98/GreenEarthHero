@@ -13,7 +13,7 @@ import com.oymj.greenearthhero.data.SecondHandItem
 import com.oymj.greenearthhero.utils.RippleUtil
 import java.text.SimpleDateFormat
 
-class RecyclerItemCurrentItemPost : UniversalRecyclerItem(SecondHandItem::class.java.simpleName, R.layout.listitem_second_hand_item_with_status){
+class RecyclerItemCurrentItemPurchase : UniversalRecyclerItem(SecondHandItem::class.java.simpleName, R.layout.listitem_second_hand_item_with_status){
 
     override fun getViewHolder(parent: ViewGroup, context: Context, adapter: UniversalAdapter) : UniversalViewHolder {
         return ViewHolder(inflateView(parent,context),adapter)
@@ -33,28 +33,18 @@ class RecyclerItemCurrentItemPost : UniversalRecyclerItem(SecondHandItem::class.
                 tvItemName.text = data.itemName
                 tvPrice.text = "Price: RM ${data.itemPrice}"
 
-                if(data.boughtByUser != null){
-                    if(data.trackingNo == ""){
-                        tvStatus.text = "Sold. Please Delivery"
-                        tvStatus.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
-                            view.context.resources.getColor(R.color.yellow),
-                            view.context.resources.getColor(R.color.transparent_pressed),
-                            view.context.resources.getColor(R.color.transparent),
-                            0f,0
-                        )
-                    }else{
-                        tvStatus.text = "On Delivery"
-                        tvStatus.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
-                            view.context.resources.getColor(R.color.yellow),
-                            view.context.resources.getColor(R.color.transparent_pressed),
-                            view.context.resources.getColor(R.color.transparent),
-                            0f,0
-                        )
-                    }
-                }else{
-                    tvStatus.text = "On Sale"
+                if(data.trackingNo != ""){
+                    tvStatus.text = "On Delivery"
                     tvStatus.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
                         view.context.resources.getColor(R.color.slightdarkgreen),
+                        view.context.resources.getColor(R.color.transparent_pressed),
+                        view.context.resources.getColor(R.color.transparent),
+                        0f,0
+                    )
+                }else{
+                    tvStatus.text = "Pending for Delivery"
+                    tvStatus.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
+                        view.context.resources.getColor(R.color.yellow),
                         view.context.resources.getColor(R.color.transparent_pressed),
                         view.context.resources.getColor(R.color.transparent),
                         0f,0

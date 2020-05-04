@@ -96,6 +96,8 @@
         <activity android:name=".ui.activity.CurrentPostAndSalesHistoryActivity" />
         <activity android:name=".ui.activity.PostNewItemActivity" />
         <activity android:name=".ui.activity.BuyerViewItemDetailActivity" />
+        <activity android:name=".ui.activity.CurrentPuchaseAndPurchaseHistoryActivity" />
+        <activity android:name=".ui.activity.CurrentPostDetailActivity" />
         <!--   End Second-hand Donation Platform   -->
     </application>
 

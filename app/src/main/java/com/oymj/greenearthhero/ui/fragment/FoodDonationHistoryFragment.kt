@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
@@ -91,29 +92,31 @@ class FoodDonationHistoryFragment : Fragment() {
                 success,message,data->
 
             if(success){
-                recyclerViewAdapter.stopSkeletalLoading()
-                swipeLayout.isRefreshing = false
-
-                var totalFoodDonated = data!!.fold(0,{prev,obj-> prev + obj.totalFoodAmount})
-
-                for(history in data!!){
-                    if(history.donatorUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
-
-                        foodDonationHistoryList.add(history)
-                    }
-                }
-
                 activity?.runOnUiThread {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    view?.findViewById<SwipeRefreshLayout>(R.id.swipeLayout)?.isRefreshing = false
+
+
+                    var totalFoodDonated = data!!.fold(0,{prev,obj-> prev + obj.totalFoodAmount})
+
+                    for(history in data!!){
+                        if(history.donatorUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
+
+                            foodDonationHistoryList.add(history)
+                        }
+                    }
+
                     //update the total recycler material
                     tvTotalFoodContributed.text = totalFoodDonated.toString()
 
                     recyclerViewAdapter.notifyDataSetChanged()
                 }
 
-
             }else{
-                recyclerViewAdapter.stopSkeletalLoading()
-                swipeLayout.isRefreshing = false
+                activity?.runOnUiThread {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    view?.findViewById<SwipeRefreshLayout>(R.id.swipeLayout)?.isRefreshing = false
+                }
 
                 var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
                 errorDialog.show()

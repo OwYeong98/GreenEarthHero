@@ -275,10 +275,7 @@ class RecycleActivity : AppCompatActivity() {
     }
 
     private fun setupLocationSearchPanel(){
-        locationSearchResultFragment = SearchAddressResultFragment{
-            data->
-            selectLocationFromSearchPanel(data)
-        }
+        locationSearchResultFragment = SearchAddressResultFragment()
 
         //replace framelayout with fragment
         var fragmentTransaction = supportFragmentManager.beginTransaction()

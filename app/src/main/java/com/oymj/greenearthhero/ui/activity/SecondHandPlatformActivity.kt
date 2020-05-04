@@ -59,7 +59,8 @@ class SecondHandPlatformActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 btnPurchaseHistory->{
-
+                    var intent = Intent(this@SecondHandPlatformActivity, CurrentPuchaseAndPurchaseHistoryActivity::class.java)
+                    startActivity(intent)
                 }
                 btnSearch->{
                     showSearchContainer()
@@ -186,7 +187,7 @@ class SecondHandPlatformActivity : AppCompatActivity() {
         //show loading skeletal first while getting data from firestore
         recyclerViewAdapter.startSkeletalLoading(7, UniversalAdapter.SKELETAL_TYPE_5)
 
-        SecondHandItem.getItemListFromFirebase {
+        SecondHandItem.getItemOnSaleListFromFirebase {
                 success,message,data->
 
             if(success){
@@ -194,7 +195,8 @@ class SecondHandPlatformActivity : AppCompatActivity() {
                 swipeLayout.isRefreshing = false
 
                 itemOnSaleFullList.addAll(data!!)
-                data!!.forEach { i-> itemOnSaleList.add(i)}
+                //if the item is not posted by current user only show it
+                data!!.forEach { i-> if(i.postedByUser.userId != FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@SecondHandPlatformActivity))itemOnSaleList.add(i)}
 
                 var sortBy = sortBySpinner.selectedItem as String
                 when(sortBy){
