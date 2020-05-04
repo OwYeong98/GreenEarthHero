@@ -12,6 +12,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
+import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemSecondHandItem
 import com.oymj.greenearthhero.adapters.spinner.TimeAvailableSpinnerAdapter
 import com.oymj.greenearthhero.data.SecondHandItem
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
@@ -80,7 +82,9 @@ class SecondHandPlatformActivity : AppCompatActivity() {
                     tvSearchedKeyword.visibility = View.GONE
                     inputSearch.setText("")
                     itemOnSaleList.clear()
-                    itemOnSaleFullList.forEach{item-> itemOnSaleList.add(item)}
+
+                    //if the item is not posted by current logged in user then add to the list
+                    itemOnSaleFullList.forEach{item-> if(item.postedByUser.userId != FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@SecondHandPlatformActivity)) itemOnSaleList.add(item)}
                     recyclerViewAdapter.notifyDataSetChanged()
                 }
 
@@ -236,7 +240,26 @@ class SecondHandPlatformActivity : AppCompatActivity() {
 
             override fun onItemClickedListener(data: Any, clickType:Int) {
                 if(data is SecondHandItem){
+                    var intent = Intent(this@SecondHandPlatformActivity,BuyerViewItemDetailActivity::class.java)
+                    intent.putExtra("itemId",data.id)
+                    startActivity(intent)
+                }
+            }
 
+            //override the view type to return -1 cause we want to choose recycler item mannually
+            override fun getItemViewType(position: Int): Int {
+                return if(data.get(position)::class.java.simpleName == "SecondHandItem"){
+                    -1
+                }else {
+                    super.getItemViewType(position)
+                }
+            }
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                return if(viewType == -1){
+                    RecyclerItemSecondHandItem().getViewHolder(parent,context,this)
+                }else{
+                    super.onCreateViewHolder(parent, viewType)
                 }
             }
         }
@@ -264,19 +287,19 @@ class SecondHandPlatformActivity : AppCompatActivity() {
                 var sortBy = sortBySpinner.selectedItem as String
                 when(sortBy){
                     "Latest Post"->{
-                        itemOnSaleList.sortBy { current-> (current as SecondHandItem).datePosted.time }
+                        itemOnSaleList.sortByDescending { current-> if(current is SecondHandItem) current.datePosted.time else 0 }
                         recyclerViewAdapter.notifyDataSetChanged()
                     }
                     "Oldest Post"->{
-                        itemOnSaleList.sortByDescending { current-> (current as SecondHandItem).datePosted.time }
+                        itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.datePosted.time else 0 }
                         recyclerViewAdapter.notifyDataSetChanged()
                     }
                     "Price Asc"->{
-                        itemOnSaleList.sortBy { current-> (current as SecondHandItem).itemPrice }
+                        itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.itemPrice else 0.0 }
                         recyclerViewAdapter.notifyDataSetChanged()
                     }
                     "Price Desc"->{
-                        itemOnSaleList.sortByDescending { current-> (current as SecondHandItem).itemPrice }
+                        itemOnSaleList.sortByDescending { current-> if(current is SecondHandItem) current.itemPrice else 0.0 }
                         recyclerViewAdapter.notifyDataSetChanged()
                     }
                 }

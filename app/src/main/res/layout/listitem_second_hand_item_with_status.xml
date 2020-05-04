@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/mainContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/lightestgrey"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="7">
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/darkgrey"
+            android:textSize="15sp"
+            android:text="Date: 12/12/1000 12:12:12"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/darkgrey"
+                android:textSize="16sp"
+                android:text="Item:"/>
+            <TextView
+                android:id="@+id/tvItemName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/darkgrey"
+                android:textSize="16sp"
+                android:text="Sport Shoes "/>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/darkgrey"
+            android:textSize="16sp"
+            android:text="Price: Rm 50"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"/>
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/green_gradient_color"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="14sp"
+        android:text="Pending for Delivery"/>
+
+</LinearLayout>
