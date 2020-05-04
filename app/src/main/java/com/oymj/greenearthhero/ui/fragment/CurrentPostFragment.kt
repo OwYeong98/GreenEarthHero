@@ -12,7 +12,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
+import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemCurrentItemPost
+import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemSecondHandItem
+import com.oymj.greenearthhero.data.SecondHandItem
 import com.oymj.greenearthhero.ui.activity.PostNewItemActivity
+import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import kotlinx.android.synthetic.main.fragment_current_post.*
 
@@ -42,9 +46,26 @@ class CurrentPostFragment : Fragment() {
             }
 
             override fun onItemClickedListener(data: Any, clickType:Int) {
-//                if(data is RecycleRequest){
-//
-//                }
+                if(data is SecondHandItem){
+
+                }
+            }
+
+            //override the view type to return -1 cause we want to choose recycler item mannually
+            override fun getItemViewType(position: Int): Int {
+                return if(data.get(position)::class.java.simpleName == "SecondHandItem"){
+                    -1
+                }else {
+                    super.getItemViewType(position)
+                }
+            }
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                return if(viewType == -1){
+                    RecyclerItemCurrentItemPost().getViewHolder(parent,context,this)
+                }else{
+                    super.onCreateViewHolder(parent, viewType)
+                }
             }
         }
         myRecyclerView.layoutManager = LinearLayoutManager(view.context)
@@ -73,7 +94,7 @@ class CurrentPostFragment : Fragment() {
     private fun listenToFirebaseCollectionChangesAndUpdateUI(){
         var db = FirebaseFirestore.getInstance()
 
-        listener = db.collection("Current_Post").whereEqualTo("userId", FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)).addSnapshotListener{
+        listener = db.collection("Second_hand_Item").whereEqualTo("postedBy", FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)).addSnapshotListener{
                 snapshot,e->
             if (e != null) {
                 return@addSnapshotListener
@@ -87,39 +108,37 @@ class CurrentPostFragment : Fragment() {
     }
 
     private fun getCurrentPostFromFirebase(){
-//        //clear previous data first
-//        currentRequestList.clear()
-//
-//        //show loading skeletal first while getting data from firestore
-//        recyclerViewAdapter.startSkeletalLoading(7, UniversalAdapter.SKELETAL_TYPE_3)
-//
-//        RecycleRequest.getRecycleRequestFromFirebase{
-//                success,message,data ->
-//
-//            if(success){
-//                recyclerViewAdapter.stopSkeletalLoading()
-//                swipeLayout.isRefreshing = false
-//
-//                //filter only show request that are requested by the current logged in user
-//                for(request in data!!){
-//                    if(request.requestedUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
-//                        currentRequestList.add(request)
-//                    }
-//                }
-//
-//                //refresh recyclerview
-//                recyclerViewAdapter.notifyDataSetChanged()
-//
-//
-//            }else{
-//                recyclerViewAdapter.stopSkeletalLoading()
-//                swipeLayout.isRefreshing = false
-//
-//                var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
-//                errorDialog.show()
-//            }
-//
-//        }
+        //clear previous data first
+        currentPostList.clear()
+
+        //show loading skeletal first while getting data from firestore
+        recyclerViewAdapter.startSkeletalLoading(7, UniversalAdapter.SKELETAL_TYPE_3)
+
+        SecondHandItem.getItemListOnSaleOfUserFromFirebase(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)!!){
+                success,message,data ->
+
+            if(success){
+                recyclerViewAdapter.stopSkeletalLoading()
+                swipeLayout.isRefreshing = false
+
+                data!!.forEach { item-> currentPostList.add(item) }
+
+                currentPostList.sortByDescending { item-> if(item is SecondHandItem) item.datePosted.time else 0 }
+
+                //refresh recyclerview
+                activity!!.runOnUiThread {
+                    recyclerViewAdapter.notifyDataSetChanged()
+                }
+
+            }else{
+                recyclerViewAdapter.stopSkeletalLoading()
+                swipeLayout.isRefreshing = false
+
+                var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
+                errorDialog.show()
+            }
+
+        }
     }
 
 }

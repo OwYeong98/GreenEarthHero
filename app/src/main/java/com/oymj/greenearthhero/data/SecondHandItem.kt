@@ -70,7 +70,7 @@ class SecondHandItem(
                             var itemPrice = item.getLong("itemPrice")!!.toDouble()
                             var imageUrl = item.getString("imageUrl")!!
                             var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
-                            var boughtByUser = if(item.getString("boughtBy")!=null) User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
+                            var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
                             var courierCompany = item.getString("courierCompany")
                             var trackingNo = item.getString("trackingNo")
 
@@ -104,7 +104,7 @@ class SecondHandItem(
                             var itemPrice = item.getLong("itemPrice")!!.toDouble()
                             var imageUrl = item.getString("imageUrl")!!
                             var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
-                            var boughtByUser = if(item.getString("boughtBy")!=null) User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
+                            var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
                             var courierCompany = item.getString("courierCompany")
                             var trackingNo = item.getString("trackingNo")
 
@@ -122,6 +122,38 @@ class SecondHandItem(
                     callback(false,ex.toString(),null)
                 }
         }
+
+        fun getItemByIdFromFirebase(itemId:String,callback:(Boolean,String?,SecondHandItem?)->Unit){
+            FirebaseFirestore.getInstance().collection("Second_Hand_Item").document(itemId).get()
+                .addOnSuccessListener {
+                        itemSnapshot->
+
+                    GlobalScope.launch {
+                        var item = itemSnapshot
+                        var id = item.id
+                        var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(item.getString("datePosted"))
+                        var itemName = item.getString("itemName")!!
+                        var itemDesc = item.getString("itemDesc")!!
+                        var itemPrice = item.getLong("itemPrice")!!.toDouble()
+                        var imageUrl = item.getString("imageUrl")!!
+                        var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
+                        var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
+                        var courierCompany = item.getString("courierCompany")
+                        var trackingNo = item.getString("trackingNo")
+
+
+                        var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,courierCompany,trackingNo)
+
+                        callback(true,null,newItem)
+                    }
+                }
+                .addOnFailureListener {
+                        ex->
+                    callback(false,ex.toString(),null)
+                }
+        }
+
+
     }
 
 }
