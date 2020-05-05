@@ -1,5 +1,6 @@
 package com.oymj.greenearthhero.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemCurrentItemPurchase
 import com.oymj.greenearthhero.data.SecondHandItem
+import com.oymj.greenearthhero.ui.activity.CurrentPurchaseDetailActivity
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import kotlinx.android.synthetic.main.fragment_sales_history.*
@@ -43,9 +45,11 @@ class CurrentPurchaseFragment : Fragment() {
             }
 
             override fun onItemClickedListener(data: Any, clickType:Int) {
-//                if(data is SecondHandItem){
-//
-//                }
+                if(data is SecondHandItem){
+                    var intent = Intent(context!!,CurrentPurchaseDetailActivity::class.java)
+                    intent.putExtra("itemId",data.id)
+                    activity!!.startActivity(intent)
+                }
             }
 
             //override the view type to return -1 cause we want to choose recycler item mannually

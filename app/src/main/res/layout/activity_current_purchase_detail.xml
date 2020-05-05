@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:backgroundTint="@color/transparent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Item Purchase Detail"
+            android:paddingRight="30dp"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textColor="@color/darkgrey"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="180dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:background="@drawable/green_gradient_color"
+                android:fontFamily="@font/montserrat_bold"
+                android:textSize="14sp"
+                android:text="Pending for Delivery"/>
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/darkgrey"
+                android:textSize="15sp"
+                android:text="Date: 12/12/1000 12:12:12"/>
+            <TextView
+                android:id="@+id/tvItemName"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/darkgrey"
+                android:textSize="15sp"
+                android:text="Item: Sport Shoes"/>
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/darkgrey"
+                android:textSize="15sp"
+                android:text="RM 30"/>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/darkgrey"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/mapboxGreen"
+                    android:textSize="16sp"
+                    android:text="Delivery Detail"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="Delivery Company:"/>
+
+            <TextView
+                android:id="@+id/tvDeliveryCompany"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:text="N/A"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="Tracking No: "/>
+
+            <TextView
+                android:id="@+id/tvItemDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:text="N/A"/>
+
+            <TextView
+                android:id="@+id/btnMarkItemAsReceived"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
+                android:background="@color/darkgrey"
+                android:text="Mark as Received"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/btnChatWithSeller"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/montserrat_regular"
+                android:textSize="16sp"
+                android:background="@color/darkgrey"
+                android:text="Chat With Seller"
+                android:gravity="center"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp"
+        android:background="@color/lightgrey">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="14sp"
+            android:text="If seller did not send the item,\n
+Please contact our customer service on\n03-9902 0093\n
+we assist you for the refund procedure" />
+
+    </LinearLayout>
+</LinearLayout>
