@@ -22,7 +22,7 @@
             android:textSize="17sp"
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/darkgrey"
-            android:text="Add Donation Location" />
+            android:text="Add New Location" />
 
         <ImageButton
             android:id="@+id/btnDelete"
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Donate Location Name"
+            android:text="Location Name"
             android:textColor="@color/darkgrey"
             android:fontFamily="@font/montserrat_regular"
             android:textSize="18sp"/>
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Donate Location Address"
+            android:text="Location Address"
             android:textColor="@color/darkgrey"
             android:fontFamily="@font/montserrat_regular"
             android:textSize="18sp"/>
