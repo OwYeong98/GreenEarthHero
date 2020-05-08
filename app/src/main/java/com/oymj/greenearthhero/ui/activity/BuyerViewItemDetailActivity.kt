@@ -1,11 +1,16 @@
 package com.oymj.greenearthhero.ui.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -17,6 +22,7 @@ import com.oymj.greenearthhero.data.SecondHandItem
 import com.oymj.greenearthhero.data.User
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
+import com.oymj.greenearthhero.ui.fragment.PurchaseItemSelectLocationAndPaymentFragment
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_buyer_view_item_detail.*
@@ -24,11 +30,17 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
+
 class BuyerViewItemDetailActivity: AppCompatActivity() {
+
 
     lateinit var currentViewingItemDetail:SecondHandItem
     lateinit var currentViewingItemId:String
     lateinit var listener: ListenerRegistration
+
+    private var currentBottomSheetState = BottomSheetBehavior.STATE_HIDDEN
+    private lateinit var myBottomSheetBehavior: BottomSheetBehavior<FrameLayout>
+    private lateinit var collapsedItemPurchaseFragmentLayoutParam: ViewGroup.LayoutParams
 
     //Better control of onClickListener
     //all button action will be registered here
@@ -39,7 +51,10 @@ class BuyerViewItemDetailActivity: AppCompatActivity() {
                     finish()
                 }
                 btnBuyNow->{
-
+                    myBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
+                darkBackgroundCover->{
+                    myBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 }
                 btnChatWithSeller->{
                     var loadingDialog = LoadingDialog(this@BuyerViewItemDetailActivity)
@@ -74,8 +89,8 @@ class BuyerViewItemDetailActivity: AppCompatActivity() {
                             }
                         }
                     })
-
                 }
+
             }
         }
     }
@@ -88,6 +103,7 @@ class BuyerViewItemDetailActivity: AppCompatActivity() {
 
         linkAllButtonWithOnClickListener()
         setupUI()
+        setupBottomSheet()
 
     }
 
@@ -186,16 +202,69 @@ class BuyerViewItemDetailActivity: AppCompatActivity() {
 
     }
 
+    private fun setupBottomSheet(){
+        collapsedItemPurchaseFragmentLayoutParam = itemPurchaseFrameLayout.layoutParams
+        myBottomSheetBehavior = BottomSheetBehavior.from(item_purchase_bottom_sheet)
+
+        myBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                if (currentBottomSheetState == BottomSheetBehavior.STATE_EXPANDED) {
+                    item_purchase_bottom_sheet.setBackgroundResource(R.drawable.white_rounded_corner_bg_with_shadow)
+                } else {
+                    item_purchase_bottom_sheet.setBackgroundColor(Color.WHITE)
+                }
+            }
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (currentBottomSheetState != newState) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            currentBottomSheetState = BottomSheetBehavior.STATE_COLLAPSED
+                            itemPurchaseFrameLayout.layoutParams = collapsedItemPurchaseFragmentLayoutParam
+                            item_purchase_bottom_sheet.setBackgroundResource(R.drawable.white_rounded_corner_bg_with_shadow)
+                            darkBackgroundCover.visibility = View.VISIBLE
+                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            currentBottomSheetState = BottomSheetBehavior.STATE_HIDDEN
+                            darkBackgroundCover.visibility = View.GONE
+                        }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            currentBottomSheetState = BottomSheetBehavior.STATE_EXPANDED
+                            val layoutParams = FrameLayout.LayoutParams(
+                                FrameLayout.LayoutParams.MATCH_PARENT,
+                                FrameLayout.LayoutParams.MATCH_PARENT
+                            )
+                            itemPurchaseFrameLayout.layoutParams = layoutParams
+                            item_purchase_bottom_sheet.setBackgroundColor(Color.WHITE)
+
+                            darkBackgroundCover.visibility = View.VISIBLE
+                        }
+                        BottomSheetBehavior.STATE_DRAGGING -> {
+
+                        }
+                        BottomSheetBehavior.STATE_SETTLING -> {
+
+                        }
+                    }
+                }
+            }
+        })
+
+        myBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     private fun linkAllButtonWithOnClickListener() {
         //all button with onClick listener should be registered in this list
         val actionButtonViewList = listOf(
             btnBack,
             btnBuyNow,
-            btnChatWithSeller
+            btnChatWithSeller,
+            darkBackgroundCover
         )
 
         for (view in actionButtonViewList) {
             view.setOnClickListener(myOnClickListener)
         }
     }
+
 }

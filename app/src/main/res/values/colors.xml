@@ -17,5 +17,6 @@
     <color name="inputContainerGrey">#686868</color>
     <color name="mapboxGreen">#1B7713</color>
     <color name="transparent">#00000000</color>
+    <color name="halfTransparent">#BF000000</color>
     <color name="transparent_pressed">#c4c2bc</color>
 </resources>
