@@ -214,14 +214,11 @@ class PurchaseItemSelectLocationAndPaymentFragment : Fragment() {
                 val paymentIntent = result.intent
                 val status = paymentIntent.status
                 if (status == StripeIntent.Status.Succeeded) {
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-
-                    Log.d("wtf", "Payment succeed. Gson: ${gson}")
-
-                    var successDialog = SuccessDialog(context!!,"Purchased Successfully","Your Purchase is processed successfully. You can keep track of your purchase on My Purchase page.")
+                    var successDialog = SuccessDialog(context!!,"Purchased Successfully","Your Purchase is processed successfully. You can keep track of your purchase on My Purchase page."){
+                        activity!!.finish()
+                    }
                     successDialog.show()
                 } else {
-                    Log.d("wtf", "Payment Failed")
                     var errorDialog = ErrorDialog(context!!,"Payment Gateway error!","Stripe encountered failure when processing your credit/debit card!")
                     errorDialog.show()
                 }
@@ -229,7 +226,6 @@ class PurchaseItemSelectLocationAndPaymentFragment : Fragment() {
 
             override fun onError(e: Exception) {
                 loadingDialog.dismiss()
-                Log.d("wtf", "Payment Failed With Error: "+e.toString())
                 var errorDialog = ErrorDialog(context!!,"Payment Gateway error!","Stripe encountered failure when processing your credit/debit card!")
                 errorDialog.show()
             }

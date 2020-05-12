@@ -15,6 +15,7 @@ class SecondHandItem(
     var datePosted: Date,
     var postedByUser: User,
     var boughtByUser: User?,
+    var deliveryLocation:Location?,
     var courierCompany: String?,
     var trackingNo:String?
 ) {
@@ -37,11 +38,12 @@ class SecondHandItem(
                             var imageUrl = item.getString("imageUrl")!!
                             var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
                             var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
+                            var deliveryLocation = if(item.getString("deliveryLocationId")!="")Location.suspendGetLocationById(item.getString("deliveryLocationId")!!) else null
                             var courierCompany = item.getString("courierCompany")
                             var trackingNo = item.getString("trackingNo")
 
 
-                            var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,courierCompany,trackingNo)
+                            var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,deliveryLocation,courierCompany,trackingNo)
 
                             itemList.add(newItem)
                         }
@@ -71,11 +73,12 @@ class SecondHandItem(
                             var imageUrl = item.getString("imageUrl")!!
                             var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
                             var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
+                            var deliveryLocation = if(item.getString("deliveryLocationId")!="")Location.suspendGetLocationById(item.getString("deliveryLocationId")!!) else null
                             var courierCompany = item.getString("courierCompany")
                             var trackingNo = item.getString("trackingNo")
 
 
-                            var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,courierCompany,trackingNo)
+                            var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,deliveryLocation,courierCompany,trackingNo)
 
                             itemList.add(newItem)
                         }
@@ -105,11 +108,12 @@ class SecondHandItem(
                             var imageUrl = item.getString("imageUrl")!!
                             var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
                             var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
+                            var deliveryLocation = if(item.getString("deliveryLocationId")!="")Location.suspendGetLocationById(item.getString("deliveryLocationId")!!) else null
                             var courierCompany = item.getString("courierCompany")
                             var trackingNo = item.getString("trackingNo")
 
 
-                            var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,courierCompany,trackingNo)
+                            var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,deliveryLocation,courierCompany,trackingNo)
 
                             itemList.add(newItem)
                         }
@@ -138,11 +142,12 @@ class SecondHandItem(
                         var imageUrl = item.getString("imageUrl")!!
                         var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
                         var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
+                        var deliveryLocation = if(item.getString("deliveryLocationId")!="")Location.suspendGetLocationById(item.getString("deliveryLocationId")!!) else null
                         var courierCompany = item.getString("courierCompany")
                         var trackingNo = item.getString("trackingNo")
 
 
-                        var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,courierCompany,trackingNo)
+                        var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,deliveryLocation,courierCompany,trackingNo)
 
                         callback(true,null,newItem)
                     }
