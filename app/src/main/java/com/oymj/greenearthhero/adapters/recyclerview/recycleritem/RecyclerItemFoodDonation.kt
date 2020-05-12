@@ -31,9 +31,9 @@ class RecyclerItemFoodDonation : UniversalRecyclerItem(FoodDonation::class.java.
                 val tvDistanceAway = view.findViewById<TextView>(R.id.tvDistanceAway)
 
                 //set data
-                tvRestaurantName.text = data.donateLocation.name
+                tvRestaurantName.text = data.location.name
                 tvDonatingUser.text = data.donatorUser.getFullName()
-                tvAddress.text = data.donateLocation.address
+                tvAddress.text = data.location.address
                 tvTotalFoodQuantity.text = "Total Food Quantity: ${data.totalFoodAmount}"
 
                 if(LocationUtils.getLastKnownLocation() != null){

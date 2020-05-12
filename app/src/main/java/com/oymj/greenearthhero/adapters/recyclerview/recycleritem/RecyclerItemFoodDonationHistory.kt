@@ -30,8 +30,8 @@ class RecyclerItemFoodDonationHistory : UniversalRecyclerItem(FoodDonationHistor
                 val tvTotalFood = view.findViewById<TextView>(R.id.tvTotalFood)
 
                 tvDate.text = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(data.dateEnded)
-                tvRestaurantName.text = data.donateLocation.name
-                tvAddress.text = data.donateLocation.address
+                tvRestaurantName.text = data.location.name
+                tvAddress.text = data.location.address
 
 
                 tvTotalFood.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,

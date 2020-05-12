@@ -2,7 +2,6 @@ package com.oymj.greenearthhero.ui.activity
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -12,11 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.functions.FirebaseFunctions
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemClaimFood
-import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemFoodEditable
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemFoodEditableAmount
 import com.oymj.greenearthhero.data.ClaimFood
 import com.oymj.greenearthhero.data.Food
@@ -25,14 +22,11 @@ import com.oymj.greenearthhero.ui.dialog.*
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_food_donation_detail.*
-import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.ThreadPoolExecutor
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 class FoodDonationDetailActivity : AppCompatActivity() {
 
@@ -229,11 +223,11 @@ class FoodDonationDetailActivity : AppCompatActivity() {
                             btnClaim.text = "Claim Food"
                             btnExtends.visibility = View.GONE
                         }
-                    }
 
-                    //update the UI
-                    tvRestaurantName.text = foodDonation?.donateLocation?.name
-                    tvAddress.text = foodDonation?.donateLocation?.address
+                        //update the UI
+                        tvRestaurantName.text = foodDonation?.location?.name
+                        tvAddress.text = foodDonation?.location?.address
+                    }
 
                     //end previous thread if there are already one
                     if (timeLeftUpdaterThread != null){
@@ -397,7 +391,7 @@ class FoodDonationDetailActivity : AppCompatActivity() {
         val donationHistoryDocument = hashMapOf(
             "date_started" to dateFormat.format(data.datePosted),
             "date_ended" to currentDateTime,
-            "donateLocation" to data.donateLocation,
+            "donateLocation" to data.location,
             "donatorUser" to data.donatorUser,
             "minutesAvailable" to data.minutesAvailable,
             "totalFoodAmount" to data.totalFoodAmount

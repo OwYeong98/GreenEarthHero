@@ -1,9 +1,7 @@
 package com.oymj.greenearthhero.data
 
-import android.location.Location
-import android.webkit.ValueCallback
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.oymj.greenearthhero.data.Location
 import com.oymj.greenearthhero.utils.LocationUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -15,7 +13,7 @@ class FoodDonation(
     var id:String,
     var donatorUser: User,
     var datePosted: Date,
-    var donateLocation:DonateLocation,
+    var location: com.oymj.greenearthhero.data.Location,
     var minutesAvailable:Int,
     var foodList: ArrayList<Food>,
     var totalFoodAmount:Int
@@ -32,7 +30,7 @@ class FoodDonation(
                         for(foodDonation in foodDonationSnapshot!!){
                             var id = foodDonation.id
                             var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonation.getString("datePosted"))
-                            var donateLocation = DonateLocation.getDonateLocationById(foodDonation.getString("donateLocationId")!!)
+                            var donateLocation = Location.getLocationById(foodDonation.getString("donateLocationId")!!)
                             var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonation.getString("donatorUserId")!!)
                             var minutesAvailable = foodDonation.getLong("minutesAvailable")?.toInt()
                             var totalFoodAmount = foodDonation.getLong("totalFoodAmount")?.toInt()
@@ -58,7 +56,7 @@ class FoodDonation(
             FirebaseFirestore.getInstance().collection("Food_Donation").get()
                 .addOnSuccessListener {
                         foodDonationSnapshot->
-                    DonateLocation.getDonateLocationList(callback = {
+                    Location.getLocationList(callback = {
                         success,message,donateLocationList->
 
                         if(success){
@@ -67,7 +65,7 @@ class FoodDonation(
                                     var id = foodDonation.id
                                     var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonation.getString("datePosted"))
                                     var donateLocationId = foodDonation.getString("donateLocationId")!!
-                                    var donateLocation  = donateLocationList?.fold(null as DonateLocation?,{prev,curr-> if(curr.id == donateLocationId) curr else prev})
+                                    var donateLocation  = donateLocationList?.fold(null as com.oymj.greenearthhero.data.Location?,{ prev, curr-> if(curr.id == donateLocationId) curr else prev})
 
                                     var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonation.getString("donatorUserId")!!)
                                     var minutesAvailable = foodDonation.getLong("minutesAvailable")?.toInt()
@@ -99,7 +97,7 @@ class FoodDonation(
             FirebaseFirestore.getInstance().collection("Food_Donation").whereEqualTo("donatorUserId",userId).get()
                 .addOnSuccessListener {
                         foodDonationSnapshot->
-                    DonateLocation.getDonateLocationList(callback = {
+                    Location.getLocationList(callback = {
                             success,message,donateLocationList->
 
                         if(success){
@@ -108,7 +106,7 @@ class FoodDonation(
                                     var id = foodDonation.id
                                     var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonation.getString("datePosted"))
                                     var donateLocationId = foodDonation.getString("donateLocationId")!!
-                                    var donateLocation  = donateLocationList?.fold(null as DonateLocation?,{prev,curr-> if(curr.id == donateLocationId) curr else prev})
+                                    var donateLocation  = donateLocationList?.fold(null as com.oymj.greenearthhero.data.Location?,{ prev, curr-> if(curr.id == donateLocationId) curr else prev})
 
                                     var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonation.getString("donatorUserId")!!)
                                     var minutesAvailable = foodDonation.getLong("minutesAvailable")?.toInt()
@@ -146,7 +144,7 @@ class FoodDonation(
                         var id = foodDonationSnapshot.id
                         var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonationSnapshot.getString("datePosted"))
                         var donateLocationId = foodDonationSnapshot.getString("donateLocationId")!!
-                        var donateLocation  = DonateLocation.getDonateLocationById(donateLocationId)
+                        var donateLocation  = Location.getLocationById(donateLocationId)
 
                         var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonationSnapshot.getString("donatorUserId")!!)
                         var minutesAvailable = foodDonationSnapshot.getLong("minutesAvailable")?.toInt()
@@ -173,8 +171,8 @@ class FoodDonation(
         if(LocationUtils.getLastKnownLocation() != null){
             var userCurrentLoc = LocationUtils.getLastKnownLocation()
             var results: FloatArray = FloatArray(2)
-            Location.distanceBetween(userCurrentLoc?.latitude!!,userCurrentLoc?.longitude!!,
-                donateLocation.location.lat!!,donateLocation.location.lon!!,results)
+            android.location.Location.distanceBetween(userCurrentLoc?.latitude!!,userCurrentLoc?.longitude!!,
+                location.location.lat!!,location.location.lon!!,results)
             return results[0]
         }else{
             return -1f

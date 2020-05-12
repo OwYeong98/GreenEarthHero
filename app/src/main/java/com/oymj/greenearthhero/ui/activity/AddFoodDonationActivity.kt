@@ -3,14 +3,11 @@ package com.oymj.greenearthhero.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +18,7 @@ import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemFoodEditable
 import com.oymj.greenearthhero.adapters.spinner.DonateLocationSpinnerAdapter
 import com.oymj.greenearthhero.adapters.spinner.TimeAvailableSpinnerAdapter
-import com.oymj.greenearthhero.data.DonateLocation
+import com.oymj.greenearthhero.data.Location
 import com.oymj.greenearthhero.data.Food
 import com.oymj.greenearthhero.data.TomTomPosition
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
@@ -47,7 +44,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
     }
 
     lateinit var donateLocationSpinnerAdapter:DonateLocationSpinnerAdapter
-    var donateLocationList =  ArrayList<DonateLocation>()
+    var donateLocationList =  ArrayList<Location>()
 
 
     private lateinit var recyclerViewAdapter: UniversalAdapter
@@ -61,7 +58,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
             when (v) {
                 btnDonateLocationEdit ->{
                     var intent = Intent(this@AddFoodDonationActivity,AddDonationLocationActivity::class.java)
-                    intent.putExtra("donateLocation",donateLocationSpinner.selectedItem as DonateLocation)
+                    intent.putExtra("donateLocation",donateLocationSpinner.selectedItem as Location)
                     startActivityForResult(intent, ADD_DONATE_LOCATION_REQUEST_CODE)
                 }
                 btnAdd->{
@@ -72,7 +69,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
                     if(foodList.size == 0){
                         var errorDialog = ErrorDialog(this@AddFoodDonationActivity, "No Food Added","You must at least donate some food.")
                         errorDialog.show()
-                    }else if((donateLocationSpinner.selectedItem as DonateLocation).id == "-1" || (donateLocationSpinner.selectedItem as DonateLocation).id == "-2"){
+                    }else if((donateLocationSpinner.selectedItem as Location).id == "-1" || (donateLocationSpinner.selectedItem as Location).id == "-2"){
                         var errorDialog = ErrorDialog(this@AddFoodDonationActivity, "Donate Location not Selected","Please select donate location for your donation!")
                         errorDialog.show()
                     }else{
@@ -230,15 +227,15 @@ class AddFoodDonationActivity : AppCompatActivity() {
     }
 
     private fun getListOfDonateLocationFromFirebase(selectedDonationLocationId: String?){
-        DonateLocation.getDonateLocationListOfUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
+        Location.getLocationListOfUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
             success,message,data->
 
             if(success){
                 donateLocationList.clear()
                 donateLocationList.addAll(data!!)
 
-                donateLocationList.add(0,DonateLocation("-2","null","Please select a location","null", TomTomPosition()))
-                donateLocationList.add(DonateLocation("-1","null","add new location ...","null", TomTomPosition()))
+                donateLocationList.add(0,Location("-2","null","Please select a location","null", TomTomPosition()))
+                donateLocationList.add(Location("-1","null","add new location ...","null", TomTomPosition()))
 
                 if(selectedDonationLocationId!= null){
                     var selectedPosition=0
@@ -326,7 +323,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
         dateFormat.timeZone = TimeZone.getTimeZone("GMT+8:00")
 
         var minutesAvailable = (timeAvailableSpinner.selectedItem as String).replace("hours","").trim().toInt() * 60
-        var donateLocationId = (donateLocationSpinner.selectedItem as DonateLocation).id
+        var donateLocationId = (donateLocationSpinner.selectedItem as Location).id
 
         val donationData = hashMapOf(
             "datePosted" to dateFormat.format(Date()),

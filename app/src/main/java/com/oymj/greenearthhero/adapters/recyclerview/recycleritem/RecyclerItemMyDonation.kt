@@ -5,13 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalRecyclerItem
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalViewHolder
 import com.oymj.greenearthhero.data.FoodDonation
-import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import java.text.SimpleDateFormat
 
@@ -34,8 +32,8 @@ class RecyclerItemMyDonation : UniversalRecyclerItem(FoodDonation::class.java.si
 
                 var dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
                 //set data
-                tvRestaurantName.text = data.donateLocation.name
-                tvAddress.text = data.donateLocation.address
+                tvRestaurantName.text = data.location.name
+                tvAddress.text = data.location.address
                 tvDatePosted.text = dateFormat.format(data.datePosted)
                 tvDateEnd.text = dateFormat.format(data.getDonationEndTime())
                 tvTotalFood.text = "Total Food: ${data.totalFoodAmount}"

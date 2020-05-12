@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.api.ApisImplementation
-import com.oymj.greenearthhero.data.DonateLocation
+import com.oymj.greenearthhero.data.Location
 import com.oymj.greenearthhero.data.TomTomAddress
 import com.oymj.greenearthhero.data.TomTomPlacesResult
 import com.oymj.greenearthhero.data.TomTomPosition
@@ -33,7 +33,7 @@ class AddDonationLocationActivity: AppCompatActivity() {
 
     private lateinit var myGoogleMap: GoogleMap
     private lateinit var currentPinnedLocationMarker: Marker
-    private lateinit var currentEditingDonateLocation: DonateLocation
+    private lateinit var currentEditingLocation: Location
     private var currentPinnedLocation: TomTomPlacesResult = TomTomPlacesResult()
 
     //Better control of onClickListener
@@ -89,7 +89,7 @@ class AddDonationLocationActivity: AppCompatActivity() {
 
         var donateLocation = intent.getSerializableExtra("donateLocation")
         if(donateLocation!=null){
-            currentEditingDonateLocation = donateLocation as DonateLocation
+            currentEditingLocation = donateLocation as Location
         }
 
         setupUI()
@@ -98,8 +98,8 @@ class AddDonationLocationActivity: AppCompatActivity() {
 
     }
 
-    private fun displayDonateLocationData(data:DonateLocation){
-        currentEditingDonateLocation=data
+    private fun displayDonateLocationData(data:Location){
+        currentEditingLocation=data
 
         tvTitle.text = "Edit Donation Location"
         btnAdd.text = "Edit"
@@ -142,13 +142,13 @@ class AddDonationLocationActivity: AppCompatActivity() {
         if(donateLocationNameError.replace("|","") != ""){
             inputDonateLocationName.error = donateLocationNameError.replace("|","\n")
         }else{
-            DonateLocation.getDonateLocationListOfUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
+            Location.getLocationListOfUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
                 success,message,locationList->
                 var isLocationNameAlreadyExist = false
                 for(location in locationList!!){
                     if(location.name.toLowerCase() == donateLocationName.toLowerCase()){
-                        if(::currentEditingDonateLocation.isInitialized){
-                            if(currentEditingDonateLocation.name.toLowerCase() != location.name.toLowerCase())
+                        if(::currentEditingLocation.isInitialized){
+                            if(currentEditingLocation.name.toLowerCase() != location.name.toLowerCase())
                                 isLocationNameAlreadyExist = true
                         }else{
                             isLocationNameAlreadyExist = true
@@ -170,15 +170,15 @@ class AddDonationLocationActivity: AppCompatActivity() {
                     var loadingDialog = LoadingDialog(this)
                     loadingDialog.show()
 
-                    if(::currentEditingDonateLocation.isInitialized){
-                        FirebaseFirestore.getInstance().collection("Location").document(currentEditingDonateLocation.id).set(donateLocationData)
+                    if(::currentEditingLocation.isInitialized){
+                        FirebaseFirestore.getInstance().collection("Location").document(currentEditingLocation.id).set(donateLocationData)
                             .addOnSuccessListener {
                                     doc->
                                 loadingDialog.dismiss()
 
 
                                 var intent = Intent()
-                                intent.putExtra("id",currentEditingDonateLocation.id)
+                                intent.putExtra("id",currentEditingLocation.id)
                                 setResult(Activity.RESULT_OK,intent)
                                 finish()
                             }
@@ -210,7 +210,7 @@ class AddDonationLocationActivity: AppCompatActivity() {
     }
 
     private fun removeDonationLocationFromFirebase(){
-        FirebaseFirestore.getInstance().collection("Location").document(currentEditingDonateLocation.id).delete()
+        FirebaseFirestore.getInstance().collection("Location").document(currentEditingLocation.id).delete()
             .addOnSuccessListener {
                 doc->
 
@@ -280,8 +280,8 @@ class AddDonationLocationActivity: AppCompatActivity() {
             }
 
             //Display edit data
-            if(::currentEditingDonateLocation.isInitialized)
-                displayDonateLocationData(currentEditingDonateLocation)
+            if(::currentEditingLocation.isInitialized)
+                displayDonateLocationData(currentEditingLocation)
 
             myGoogleMap.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener{
                 override fun onMarkerDragEnd(marker: Marker?) {

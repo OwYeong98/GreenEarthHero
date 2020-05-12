@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.oymj.greenearthhero.R
-import com.oymj.greenearthhero.data.DonateLocation
+import com.oymj.greenearthhero.data.Location
 import com.oymj.greenearthhero.utils.RippleUtil
 
-class DonateLocationSpinnerAdapter(val context: Context, var data: ArrayList<DonateLocation>) : BaseAdapter() {
+class DonateLocationSpinnerAdapter(val context: Context, var data: ArrayList<Location>) : BaseAdapter() {
 
 
     val mInflater: LayoutInflater = LayoutInflater.from(context)
@@ -52,7 +52,7 @@ class DonateLocationSpinnerAdapter(val context: Context, var data: ArrayList<Don
 
     inner class ItemRowHolder(var view: View?, var position:Int) {
 
-        fun initialize(data:DonateLocation){
+        fun initialize(data:Location){
             var label = view?.findViewById(R.id.tvTitle) as TextView
             var mainContainer = view?.findViewById(R.id.mainContainer) as FrameLayout
 

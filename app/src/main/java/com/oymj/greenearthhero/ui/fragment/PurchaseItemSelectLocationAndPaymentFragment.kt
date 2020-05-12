@@ -14,7 +14,7 @@ import com.google.gson.GsonBuilder
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.spinner.DonateLocationSpinnerAdapter
 import com.oymj.greenearthhero.api.ApisImplementation
-import com.oymj.greenearthhero.data.DonateLocation
+import com.oymj.greenearthhero.data.Location
 import com.oymj.greenearthhero.data.TomTomPosition
 import com.oymj.greenearthhero.ui.activity.AddDonationLocationActivity
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
@@ -37,7 +37,7 @@ class PurchaseItemSelectLocationAndPaymentFragment : Fragment() {
     }
 
     lateinit var locationSpinnerAdapter:DonateLocationSpinnerAdapter
-    var locationList =  ArrayList<DonateLocation>()
+    var locationList =  ArrayList<Location>()
 
     lateinit var spinner:Spinner
     lateinit var btnEditLocation:ImageView
@@ -72,14 +72,14 @@ class PurchaseItemSelectLocationAndPaymentFragment : Fragment() {
         getListOfDonateLocationFromFirebase(null)
         btnEditLocation.setOnClickListener {
             var intent = Intent(context!!,AddDonationLocationActivity::class.java)
-            intent.putExtra("donateLocation",spinner.selectedItem as DonateLocation)
+            intent.putExtra("donateLocation",spinner.selectedItem as Location)
             startActivityForResult(intent, ADD_DONATE_LOCATION_REQUEST_CODE)
         }
 
         btnPayNow.setOnClickListener {
 //            var intent = Intent(context!!,StripePaymentActivity::class.java)
 //            startActivity(intent)
-            var selectedLoc=locationSpinner.selectedItem as DonateLocation
+            var selectedLoc=locationSpinner.selectedItem as Location
             if(selectedLoc.id == "-1" || selectedLoc.id == "-2"){
                 var errorDialog = ErrorDialog(context!!,"Location Must be selected","Please select delivery location!!");
                 errorDialog.show()
@@ -127,15 +127,15 @@ class PurchaseItemSelectLocationAndPaymentFragment : Fragment() {
     }
 
     fun getListOfDonateLocationFromFirebase(selectedDonationLocationId: String?){
-        DonateLocation.getDonateLocationListOfUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)!!,callback = {
+        Location.getLocationListOfUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)!!,callback = {
                 success,message,data->
 
             if(success){
                 locationList.clear()
                 locationList.addAll(data!!)
 
-                locationList.add(0,DonateLocation("-2","null","Please select a location","null", TomTomPosition()))
-                locationList.add(DonateLocation("-1","null","add new location ...","null", TomTomPosition()))
+                locationList.add(0,Location("-2","null","Please select a location","null", TomTomPosition()))
+                locationList.add(Location("-1","null","add new location ...","null", TomTomPosition()))
 
                 if(selectedDonationLocationId!= null){
                     var selectedPosition=0
@@ -156,7 +156,7 @@ class PurchaseItemSelectLocationAndPaymentFragment : Fragment() {
         })
     }
 
-    private fun startCheckout(selectedLocation:DonateLocation) {
+    private fun startCheckout(selectedLocation:Location) {
 
         if(cardInputWidget.paymentMethodCreateParams != null){
             loadingDialog = LoadingDialog(context!!)
