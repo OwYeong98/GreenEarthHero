@@ -142,56 +142,75 @@ class AddDonationLocationActivity: AppCompatActivity() {
         if(donateLocationNameError.replace("|","") != ""){
             inputDonateLocationName.error = donateLocationNameError.replace("|","\n")
         }else{
-
-            val donateLocationData = hashMapOf(
-                "address" to currentPinnedLocation?.address?.fullAddress,
-                "location" to GeoPoint(currentPinnedLocation?.latLong?.lat!!,currentPinnedLocation?.latLong?.lon!!),
-                "name" to inputDonateLocationName.text.toString(),
-                "userId" to FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)
-            )
-
-            var loadingDialog = LoadingDialog(this)
-            loadingDialog.show()
-
-            if(::currentEditingDonateLocation.isInitialized){
-                FirebaseFirestore.getInstance().collection("Donate_Location").document(currentEditingDonateLocation.id).set(donateLocationData)
-                    .addOnSuccessListener {
-                            doc->
-                        loadingDialog.dismiss()
-
-
-                        var intent = Intent()
-                        intent.putExtra("id",currentEditingDonateLocation.id)
-                        setResult(Activity.RESULT_OK,intent)
-                        finish()
+            DonateLocation.getDonateLocationListOfUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
+                success,message,locationList->
+                var isLocationNameAlreadyExist = false
+                for(location in locationList!!){
+                    if(location.name.toLowerCase() == donateLocationName.toLowerCase()){
+                        if(::currentEditingDonateLocation.isInitialized){
+                            if(currentEditingDonateLocation.name.toLowerCase() != location.name.toLowerCase())
+                                isLocationNameAlreadyExist = true
+                        }else{
+                            isLocationNameAlreadyExist = true
+                        }
                     }
-                    .addOnFailureListener {
-                            e -> Log.d("error", "Error writing document", e)
-                    }
-            }else{
-                FirebaseFirestore.getInstance().collection("Donate_Location").add(donateLocationData)
-                    .addOnSuccessListener {
-                            doc->
-                        loadingDialog.dismiss()
+                }
+
+                if(isLocationNameAlreadyExist){
+                    inputDonateLocationName.error = "Location Name Already exist. Please put another name!"
+                    inputDonateLocationName.requestFocus()
+                }else{
+                    val donateLocationData = hashMapOf(
+                        "address" to currentPinnedLocation?.address?.fullAddress,
+                        "location" to GeoPoint(currentPinnedLocation?.latLong?.lat!!,currentPinnedLocation?.latLong?.lon!!),
+                        "name" to inputDonateLocationName.text.toString(),
+                        "userId" to FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)
+                    )
+
+                    var loadingDialog = LoadingDialog(this)
+                    loadingDialog.show()
+
+                    if(::currentEditingDonateLocation.isInitialized){
+                        FirebaseFirestore.getInstance().collection("Location").document(currentEditingDonateLocation.id).set(donateLocationData)
+                            .addOnSuccessListener {
+                                    doc->
+                                loadingDialog.dismiss()
 
 
-                        var intent = Intent()
-                        intent.putExtra("id",doc.id)
-                        setResult(Activity.RESULT_OK,intent)
-                        finish()
+                                var intent = Intent()
+                                intent.putExtra("id",currentEditingDonateLocation.id)
+                                setResult(Activity.RESULT_OK,intent)
+                                finish()
+                            }
+                            .addOnFailureListener {
+                                    e -> Log.d("error", "Error writing document", e)
+                            }
+                    }else{
+                        FirebaseFirestore.getInstance().collection("Location").add(donateLocationData)
+                            .addOnSuccessListener {
+                                    doc->
+                                loadingDialog.dismiss()
+
+
+                                var intent = Intent()
+                                intent.putExtra("id",doc.id)
+                                setResult(Activity.RESULT_OK,intent)
+                                finish()
+                            }
+                            .addOnFailureListener {
+                                    e ->
+                                var errorDialog = ErrorDialog(this, "Error","We have encountered some error when contacting with firebase!")
+                                errorDialog.show()
+                                Log.d("error", "Error writing document", e)
+                            }
                     }
-                    .addOnFailureListener {
-                            e ->
-                        var errorDialog = ErrorDialog(this, "Error","We have encountered some error when contacting with firebase!")
-                        errorDialog.show()
-                        Log.d("error", "Error writing document", e)
-                    }
-            }
+                }
+            })
         }
     }
 
     private fun removeDonationLocationFromFirebase(){
-        FirebaseFirestore.getInstance().collection("Donate_Location").document(currentEditingDonateLocation.id).delete()
+        FirebaseFirestore.getInstance().collection("Location").document(currentEditingDonateLocation.id).delete()
             .addOnSuccessListener {
                 doc->
 

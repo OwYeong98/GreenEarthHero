@@ -1,8 +1,6 @@
 package com.oymj.greenearthhero.api
 
-import com.oymj.greenearthhero.api.responses.GeocodingTomTomResponse
-import com.oymj.greenearthhero.api.responses.SearchAddressResponse
-import com.oymj.greenearthhero.api.responses.ReverseGeocodingTomTomResponse
+import com.oymj.greenearthhero.api.responses.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,4 +15,11 @@ interface apis {
 
     @GET("search/2/reverseGeocode/{lat}%2C{long}.json")
     fun reverseGeocodingFromTomTom(@Path(value = "lat", encoded = false) lat:String,@Path(value = "long", encoded = false) long:String, @Query("key") key:String): Call<ReverseGeocodingTomTomResponse>
+
+    //***********API for Payment Server******************************************************************************//
+    //Payment server is hosted on heroku using laravel framework
+    @GET("stripe/initializePaymentIntent")
+    fun initializePaymentIntent(@Query("firebaseToken") firebaseToken:String, @Query("itemIdToPurchase") itemId:String,@Query("locationId") locationId:String): Call<BaseResponse<InitializePaymentIntentResponse>>
+
+
 }

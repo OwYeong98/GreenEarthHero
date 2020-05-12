@@ -3,5 +3,6 @@
     <string name="default_notification_channel_id">1</string>
     <string name="mapbox_access_token">pk.eyJ1IjoiZ3JlZW5lYXJ0aGhlcm8iLCJhIjoiY2s4NW5vajAzMDhndTNtbzcxbGQwenNtdyJ9.r-WLC0qXFs6XkdAEMBsrQw</string>
     <string name="tomtom_key">RWlk4GE537fozwuNN7rabDN2G8AAEv6h</string>
+    <string name="stripe_publishable_key">pk_test_VLgTWVFCVB1AzsOkSTeeRa5P00Z5r56N8D</string>
     <string name="title_activity_maps">Map</string>
 </resources>

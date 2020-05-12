@@ -105,6 +105,8 @@ class BuyerViewItemDetailActivity: AppCompatActivity() {
         setupUI()
         setupBottomSheet()
 
+
+
     }
 
     override fun onStart() {
@@ -155,6 +157,8 @@ class BuyerViewItemDetailActivity: AppCompatActivity() {
                     tvItemName.text = data!!.itemName
                     tvItemDesc.text = data!!.itemDesc
                     tvSellerName.text = data!!.postedByUser.getFullName()
+                    (itemPurchaseFragment.fragmentManager!!.fragments[0] as PurchaseItemSelectLocationAndPaymentFragment).setTotalAmount(data!!.itemPrice)
+                    (itemPurchaseFragment.fragmentManager!!.fragments[0] as PurchaseItemSelectLocationAndPaymentFragment).setItemId(data!!.id)
 
                     ivItemImage.setImageResource(R.drawable.skeleton_rounded_square)
                     shimmerLayout.startShimmerAnimation()

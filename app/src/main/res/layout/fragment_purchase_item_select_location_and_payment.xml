@@ -18,7 +18,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -72,6 +72,36 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_mastercard" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="Pay With Credit/Debit Card "
+            android:textColor="@color/darkgrey"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <com.stripe.android.view.CardInputWidget
+        android:id="@+id/cardInputWidget"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="40dp"/>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -84,6 +114,16 @@
         android:layout_marginBottom="10dp"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/tvTotalAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/darkgrey"
+            android:textSize="13sp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Total: RM 10000.00"/>
+        <TextView
+            android:id="@+id/btnPayNow"
             android:layout_width="180dp"
             android:layout_height="35dp"
             android:gravity="center"
