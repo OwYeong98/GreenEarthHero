@@ -15,7 +15,7 @@ class DonateLocation(
     companion object{
 
         fun getDonateLocationList( callback: (Boolean, String?, ArrayList<DonateLocation>?)-> Unit){
-            FirebaseFirestore.getInstance().collection("Donate_Location").get()
+            FirebaseFirestore.getInstance().collection("Location").get()
                 .addOnSuccessListener {
                         donateLocSnapshot->
 
@@ -47,7 +47,7 @@ class DonateLocation(
         }
 
         fun getDonateLocationListOfUser(userId:String, callback: (Boolean, String?, ArrayList<DonateLocation>?)-> Unit){
-            FirebaseFirestore.getInstance().collection("Donate_Location").whereEqualTo("userId",userId).get()
+            FirebaseFirestore.getInstance().collection("Location").whereEqualTo("userId",userId).get()
                 .addOnSuccessListener {
                         donateLocSnapshot->
 
@@ -79,7 +79,7 @@ class DonateLocation(
         }
 
         suspend fun getDonateLocationById(donationLocationId:String): DonateLocation? {
-            var donateLocationSnapshot = FirebaseFirestore.getInstance().collection("Donate_Location").document(donationLocationId).get().await()
+            var donateLocationSnapshot = FirebaseFirestore.getInstance().collection("Location").document(donationLocationId).get().await()
 
             var id = donateLocationSnapshot.id
             var name = donateLocationSnapshot.getString("name")

@@ -2,10 +2,10 @@ package com.oymj.greenearthhero.api
 
 import android.content.Context
 import android.util.Log
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import com.oymj.greenearthhero.R
-import com.oymj.greenearthhero.api.responses.GeocodingTomTomResponse
-import com.oymj.greenearthhero.api.responses.SearchAddressResponse
-import com.oymj.greenearthhero.api.responses.ReverseGeocodingTomTomResponse
+import com.oymj.greenearthhero.api.responses.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -54,6 +54,34 @@ class ApisImplementation {
             var service = retrofit.create(apis::class.java)
 
             return service
+        }
+
+        fun getPaymentServer():apis{
+            val logging = HttpLoggingInterceptor()
+
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+            val httpClient = OkHttpClient.Builder().addInterceptor(logging).build()
+
+
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://greenearthhero-nodejs-server.herokuapp.com/api/")
+                .client(httpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+
+            var service = retrofit.create(apis::class.java)
+
+            return service
+        }
+
+        fun <T> parseError(response:Response<out Any>) : BaseResponse<T>? {
+            Log.d("wtf","error : ${response.errorBody().toString()}")
+            val gson = Gson()
+            val type = object : TypeToken<BaseResponse<Any>>() {}.type
+            var errorResponse: BaseResponse<T>? = gson.fromJson(response.errorBody()!!.charStream(), type)
+
+            return errorResponse
         }
     }
 
@@ -109,6 +137,25 @@ class ApisImplementation {
                 }
             }
             override fun onFailure(call: Call<ReverseGeocodingTomTomResponse>, t: Throwable) {
+                callback(false,null)
+            }
+        })
+    }
+
+    fun initializePaymentIntent(context: Context,firebaseToken:String,itemIdToPurchase:String,locationId:String, callback:(Boolean, BaseResponse<InitializePaymentIntentResponse>?)->Unit){
+
+        var call = ApisImplementation.getPaymentServer().initializePaymentIntent(firebaseToken,itemIdToPurchase,locationId)
+
+        call.enqueue(object : Callback<BaseResponse<InitializePaymentIntentResponse>> {
+            override fun onResponse(call: Call<BaseResponse<InitializePaymentIntentResponse>>, response: Response<BaseResponse<InitializePaymentIntentResponse>>) {
+                if (response.isSuccessful) {
+                    callback(true,response.body())
+                }else{
+                    var errorResponse:BaseResponse<InitializePaymentIntentResponse> = parseError(response)!!
+                    callback(false,errorResponse!!)
+                }
+            }
+            override fun onFailure(call: Call<BaseResponse<InitializePaymentIntentResponse>>, t: Throwable) {
                 callback(false,null)
             }
         })

@@ -210,14 +210,14 @@
         android:clickable="true"
         android:background="@drawable/white_rounded_corner_bg_with_shadow"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="320dp"
+        app:behavior_peekHeight="360dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:focusable="true">
 
         <FrameLayout
             android:id="@+id/itemPurchaseFrameLayout"
             android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:layout_height="340dp">
             <fragment
                 android:id="@+id/itemPurchaseFragment"
                 android:layout_marginTop="5dp"
