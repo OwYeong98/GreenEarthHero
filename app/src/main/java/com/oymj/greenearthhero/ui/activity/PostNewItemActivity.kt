@@ -174,6 +174,7 @@ class PostNewItemActivity : AppCompatActivity() {
             "itemPrice" to price,
             "imageUrl" to "",
             "boughtBy" to "",
+            "deliveryLocationId" to "",
             "courierCompany" to "",
             "trackingNo" to ""
         )

@@ -78,7 +78,7 @@ class Location(
                 }
         }
 
-        suspend fun getLocationById(donationLocationId:String): Location? {
+        suspend fun suspendGetLocationById(donationLocationId:String): Location? {
             var donateLocationSnapshot = FirebaseFirestore.getInstance().collection("Location").document(donationLocationId).get().await()
 
             var id = donateLocationSnapshot.id

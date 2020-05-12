@@ -30,7 +30,7 @@ class FoodDonation(
                         for(foodDonation in foodDonationSnapshot!!){
                             var id = foodDonation.id
                             var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonation.getString("datePosted"))
-                            var donateLocation = Location.getLocationById(foodDonation.getString("donateLocationId")!!)
+                            var donateLocation = Location.suspendGetLocationById(foodDonation.getString("donateLocationId")!!)
                             var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonation.getString("donatorUserId")!!)
                             var minutesAvailable = foodDonation.getLong("minutesAvailable")?.toInt()
                             var totalFoodAmount = foodDonation.getLong("totalFoodAmount")?.toInt()
@@ -144,7 +144,7 @@ class FoodDonation(
                         var id = foodDonationSnapshot.id
                         var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonationSnapshot.getString("datePosted"))
                         var donateLocationId = foodDonationSnapshot.getString("donateLocationId")!!
-                        var donateLocation  = Location.getLocationById(donateLocationId)
+                        var donateLocation  = Location.suspendGetLocationById(donateLocationId)
 
                         var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonationSnapshot.getString("donatorUserId")!!)
                         var minutesAvailable = foodDonationSnapshot.getLong("minutesAvailable")?.toInt()
