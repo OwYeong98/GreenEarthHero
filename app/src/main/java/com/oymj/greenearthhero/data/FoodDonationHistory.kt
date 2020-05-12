@@ -14,7 +14,7 @@ class FoodDonationHistory(
     var donatorUser: User,
     var dateStarted: Date,
     var dateEnded: Date,
-    var donateLocation:DonateLocation,
+    var location:Location,
     var minutesAvailable:Int,
     var foodList: ArrayList<Food>,
     var totalFoodAmount:Int
@@ -43,7 +43,7 @@ class FoodDonationHistory(
                             location.lat = positionData["lat"]!!
                             location.lon = positionData["lon"]!!
 
-                            var donateLocationObj = DonateLocation(donateLocationData["id"]!!,donateLocationData["userId"]!!,donateLocationData["name"]!!
+                            var donateLocationObj = Location(donateLocationData["id"]!!,donateLocationData["userId"]!!,donateLocationData["name"]!!
                                 ,donateLocationData["address"]!!,location)
 
                             var donatorUserObj = User(donatorUserData["userId"]!!,donatorUserData["email"]!!,donatorUserData["firstName"]!!

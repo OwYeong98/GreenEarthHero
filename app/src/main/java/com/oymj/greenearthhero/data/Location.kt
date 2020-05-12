@@ -5,7 +5,7 @@ import kotlinx.coroutines.tasks.await
 import java.io.Serializable
 import java.util.ArrayList
 
-class DonateLocation(
+class Location(
     var id:String,
     var userId:String,
     var name:String,
@@ -14,12 +14,12 @@ class DonateLocation(
 
     companion object{
 
-        fun getDonateLocationList( callback: (Boolean, String?, ArrayList<DonateLocation>?)-> Unit){
+        fun getLocationList( callback: (Boolean, String?, ArrayList<Location>?)-> Unit){
             FirebaseFirestore.getInstance().collection("Location").get()
                 .addOnSuccessListener {
                         donateLocSnapshot->
 
-                    var donateLocationList = ArrayList<DonateLocation>()
+                    var donateLocationList = ArrayList<Location>()
 
                     for(donateLocation in donateLocSnapshot){
                         var id = donateLocation.id
@@ -32,7 +32,7 @@ class DonateLocation(
                         tomTomPosition.lat = location?.latitude!!
                         tomTomPosition.lon = location?.longitude!!
 
-                        var newDonateLocation = DonateLocation(id,userId!!,name!!,address!!,tomTomPosition)
+                        var newDonateLocation = Location(id,userId!!,name!!,address!!,tomTomPosition)
 
                         donateLocationList.add(newDonateLocation)
                     }
@@ -46,12 +46,12 @@ class DonateLocation(
                 }
         }
 
-        fun getDonateLocationListOfUser(userId:String, callback: (Boolean, String?, ArrayList<DonateLocation>?)-> Unit){
+        fun getLocationListOfUser(userId:String, callback: (Boolean, String?, ArrayList<Location>?)-> Unit){
             FirebaseFirestore.getInstance().collection("Location").whereEqualTo("userId",userId).get()
                 .addOnSuccessListener {
                         donateLocSnapshot->
 
-                    var donateLocationList = ArrayList<DonateLocation>()
+                    var donateLocationList = ArrayList<Location>()
 
                     for(donateLocation in donateLocSnapshot){
                         var id = donateLocation.id
@@ -64,7 +64,7 @@ class DonateLocation(
                         tomTomPosition.lat = location?.latitude!!
                         tomTomPosition.lon = location?.longitude!!
 
-                        var newDonateLocation = DonateLocation(id,userId!!,name!!,address!!,tomTomPosition)
+                        var newDonateLocation = Location(id,userId!!,name!!,address!!,tomTomPosition)
 
                         donateLocationList.add(newDonateLocation)
                     }
@@ -78,7 +78,7 @@ class DonateLocation(
                 }
         }
 
-        suspend fun getDonateLocationById(donationLocationId:String): DonateLocation? {
+        suspend fun getLocationById(donationLocationId:String): Location? {
             var donateLocationSnapshot = FirebaseFirestore.getInstance().collection("Location").document(donationLocationId).get().await()
 
             var id = donateLocationSnapshot.id
@@ -91,7 +91,7 @@ class DonateLocation(
             tomTomPosition.lat = location?.latitude!!
             tomTomPosition.lon = location?.longitude!!
 
-            var foundDonateLocation = DonateLocation(id,userId!!,name!!,address!!,tomTomPosition)
+            var foundDonateLocation = Location(id,userId!!,name!!,address!!,tomTomPosition)
 
 
             return foundDonateLocation!!

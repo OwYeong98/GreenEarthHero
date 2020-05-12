@@ -1,7 +1,6 @@
 package com.oymj.greenearthhero.adapters.spinner
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import android.widget.BaseAdapter
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.oymj.greenearthhero.R
-import com.oymj.greenearthhero.data.DonateLocation
 import com.oymj.greenearthhero.utils.RippleUtil
 
 class TimeAvailableSpinnerAdapter(val context: Context, var data: ArrayList<String>) : BaseAdapter() {

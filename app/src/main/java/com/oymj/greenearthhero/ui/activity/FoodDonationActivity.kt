@@ -169,7 +169,7 @@ class FoodDonationActivity : AppCompatActivity() {
 
                         var marker = myGoogleMap.addMarker(
                             MarkerOptions()
-                                .position(LatLng(foodDonation.donateLocation.location.lat!!,foodDonation.donateLocation.location.lon!!))
+                                .position(LatLng(foodDonation.location.location.lat!!,foodDonation.location.location.lon!!))
                                 .icon(BitmapDescriptorFactory.fromResource(markerIcon))
                         )
 
@@ -374,8 +374,8 @@ class FoodDonationActivity : AppCompatActivity() {
                     //set marker data based on request that stored in tag
                     var foodDonation = marker.tag as FoodDonation
                     tvDonatorUser.text = foodDonation.donatorUser.getFullName()
-                    tvAddress.text = foodDonation.donateLocation.address
-                    tvRestaurantName.text = foodDonation.donateLocation.name
+                    tvAddress.text = foodDonation.location.address
+                    tvRestaurantName.text = foodDonation.location.name
                     tvTotal.text = "Total Food Quantity: ${foodDonation.totalFoodAmount}"
 
                     if(LocationUtils.getLastKnownLocation() != null){

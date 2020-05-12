@@ -2,9 +2,7 @@ package com.oymj.greenearthhero.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +10,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,18 +30,13 @@ import com.oymj.greenearthhero.data.*
 import com.oymj.greenearthhero.ui.customxmllayout.GoogleMapWrapperForDispatchingTouchEvent
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
-import com.oymj.greenearthhero.ui.dialog.SuccessDialog
-import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.LocationUtils
-import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_food_collection.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.concurrent.timer
 
 class FoodCollectionActivity : AppCompatActivity(){
     private lateinit var myGoogleMap: GoogleMap
@@ -169,7 +160,7 @@ class FoodCollectionActivity : AppCompatActivity(){
 
                         var marker = myGoogleMap.addMarker(
                             MarkerOptions()
-                                .position(LatLng(foodDonation.donateLocation.location.lat!!,foodDonation.donateLocation.location.lon!!))
+                                .position(LatLng(foodDonation.location.location.lat!!,foodDonation.location.location.lon!!))
                                 .icon(BitmapDescriptorFactory.fromResource(markerIcon))
                         )
 
@@ -203,7 +194,7 @@ class FoodCollectionActivity : AppCompatActivity(){
 
                     //move camera to chosen request
                     var newCameraPosition = CameraPosition.builder()
-                        .target(LatLng(data.donateLocation.location.lat!!,data.donateLocation.location.lon!!))
+                        .target(LatLng(data.location.location.lat!!,data.location.location.lon!!))
                         .zoom(15f)
                         .bearing(90f)
                         .tilt(0f)
@@ -413,8 +404,8 @@ class FoodCollectionActivity : AppCompatActivity(){
                     //set marker data based on request that stored in tag
                     var foodDonation = marker.tag as FoodDonation
                     tvDonatorUser.text = foodDonation.donatorUser.getFullName()
-                    tvAddress.text = foodDonation.donateLocation.address
-                    tvRestaurantName.text = foodDonation.donateLocation.name
+                    tvAddress.text = foodDonation.location.address
+                    tvRestaurantName.text = foodDonation.location.name
                     tvTotal.text = "Total Food Quantity: ${foodDonation.totalFoodAmount}"
 
                     if(LocationUtils.getLastKnownLocation() != null){
