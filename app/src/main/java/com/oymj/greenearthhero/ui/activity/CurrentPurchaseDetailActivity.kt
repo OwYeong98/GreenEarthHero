@@ -2,6 +2,7 @@ package com.oymj.greenearthhero.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -148,6 +149,8 @@ class CurrentPurchaseDetailActivity: AppCompatActivity() {
                     tvDate.text = "Date: ${SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(data.datePosted)}"
                     tvItemName.text = data.itemName
                     tvPrice.text = "RM ${String.format("%.2f",data.itemPrice)}"
+                    tvDeliveryCompany.text = if(data.courierCompany == "") "N/A" else data.courierCompany
+                    tvTrackingNo.text = if(data.trackingNo == "") "N/A" else data.trackingNo
 
                     if(data.boughtByUser != null){
                         if(data.trackingNo == ""){
@@ -176,52 +179,58 @@ class CurrentPurchaseDetailActivity: AppCompatActivity() {
     }
 
     private fun updateFirebaseSalesIsDone(data: SecondHandItem){
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        dateFormat.timeZone = TimeZone.getTimeZone("GMT+8:00")
-        val currentDateTime: String = dateFormat.format(Date()) // Find todays date
+        if(data.trackingNo == ""){
+            var errorDialog = ErrorDialog(this,"Delivery detail not added!","You can only mark this purchase as received when seller added delivery detail.")
+            errorDialog.show()
+        }else{
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            dateFormat.timeZone = TimeZone.getTimeZone("GMT+8:00")
+            val currentDateTime: String = dateFormat.format(Date()) // Find todays date
 
+            //create a firebase document
+            val itemHistoryDocument = hashMapOf(
+                "date" to currentDateTime,
+                "user_posted" to data.postedByUser,
+                "user_bought" to data.boughtByUser,
+                "delivery_location" to data.deliveryLocation,
+                "courierCompany" to data.courierCompany,
+                "trackingNo" to data.trackingNo,
+                "imageUrl" to data.imageUrl,
+                "itemName" to data.itemName,
+                "itemDesc" to data.itemDesc,
+                "itemPrice" to data.itemPrice
+            )
 
-        //create a firebase document
-        val itemHistoryDocument = hashMapOf(
-            "date" to currentDateTime,
-            "user_posted" to data.postedByUser,
-            "user_bought" to data.boughtByUser,
-            "courierCompany" to data.courierCompany,
-            "trackingNo" to data.trackingNo,
-            "imageUrl" to data.imageUrl,
-            "itemName" to data.itemName,
-            "itemDesc" to data.itemDesc,
-            "itemPrice" to data.itemPrice
-        )
+            var loadingDialog = LoadingDialog(this)
+            loadingDialog.show()
 
-        var loadingDialog = LoadingDialog(this)
-        loadingDialog.show()
+            FirebaseFirestore.getInstance().collection("Second_Hand_Item_History").add(itemHistoryDocument)
+                .addOnSuccessListener {
 
-        FirebaseFirestore.getInstance().collection("Second_Hand_Item_History").add(itemHistoryDocument)
-            .addOnSuccessListener {
+                    var successDialog = SuccessDialog(this,"Success","The item is marked as received Successfully!")
+                    successDialog.show()
+//                FirebaseFirestore.getInstance().collection("Second_Hand_Item").document(data.id).delete()
+//                    .addOnSuccessListener {
+//                        loadingDialog.hide()
+//
+//                        var successDialog = SuccessDialog(this,"Success","The item is marked as received Successfully!")
+//                        successDialog.show()
+//                    }
+//                    .addOnFailureListener {
+//                        loadingDialog.hide()
+//
+//                        var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+//                        errorDialog.show()
+//                    }
+                }
+                .addOnFailureListener {
+                        e ->
+                    loadingDialog.hide()
 
-
-                FirebaseFirestore.getInstance().collection("Second_Hand_Item").document(data.id).delete()
-                    .addOnSuccessListener {
-                        loadingDialog.hide()
-
-                        var successDialog = SuccessDialog(this,"Success","The item is marked as received Successfully!")
-                        successDialog.show()
-                    }
-                    .addOnFailureListener {
-                        loadingDialog.hide()
-
-                        var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
-                        errorDialog.show()
-                    }
-            }
-            .addOnFailureListener {
-                    e ->
-                loadingDialog.hide()
-
-                var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
-                errorDialog.show()
-            }
+                    var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+                    errorDialog.show()
+                }
+        }
     }
 
     private fun setupUI(){

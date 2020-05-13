@@ -3,6 +3,7 @@ package com.oymj.greenearthhero.ui.activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.Error
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class CurrentPostDetailActivity: AppCompatActivity() {
 
@@ -256,10 +259,7 @@ class CurrentPostDetailActivity: AppCompatActivity() {
                 errorDialog.show()
             }
         }
-
-
     }
-
 
     private fun setupUI(){
         btnEditDetail.background = RippleUtil.getRippleButtonOutlineDrawable(this,

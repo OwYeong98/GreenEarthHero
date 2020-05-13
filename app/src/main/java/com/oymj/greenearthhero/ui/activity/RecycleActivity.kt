@@ -297,18 +297,8 @@ class RecycleActivity : AppCompatActivity() {
         //hide location panel
         showLocationPanel(false)
 
-        //store current selected location
-        this.currentPinnedLocation = data
-        if(data.address?.fullAddress == null){
-            updateFeaturePlaceAddressWithLatLong(this.currentPinnedLocation!!)
-        }else{
-            //update the selected location
-            recycle_request_location_label.text = data.address?.fullAddress
-        }
-
-
         //pin selected location in map
-        if(!::currentPinnedLocationMarker.isInitialized){
+        if(currentPinnedLocation == null){
             //first time
             currentPinnedLocationMarker = myGoogleMap.addMarker(MarkerOptions()
                 .position(LatLng(data.latLong?.lat!!,data.latLong?.lon!!))
@@ -335,6 +325,15 @@ class RecycleActivity : AppCompatActivity() {
         }else{
             //change the location of the pin
             currentPinnedLocationMarker.position = LatLng(data.latLong?.lat!!,data.latLong?.lon!!)
+        }
+
+        //store current selected location
+        this.currentPinnedLocation = data
+        if(data.address?.fullAddress == null){
+            updateFeaturePlaceAddressWithLatLong(this.currentPinnedLocation!!)
+        }else{
+            //update the selected location
+            recycle_request_location_label.text = data.address?.fullAddress
         }
 
         //move to selected location
@@ -421,6 +420,7 @@ class RecycleActivity : AppCompatActivity() {
                         recycle_plastic_info_textview.text = "0 KG"
                         recycle_paper_info_textview.text = "0 KG"
                         currentPinnedLocation=null
+                        currentPinnedLocationMarker.remove()
                         recycle_request_location_label.text = "Select A Pick Up Location"
                         loadingDialog.hide()
 

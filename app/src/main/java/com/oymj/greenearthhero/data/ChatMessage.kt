@@ -26,7 +26,7 @@ class ChatMessage(
 
                     for(chat in chatSnapshot){
                         var id = chat.id
-                        var dateSent = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chat.getString("dateSent"))
+                        var dateSent = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(chat.getString("dateSent"))
                         var message = chat.getString("message")
                         var userSend = chat.getString("userSend")
 
@@ -53,7 +53,7 @@ class ChatMessage(
             var messageList = ArrayList<ChatMessage>()
             for(chat in chatList){
                 var id = chat.id
-                var dateSent = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(chat.getString("dateSent"))
+                var dateSent = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(chat.getString("dateSent"))
                 var message = chat.getString("message")
                 var userSend = chat.getString("userSend")
 

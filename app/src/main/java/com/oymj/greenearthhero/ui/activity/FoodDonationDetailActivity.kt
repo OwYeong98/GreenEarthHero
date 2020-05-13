@@ -219,9 +219,11 @@ class FoodDonationDetailActivity : AppCompatActivity() {
                         if(isOwner){
                             btnClaim.text = "Edit Food Amount"
                             btnExtends.visibility = View.VISIBLE
+                            btnEndDonation.visibility = View.VISIBLE
                         }else{
                             btnClaim.text = "Claim Food"
                             btnExtends.visibility = View.GONE
+                            btnEndDonation.visibility = View.GONE
                         }
 
                         //update the UI

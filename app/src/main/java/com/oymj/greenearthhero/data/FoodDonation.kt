@@ -29,7 +29,7 @@ class FoodDonation(
                     GlobalScope.launch {
                         for(foodDonation in foodDonationSnapshot!!){
                             var id = foodDonation.id
-                            var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonation.getString("datePosted"))
+                            var datePosted = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(foodDonation.getString("datePosted"))
                             var donateLocation = Location.suspendGetLocationById(foodDonation.getString("donateLocationId")!!)
                             var donatorUserRef = User.suspendGetSpecificUserFromFirebase(foodDonation.getString("donatorUserId")!!)
                             var minutesAvailable = foodDonation.getLong("minutesAvailable")?.toInt()
@@ -63,7 +63,7 @@ class FoodDonation(
                             GlobalScope.launch {
                                 for(foodDonation in foodDonationSnapshot!!){
                                     var id = foodDonation.id
-                                    var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonation.getString("datePosted"))
+                                    var datePosted = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(foodDonation.getString("datePosted"))
                                     var donateLocationId = foodDonation.getString("donateLocationId")!!
                                     var donateLocation  = donateLocationList?.fold(null as com.oymj.greenearthhero.data.Location?,{ prev, curr-> if(curr.id == donateLocationId) curr else prev})
 
@@ -104,7 +104,7 @@ class FoodDonation(
                             GlobalScope.launch {
                                 for(foodDonation in foodDonationSnapshot!!){
                                     var id = foodDonation.id
-                                    var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonation.getString("datePosted"))
+                                    var datePosted = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(foodDonation.getString("datePosted"))
                                     var donateLocationId = foodDonation.getString("donateLocationId")!!
                                     var donateLocation  = donateLocationList?.fold(null as com.oymj.greenearthhero.data.Location?,{ prev, curr-> if(curr.id == donateLocationId) curr else prev})
 
@@ -142,7 +142,7 @@ class FoodDonation(
                     GlobalScope.launch {
 
                         var id = foodDonationSnapshot.id
-                        var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(foodDonationSnapshot.getString("datePosted"))
+                        var datePosted = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(foodDonationSnapshot.getString("datePosted"))
                         var donateLocationId = foodDonationSnapshot.getString("donateLocationId")!!
                         var donateLocation  = Location.suspendGetLocationById(donateLocationId)
 

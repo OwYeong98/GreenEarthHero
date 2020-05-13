@@ -114,6 +114,8 @@ class MyVolunteerActivity : AppCompatActivity() {
 
             if(success){
                 recyclerViewAdapter.stopSkeletalLoading()
+                //clear previous data first
+                myVolunteerList.clear()
                 swipeLayout.isRefreshing = false
 
                 //filter only show request that are requested by the current logged in user

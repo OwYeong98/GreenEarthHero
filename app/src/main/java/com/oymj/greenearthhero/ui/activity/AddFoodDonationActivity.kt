@@ -319,7 +319,7 @@ class AddFoodDonationActivity : AppCompatActivity() {
 
     private fun addDonationRequestToFirebase(){
 
-        var dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+        var dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         dateFormat.timeZone = TimeZone.getTimeZone("GMT+8:00")
 
         var minutesAvailable = (timeAvailableSpinner.selectedItem as String).replace("hours","").trim().toInt() * 60

@@ -11,6 +11,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
+import com.oymj.greenearthhero.data.SecondHandItemHistory
+import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import kotlinx.android.synthetic.main.fragment_sales_history.*
 
@@ -67,7 +69,7 @@ class PurchaseHistoryFragment : Fragment() {
     private fun listenToFirebaseCollectionChangesAndUpdateUI(){
         var db = FirebaseFirestore.getInstance()
 
-        listener = db.collection("Current_Post").whereEqualTo("userId", FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)).addSnapshotListener{
+        listener = db.collection("Second_Hand_Item_History").whereEqualTo("user_bought.userId", FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)).addSnapshotListener{
                 snapshot,e->
             if (e != null) {
                 return@addSnapshotListener
@@ -81,39 +83,35 @@ class PurchaseHistoryFragment : Fragment() {
     }
 
     private fun getPurchaseHistoryFromFirebase(){
-//        //clear previous data first
-//        purchaseHistoryList.clear()
-//
-//        //show loading skeletal first while getting data from firestore
-//        recyclerViewAdapter.startSkeletalLoading(7, UniversalAdapter.SKELETAL_TYPE_3)
-//
-//        RecycleRequest.getRecycleRequestFromFirebase{
-//                success,message,data ->
-//
-//            if(success){
-//                recyclerViewAdapter.stopSkeletalLoading()
-//                swipeLayout.isRefreshing = false
-//
-//                //filter only show request that are requested by the current logged in user
-//                for(request in data!!){
-//                    if(request.requestedUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
-//                        currentRequestList.add(request)
-//                    }
-//                }
-//
-//                //refresh recyclerview
-//                recyclerViewAdapter.notifyDataSetChanged()
-//
-//
-//            }else{
-//                recyclerViewAdapter.stopSkeletalLoading()
-//                swipeLayout.isRefreshing = false
-//
-//                var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
-//                errorDialog.show()
-//            }
-//
-//        }
+        //clear previous data first
+        purchaseHistoryList.clear()
+
+        //show loading skeletal first while getting data from firestore
+        recyclerViewAdapter.startSkeletalLoading(7, UniversalAdapter.SKELETAL_TYPE_3)
+
+        SecondHandItemHistory.getPurchaseHistoryOfUserFromFirebase(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)!!){
+                success,message,data ->
+
+            if(success){
+                recyclerViewAdapter.stopSkeletalLoading()
+                swipeLayout.isRefreshing = false
+
+                purchaseHistoryList.addAll(data!!)
+
+                activity?.runOnUiThread{
+                    //refresh recyclerview
+                    recyclerViewAdapter.notifyDataSetChanged()
+                }
+
+            }else{
+                recyclerViewAdapter.stopSkeletalLoading()
+                swipeLayout.isRefreshing = false
+
+                var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
+                errorDialog.show()
+            }
+
+        }
     }
 
 }
