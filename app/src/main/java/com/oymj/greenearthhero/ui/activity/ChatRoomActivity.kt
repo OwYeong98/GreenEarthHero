@@ -222,7 +222,7 @@ class ChatRoomActivity: AppCompatActivity() {
     }
 
     private fun sendMessageToChatRoom(message: ChatMessage, callback: (Boolean)->Unit){
-        var dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+        var dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         dateFormat.timeZone = TimeZone.getTimeZone("GMT+8:00")
         //create a firebase document
         val messageDocument = hashMapOf(

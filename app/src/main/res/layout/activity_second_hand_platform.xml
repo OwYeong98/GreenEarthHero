@@ -78,7 +78,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:textColor="@color/white"
-                android:text="Purchase History" />
+                android:text="My Purchase" />
         </LinearLayout>
 
         <LinearLayout

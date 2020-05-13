@@ -2,6 +2,7 @@ package com.oymj.greenearthhero.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,13 @@ import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemCu
 import com.oymj.greenearthhero.data.SecondHandItem
 import com.oymj.greenearthhero.ui.activity.CurrentPurchaseDetailActivity
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
+import com.oymj.greenearthhero.ui.dialog.LoadingDialog
+import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import kotlinx.android.synthetic.main.fragment_sales_history.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class CurrentPurchaseFragment : Fragment() {
 

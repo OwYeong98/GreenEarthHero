@@ -121,6 +121,7 @@ class MyChatActivity : AppCompatActivity() {
 
                 if(success){
                     recyclerViewAdapter.stopSkeletalLoading()
+                    chatRoomList.clear()
                     swipeLayout.isRefreshing = false
 
                     for(chatRoom in data!!){

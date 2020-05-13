@@ -30,6 +30,7 @@ object UniversalAdapterRepo {
         registerRecyclerItem(RecyclerItemFoodDonationHistory())
         registerRecyclerItem(RecyclerItemSecondHandItem())
         registerRecyclerItem(RecyclerItemCurrentItemPost())
+        registerRecyclerItem(RecyclerItemSecondHandItemHistory())
     }
 
     fun registerRecyclerItem(recyclerItem: UniversalRecyclerItem){
