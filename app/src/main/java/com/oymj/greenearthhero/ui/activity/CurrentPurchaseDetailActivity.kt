@@ -209,20 +209,25 @@ class CurrentPurchaseDetailActivity: AppCompatActivity() {
 
                     var successDialog = SuccessDialog(this,"Success","The item is marked as received Successfully!")
                     successDialog.show()
-//                FirebaseFirestore.getInstance().collection("Second_Hand_Item").document(data.id).delete()
-//                    .addOnSuccessListener {
-//                        loadingDialog.hide()
-//
-//                        var successDialog = SuccessDialog(this,"Success","The item is marked as received Successfully!")
-//                        successDialog.show()
-//                    }
-//                    .addOnFailureListener {
-//                        loadingDialog.hide()
-//
-//                        var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
-//                        errorDialog.show()
-//                    }
-                }
+
+                    //stop listening to change because we are deleting the document
+                    listener.remove()
+                    FirebaseFirestore.getInstance().collection("Second_Hand_Item").document(data.id).delete()
+                        .addOnSuccessListener {
+                            loadingDialog.hide()
+
+                            var successDialog = SuccessDialog(this,"Success","The item is marked as received Successfully!"){
+                                finish()
+                            }
+                            successDialog.show()
+                        }
+                        .addOnFailureListener {
+                            loadingDialog.hide()
+
+                            var errorDialog = ErrorDialog(this,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+                            errorDialog.show()
+                        }
+                    }
                 .addOnFailureListener {
                         e ->
                     loadingDialog.hide()

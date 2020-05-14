@@ -132,33 +132,35 @@ class SecondHandItem(
                 .addOnSuccessListener {
                         itemSnapshot->
 
-                    GlobalScope.launch {
-                        var item = itemSnapshot
-                        var id = item.id
-                        var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(item.getString("datePosted"))
-                        var itemName = item.getString("itemName")!!
-                        var itemDesc = item.getString("itemDesc")!!
-                        var itemPrice = item.getLong("itemPrice")!!.toDouble()
-                        var imageUrl = item.getString("imageUrl")!!
-                        var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
-                        var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
-                        var deliveryLocation = if(item.getString("deliveryLocationId")!="")Location.suspendGetLocationById(item.getString("deliveryLocationId")!!) else null
-                        var courierCompany = item.getString("courierCompany")
-                        var trackingNo = item.getString("trackingNo")
+                    if(itemSnapshot.exists()){
+                        GlobalScope.launch {
+                            var item = itemSnapshot
+                            var id = item.id
+                            var datePosted = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(item.getString("datePosted"))
+                            var itemName = item.getString("itemName")!!
+                            var itemDesc = item.getString("itemDesc")!!
+                            var itemPrice = item.getLong("itemPrice")!!.toDouble()
+                            var imageUrl = item.getString("imageUrl")!!
+                            var postedByUser  = User.suspendGetSpecificUserFromFirebase(item.getString("postedBy")!!)
+                            var boughtByUser = if(item.getString("boughtBy")!="") User.suspendGetSpecificUserFromFirebase(item.getString("boughtBy")!!) else null
+                            var deliveryLocation = if(item.getString("deliveryLocationId")!="")Location.suspendGetLocationById(item.getString("deliveryLocationId")!!) else null
+                            var courierCompany = item.getString("courierCompany")
+                            var trackingNo = item.getString("trackingNo")
 
 
-                        var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,deliveryLocation,courierCompany,trackingNo)
+                            var newItem = SecondHandItem(id,itemName!!,itemDesc!!,itemPrice!!,imageUrl!!,datePosted,postedByUser!!,boughtByUser,deliveryLocation,courierCompany,trackingNo)
 
-                        callback(true,null,newItem)
+                            callback(true,null,newItem)
+                        }
+                    }else{
+                        callback(false,"Item not exist!",null)
                     }
+
                 }
                 .addOnFailureListener {
                         ex->
                     callback(false,ex.toString(),null)
                 }
         }
-
-
     }
-
 }

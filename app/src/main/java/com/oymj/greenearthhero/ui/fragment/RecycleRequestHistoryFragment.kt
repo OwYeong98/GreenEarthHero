@@ -121,7 +121,7 @@ class RecycleRequestHistoryFragment : Fragment() {
                 var totalPlastic = 0
                 var totalPaper = 0
 
-
+                recycleHistoryList.clear()
                 for(history in data!!){
                     if(history.userRequested.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
                         totalMetal += history.metalWeight

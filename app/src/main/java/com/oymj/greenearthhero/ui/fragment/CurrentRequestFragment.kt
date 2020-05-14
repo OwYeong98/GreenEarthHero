@@ -131,6 +131,7 @@ class CurrentRequestFragment : Fragment() {
                 recyclerViewAdapter.stopSkeletalLoading()
                 swipeLayout.isRefreshing = false
 
+                currentRequestList.clear()
                 //filter only show request that are requested by the current logged in user
                 for(request in data!!){
                     if(request.requestedUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){

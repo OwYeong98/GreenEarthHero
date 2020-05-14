@@ -123,6 +123,7 @@ class MyDonationFragment : Fragment() {
                     recyclerViewAdapter.stopSkeletalLoading()
                     view?.findViewById<SwipeRefreshLayout>(R.id.swipeLayout)?.isRefreshing = false
 
+                    currentDonationList.clear()
                     currentDonationList.addAll(data!!)
 
 

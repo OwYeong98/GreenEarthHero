@@ -212,6 +212,8 @@ class CurrentPostDetailActivity: AppCompatActivity() {
                     tvItemPrice.text = "RM ${String.format("%.2f",data.itemPrice)}"
 
                     if(data.boughtByUser != null){
+                        tvDeliveryTitle.visibility = View.VISIBLE
+                        tvDeliveryAddress.text = data.deliveryLocation?.address
                         if(data.trackingNo == ""){
                             tvStatus.text = "Sold. Please Delivery"
                             tvStatus.background = RippleUtil.getRippleButtonOutlineDrawable(this,
@@ -219,6 +221,7 @@ class CurrentPostDetailActivity: AppCompatActivity() {
                                 resources.getColor(R.color.transparent_pressed),
                                 resources.getColor(R.color.transparent),
                                 0f, 0)
+
 
                             btnEditDetail.text = "Add Delivery Detail"
                             btnEditDetail.visibility = View.GONE
@@ -233,6 +236,7 @@ class CurrentPostDetailActivity: AppCompatActivity() {
                                 resources.getColor(R.color.transparent),
                                 0f, 0)
 
+
                             btnEditDetail.text = "Edit Delivery Detail"
                             btnEditDetail.visibility = View.GONE
                             btnCancelSelling.visibility = View.GONE
@@ -241,6 +245,9 @@ class CurrentPostDetailActivity: AppCompatActivity() {
                         }
 
                     }else{
+                        tvDeliveryTitle.visibility = View.GONE
+                        tvDeliveryAddress.visibility = View.GONE
+
                         tvStatus.text = "On Sale"
                         tvStatus.background = RippleUtil.getRippleButtonOutlineDrawable(this,
                             resources.getColor(R.color.mapboxGreen),

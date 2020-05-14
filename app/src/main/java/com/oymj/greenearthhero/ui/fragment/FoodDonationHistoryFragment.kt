@@ -99,6 +99,7 @@ class FoodDonationHistoryFragment : Fragment() {
 
                     var totalFoodDonated = data!!.fold(0,{prev,obj-> prev + obj.totalFoodAmount})
 
+                    foodDonationHistoryList.clear()
                     for(history in data!!){
                         if(history.donatorUser.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
 

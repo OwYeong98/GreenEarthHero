@@ -96,6 +96,7 @@ class PurchaseHistoryFragment : Fragment() {
                 recyclerViewAdapter.stopSkeletalLoading()
                 swipeLayout.isRefreshing = false
 
+                purchaseHistoryList.clear()
                 purchaseHistoryList.addAll(data!!)
 
                 activity?.runOnUiThread{

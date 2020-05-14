@@ -126,16 +126,16 @@
         app:layout_constraintStart_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/menu_request_icon"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_weight="3"
-            android:adjustViewBounds="true"
-            app:lottie_autoPlay="false"
-            app:lottie_loop="false"
-            app:lottie_rawRes="@raw/request_icon" />
+<!--        <com.airbnb.lottie.LottieAnimationView-->
+<!--            android:id="@+id/menu_request_icon"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:layout_weight="3"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            app:lottie_autoPlay="false"-->
+<!--            app:lottie_loop="false"-->
+<!--            app:lottie_rawRes="@raw/request_icon" />-->
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/menu_app_info_icon"
