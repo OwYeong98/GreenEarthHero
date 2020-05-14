@@ -96,6 +96,7 @@ class SalesHistoryFragment : Fragment() {
                 recyclerViewAdapter.stopSkeletalLoading()
                 swipeLayout.isRefreshing = false
 
+                salesHistoryList.clear()
                 salesHistoryList.addAll(data!!)
 
                 activity?.runOnUiThread {

@@ -43,7 +43,7 @@ class SecondHandItemHistory(
                             var userBoughtObj = User(userBoughtData["userId"]!!,userBoughtData["email"]!!,userBoughtData["firstName"]!!
                                 ,userBoughtData["lastName"]!!,userBoughtData["phone"]!!,(userBoughtData["dateOfBirth"] as Timestamp).toDate())
 
-                            var userPostedData = item.get("user_bought") as HashMap<String,String>
+                            var userPostedData = item.get("user_posted") as HashMap<String,String>
                             var userPostedObj = User(userPostedData["userId"]!!,userPostedData["email"]!!,userPostedData["firstName"]!!
                                 ,userPostedData["lastName"]!!,userPostedData["phone"]!!,(userPostedData["dateOfBirth"] as Timestamp).toDate())
 
@@ -93,7 +93,7 @@ class SecondHandItemHistory(
                             var userBoughtObj = User(userBoughtData["userId"]!!,userBoughtData["email"]!!,userBoughtData["firstName"]!!
                                 ,userBoughtData["lastName"]!!,userBoughtData["phone"]!!,(userBoughtData["dateOfBirth"] as Timestamp).toDate())
 
-                            var userPostedData = item.get("user_bought") as HashMap<String,String>
+                            var userPostedData = item.get("user_posted") as HashMap<String,String>
                             var userPostedObj = User(userPostedData["userId"]!!,userPostedData["email"]!!,userPostedData["firstName"]!!
                                 ,userPostedData["lastName"]!!,userPostedData["phone"]!!,(userPostedData["dateOfBirth"] as Timestamp).toDate())
 

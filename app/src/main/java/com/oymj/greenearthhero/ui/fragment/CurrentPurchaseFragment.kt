@@ -125,6 +125,7 @@ class CurrentPurchaseFragment : Fragment() {
                     recyclerViewAdapter.stopSkeletalLoading()
                     swipeLayout.isRefreshing = false
 
+                    currentPurchaseList.clear()
                     //filter only show request that are requested by the current logged in user
                     data!!.forEach { item-> currentPurchaseList.add(item) }
 

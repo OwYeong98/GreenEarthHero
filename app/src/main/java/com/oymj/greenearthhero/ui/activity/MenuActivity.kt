@@ -81,9 +81,6 @@ class MenuActivity : AppCompatActivity() {
                     var intent = Intent(this@MenuActivity, SecondHandPlatformActivity::class.java)
                     startActivity(intent)
                 }
-                menu_request_icon-> {
-
-                }
                 menu_app_info_icon -> {
                     var intent = Intent(this@MenuActivity, IntroActivity::class.java)
                     startActivity(intent)
@@ -147,7 +144,6 @@ class MenuActivity : AppCompatActivity() {
             menu_recycle_icon,
             menu_food_donation_icon,
             menu_good_selling_icon,
-            menu_request_icon,
             menu_app_info_icon
         )
 
@@ -172,7 +168,6 @@ class MenuActivity : AppCompatActivity() {
             menu_recycle_icon,
             menu_food_donation_icon,
             menu_good_selling_icon,
-            menu_request_icon,
             menu_app_info_icon)
         var animationDelayPreset: Long = 500
 

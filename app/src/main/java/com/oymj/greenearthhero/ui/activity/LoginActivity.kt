@@ -41,8 +41,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        inputEmail.setText("hahaha@gmail.com")
-        inputPassword.setText("123456")
+        inputEmail.setText("testuser1@gmail.com")
+        inputPassword.setText("Asd@1234")
 
         //initialize loading dialog
         loadingDialog = LoadingDialog(this)

@@ -69,6 +69,26 @@
                 android:textSize="15sp"
                 android:text="Date: 12/12/1000 12:12:12"/>
 
+            <TextView
+                android:id="@+id/tvDeliveryTitle"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/darkgrey"
+                android:textSize="15sp"
+                android:text="Delivery address:"/>
+
+            <TextView
+                android:id="@+id/tvDeliveryAddress"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_regular"
+                android:textColor="@color/darkgrey"
+                android:textSize="15sp"
+                android:text="No2, Jalan Timur 1, Taman OUG, KL"/>
+
 
             <View
                 android:layout_width="match_parent"
