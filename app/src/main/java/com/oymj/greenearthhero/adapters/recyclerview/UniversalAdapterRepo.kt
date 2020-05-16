@@ -31,6 +31,7 @@ object UniversalAdapterRepo {
         registerRecyclerItem(RecyclerItemSecondHandItem())
         registerRecyclerItem(RecyclerItemCurrentItemPost())
         registerRecyclerItem(RecyclerItemSecondHandItemHistory())
+        registerRecyclerItem(RecyclerItemNotification())
     }
 
     fun registerRecyclerItem(recyclerItem: UniversalRecyclerItem){
