@@ -58,6 +58,8 @@
         <activity android:name=".ui.activity.RegisterActivity" />
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.IntroActivity" />
+        <activity android:name=".ui.activity.EmailVerificationActivity" />
+
         <activity
             android:name=".ui.activity.MenuActivity"
             android:theme="@style/AppTheme.Transparent" />
