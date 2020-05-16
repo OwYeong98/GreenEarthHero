@@ -89,10 +89,17 @@ class LoginActivity : AppCompatActivity() {
                     if(success){
                         FirebaseUtil.currentUserDetail = data!!
                         loadingDialog.dismiss()
-                        //redirect to menu activity
-                        var intent = Intent(this@LoginActivity, MenuActivity::class.java)
-                        intent.putExtra("callFromLogin",true)
-                        startActivity(intent)
+
+                        if(!task.result!!.user!!.isEmailVerified){
+                            var intent = Intent(this@LoginActivity, EmailVerificationActivity::class.java)
+                            startActivity(intent)
+                        }else{
+                            //redirect to menu activity
+                            var intent = Intent(this@LoginActivity, MenuActivity::class.java)
+                            intent.putExtra("callFromLogin",true)
+                            startActivity(intent)
+                        }
+
                     }else{
                         var errorDialog = ErrorDialog(this,"Error","Error getting user profile!")
                         errorDialog.show()

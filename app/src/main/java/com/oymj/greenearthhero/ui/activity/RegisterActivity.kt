@@ -85,7 +85,7 @@ class RegisterActivity : AppCompatActivity() {
                                 ))
                             }
 
-                            var intent = Intent(this@RegisterActivity,MenuActivity::class.java)
+                            var intent = Intent(this@RegisterActivity,EmailVerificationActivity::class.java)
                             startActivity(intent)
                         }
                         .addOnFailureListener {

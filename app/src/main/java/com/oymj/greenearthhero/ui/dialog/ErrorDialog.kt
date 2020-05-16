@@ -12,7 +12,7 @@ import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.dialog_success_error.*
 
-class ErrorDialog(context: Context,var title:String,var desc:String) : Dialog(context) {
+class ErrorDialog(context: Context,var title:String,var desc:String,var callback: ()->Unit = {}) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,7 @@ class ErrorDialog(context: Context,var title:String,var desc:String) : Dialog(co
 
         btnAction.setOnClickListener{
             this.dismiss()
+            callback()
         }
 
     }
