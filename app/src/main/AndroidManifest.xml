@@ -63,6 +63,7 @@
             android:theme="@style/AppTheme.Transparent" />
         <activity android:name=".ui.activity.ProfileActivity"
             android:launchMode="singleTop"/>
+        <activity android:name=".ui.activity.NotificationActivity" />
 
         <!--   Recycle Platform Activity   -->
         <activity android:name=".ui.activity.RecycleActivity"

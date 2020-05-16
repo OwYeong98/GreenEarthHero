@@ -103,5 +103,37 @@ class ChatRoom(
                     callback(false,ex.toString(),null)
                 }
         }
+
+        fun getSpecificChatRoomById(chatRoomId:String,callback:(Boolean,String?,ChatRoom?)->Unit){
+            FirebaseFirestore.getInstance().collection("Chat_Room").document(chatRoomId).get()
+                .addOnSuccessListener {
+                        chatRoomSnapshot->
+                    GlobalScope.launch {
+                        if(!chatRoomSnapshot.exists()){
+                            callback(true,null,null)
+                        }else{
+                            var chatRoom = chatRoomSnapshot
+
+                            var id = chatRoom.id
+                            var lastMessage = chatRoom.getString("lastMessage")?:""
+                            var lastMessageSendBy = chatRoom.getString("lastMessageSendBy")?:""
+                            var  userList = ArrayList<String>()
+                            userList = chatRoom.get("chatUsers") as ArrayList<String>
+
+                            var user1 = User.suspendGetSpecificUserFromFirebase(userList.get(0))
+                            var user2 = User.suspendGetSpecificUserFromFirebase(userList.get(1))
+
+                            var messagesList = ArrayList<ChatMessage>()
+                            var newChatRoom = ChatRoom(id,user1!!,user2!!,messagesList,lastMessage!!,lastMessageSendBy!!)
+
+                            callback(true,null,newChatRoom)
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                        ex->
+                    callback(false,ex.toString(),null)
+                }
+        }
     }
 }

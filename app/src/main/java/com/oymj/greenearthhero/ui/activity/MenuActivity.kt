@@ -18,10 +18,13 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.data.Notification
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
+import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.LottieUtils
+import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_menu.*
 
 
@@ -39,8 +42,8 @@ class MenuActivity : AppCompatActivity() {
                     this@MenuActivity.onBackPressed()
                 }
                 menu_notification_icon -> {
-                    SuccessDialog(this@MenuActivity,"Success","Your Recycle request is submitted successfully! Please wait for someone to collect ur request").show()
-
+                    var intent = Intent(this@MenuActivity, NotificationActivity::class.java)
+                    startActivity(intent)
                 }
                 menu_chat_icon -> {
                     if(!isFromLogin){
@@ -85,7 +88,6 @@ class MenuActivity : AppCompatActivity() {
                     var intent = Intent(this@MenuActivity, IntroActivity::class.java)
                     startActivity(intent)
                 }
-
             }
         }
     }
@@ -114,6 +116,8 @@ class MenuActivity : AppCompatActivity() {
             }
         }
         animateMenuIcon()
+        setupUI()
+
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -132,6 +136,29 @@ class MenuActivity : AppCompatActivity() {
 
         animateMenuIcon()
 
+        getNumOfNotification()
+    }
+
+    private fun setupUI(){
+        numOfNotification.background = RippleUtil.getRippleButtonOutlineDrawable(this,
+            resources.getColor(R.color.red),
+            resources.getColor(R.color.red),
+            resources.getColor(R.color.transparent),
+            200f,0)
+    }
+    private fun getNumOfNotification(){
+        Notification.getNumOfNotificationOfUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!){
+            success,message,numberOfNotification->
+
+            if(success){
+                if(numberOfNotification!!>0){
+                    numOfNotification.visibility=View.VISIBLE
+                    numOfNotification.text = numberOfNotification.toString()
+                }else{
+                    numOfNotification.visibility=View.GONE
+                }
+            }
+        }
     }
 
     private fun linkAllButtonWithOnClickListener() {

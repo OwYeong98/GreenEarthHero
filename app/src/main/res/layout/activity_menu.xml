@@ -40,14 +40,39 @@
         app:layout_constraintStart_toStartOf="@+id/guideline11"
         app:layout_constraintTop_toTopOf="@+id/guideline9" />
 
-    <ImageView
-        android:id="@+id/menu_notification_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/notification_icon"
+    <LinearLayout
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
-        app:layout_constraintRight_toLeftOf="@id/menu_chat_icon"
-        app:layout_constraintTop_toTopOf="@+id/menu_chat_icon" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/menu_chat_icon"
+        app:layout_constraintRight_toLeftOf="@id/menu_chat_icon">
+
+        <TextView
+            android:id="@+id/numOfNotification"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:minWidth="20dp"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:layout_marginBottom="-15dp"
+            android:background="@color/red"
+            android:elevation="2dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="13sp"/>
+
+        <ImageView
+            android:id="@+id/menu_notification_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/notification_icon" />
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/menu_chat_icon"
@@ -249,5 +274,7 @@
 
         </LinearLayout>
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
