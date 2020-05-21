@@ -7,7 +7,7 @@ import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
 
-class User(var userId:String, var email:String, var firstName:String,  var lastName:String, var phone:String, var dateOfBirth: Date):Serializable {
+class User(var userId:String, var email:String, var firstName:String,  var lastName:String, var phone:String, var dateOfBirth: Date, var isPhoneVerified:Boolean):Serializable {
 
     companion object{
         fun getUserListFromFirebase(callback: (Boolean,String?,ArrayList<User>?)->Unit){
@@ -22,9 +22,10 @@ class User(var userId:String, var email:String, var firstName:String,  var lastN
                         var firstName = userDoc.getString("firstName")
                         var lastName = userDoc.getString("lastName")
                         var phone = userDoc.getString("phone")
+                        var isPhoneVerified = userDoc.getBoolean("isPhoneVerified")
                         var dateOfBirth = SimpleDateFormat("dd/MM/yyyy").parse(userDoc.getString("dateOfBirth"))
 
-                        var newUser = User(userId, email!!,firstName!!,lastName!!,phone!!,dateOfBirth!!)
+                        var newUser = User(userId, email!!,firstName!!,lastName!!,phone!!,dateOfBirth!!,isPhoneVerified!!)
 
                         userList.add(newUser)
                     }
@@ -52,9 +53,10 @@ class User(var userId:String, var email:String, var firstName:String,  var lastN
                     var firstName = userDoc.getString("firstName")
                     var lastName = userDoc.getString("lastName")
                     var phone = userDoc.getString("phone")
+                    var isPhoneVerified = userDoc.getBoolean("isPhoneVerified")
                     var dateOfBirth = SimpleDateFormat("dd/MM/yyyy").parse(userDoc.getString("dateOfBirth"))
 
-                    var newUser = User(userId, email!!,firstName!!,lastName!!,phone!!,dateOfBirth!!)
+                    var newUser = User(userId, email!!,firstName!!,lastName!!,phone!!,dateOfBirth!!,isPhoneVerified!!)
 
 
                     //callback after done getting list
@@ -77,9 +79,10 @@ class User(var userId:String, var email:String, var firstName:String,  var lastN
             var firstName = userDoc.getString("firstName")
             var lastName = userDoc.getString("lastName")
             var phone = userDoc.getString("phone")
+            var isPhoneVerified = userDoc.getBoolean("isPhoneVerified")
             var dateOfBirth = SimpleDateFormat("dd/MM/yyyy").parse(userDoc.getString("dateOfBirth"))
 
-            var newUser = User(userId, email!!,firstName!!,lastName!!,phone!!,dateOfBirth!!)
+            var newUser = User(userId, email!!,firstName!!,lastName!!,phone!!,dateOfBirth!!,isPhoneVerified!!)
             return newUser
         }
     }

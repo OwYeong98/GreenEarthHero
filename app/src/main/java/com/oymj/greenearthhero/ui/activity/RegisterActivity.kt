@@ -68,7 +68,8 @@ class RegisterActivity : AppCompatActivity() {
                         "firstName" to firstName,
                         "lastName" to lastName,
                         "phone" to phone,
-                        "dateOfBirth" to dateOfBirth
+                        "dateOfBirth" to dateOfBirth,
+                        "isPhoneVerified" to false
                     )
 
                     FirebaseFirestore.getInstance().collection("Users").document(user?.uid!!)
