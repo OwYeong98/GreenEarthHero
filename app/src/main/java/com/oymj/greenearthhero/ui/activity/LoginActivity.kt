@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        inputEmail.setText("testuser1@gmail.com")
+        inputEmail.setText("mun-ji@hotmail.com")
         inputPassword.setText("Asd@1234")
 
         //initialize loading dialog
@@ -92,6 +92,9 @@ class LoginActivity : AppCompatActivity() {
 
                         if(!task.result!!.user!!.isEmailVerified){
                             var intent = Intent(this@LoginActivity, EmailVerificationActivity::class.java)
+                            startActivity(intent)
+                        }else if(!data.isPhoneVerified){
+                            var intent = Intent(this@LoginActivity, PhoneVerificationActivity::class.java)
                             startActivity(intent)
                         }else{
                             //redirect to menu activity

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="-60dp"
+            android:gravity="center"
+            android:layout_marginLeft="25dp"
+            android:text="Phone Verification"
+            android:textColor="@color/darkgrey"
+            android:fontFamily="@font/montserrat"
+            android:textSize="18dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="15sp"
+        android:fontFamily="@font/montserrat_regular"
+        android:textAlignment="center"
+        android:text="For security reason\nWe require user to verify their Phone No"/>
+
+    <TextView
+        android:id="@+id/tvSuccessSendSMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/red"
+        android:textSize="13sp"
+        android:fontFamily="@font/cournew_normal"
+        android:textAlignment="center"
+        android:text=""/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"/>
+
+        <com.oymj.greenearthhero.ui.customxmllayout.CustomNumpad
+            android:id="@+id/myNumpad"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:resultKeyTextSizeInPercentage="70"
+            app:textTypeFace="@font/montserrat_bold"
+            app:textFontStyle="italic"
+            app:numberOfResultKey="6"
+            app:deleteButtonSizeInPercent="20"
+            android:layout_weight="0.8"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btnResendEmail"
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/montserrat"
+        android:textSize="12sp"
+        android:textColor="#D81B60"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:text="Resend SMS in 2:00"/>
+
+
+</LinearLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomNumpad">
+        <attr name="textTypeFace" format="reference" />
+        <attr name="textFontStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+        <attr name="buttonTextColor" format="color" />
+        <attr name="buttonBackgroundGradientStartColor" format="color" />
+        <attr name="buttonBackgroundGradientEndColor" format="color" />
+        <attr name="buttonOutlineGradientStartColor" format="color" />
+        <attr name="buttonOutlineGradientEndColor" format="color" />
+        <attr name="buttonPressedColor" format="color" />
+        <attr name="buttonCornerRadius" format="float" />
+        <attr name="buttonOutlineThickness" format="integer" />
+        <attr name="buttonTextSizeInPercentage" format="integer" />
+        <attr name="buttonTextSizeInSp" format="float" />
+        <attr name="deleteButtonSizeInPercent" format="integer" />
+        <attr name="numberOfResultKey" format="integer" />
+        <attr name="resultKeyTextSizeInPercentage" format="integer" />
+        <attr name="resultKeyTextSizeInSp" format="float" />
+        <attr name="resultKeyContainerHeight" format="integer" />
+        <attr name="resultKeyNormalColor" format="color" />
+        <attr name="resultKeyEnteredColor" format="color" />
+    </declare-styleable>
+
+</resources>

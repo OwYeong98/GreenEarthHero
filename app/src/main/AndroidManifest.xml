@@ -59,6 +59,7 @@
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.IntroActivity" />
         <activity android:name=".ui.activity.EmailVerificationActivity" />
+        <activity android:name=".ui.activity.PhoneVerificationActivity" />
 
         <activity
             android:name=".ui.activity.MenuActivity"
