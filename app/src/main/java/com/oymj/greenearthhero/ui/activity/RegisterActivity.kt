@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.data.User
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FormUtils
@@ -51,58 +52,77 @@ class RegisterActivity : AppCompatActivity() {
         var password: String = inputPassword.text.toString()
         var firstName: String = inputFirstName.text.toString()
         var lastName: String = inputLastName.text.toString()
-        var phone: String = inputPhone.text.toString()
+        var phone: String = "+60"+inputPhone.text.toString()
         var dateOfBirth: String = inputBirthDate.text.toString()
 
         var loadingDialog = LoadingDialog(this)
         loadingDialog.show()
-        mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this){
-                task->
 
-                if(task.isSuccessful){
-                    var user: FirebaseUser? = mAuth.getCurrentUser()
+        User.getUserListFromFirebase {
+                success, message, userList ->
 
-                    val userData = hashMapOf(
-                        "email" to email,
-                        "firstName" to firstName,
-                        "lastName" to lastName,
-                        "phone" to phone,
-                        "dateOfBirth" to dateOfBirth,
-                        "isPhoneVerified" to false
-                    )
-
-                    FirebaseFirestore.getInstance().collection("Users").document(user?.uid!!)
-                        .set(userData)
-                        .addOnSuccessListener {
-                            loadingDialog.dismiss()
-                            //update the device token to firebase so we can send notification later
-                            FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-                                    innerTask->
-                                var token = innerTask.token
-                                var db = FirebaseFirestore.getInstance()
-                                db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid!!).update(mapOf(
-                                    "cloudMessagingId" to token
-                                ))
-                            }
-
-                            var intent = Intent(this@RegisterActivity,EmailVerificationActivity::class.java)
-                            startActivity(intent)
-                        }
-                        .addOnFailureListener {
-                                e -> Log.d("error", "Error writing document", e) }
-                }else{
+            if (success){
+                var isPhoneExist = userList!!.fold(false,{prev,curr-> prev || curr.phone == phone})
+                if(isPhoneExist){
                     loadingDialog.dismiss()
-                    if(task.exception is FirebaseAuthUserCollisionException){
-                        var errorDialog = ErrorDialog(this,"Email already in use","Please try another Email")
-                        errorDialog.show()
-                    }else{
-                        var errorDialog = ErrorDialog(this,"Error","We have encountered error when connecting to firebase!")
-                        errorDialog.show()
-                    }
-                    Log.d("error",task.exception!!.toString())
+                    var errorDialog = ErrorDialog(this,"Phone already in use","Please try another Phone No")
+                    errorDialog.show()
+                }else{
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this){
+                                task->
+
+                            if(task.isSuccessful){
+                                var user: FirebaseUser? = mAuth.getCurrentUser()
+
+                                val userData = hashMapOf(
+                                    "email" to email,
+                                    "firstName" to firstName,
+                                    "lastName" to lastName,
+                                    "phone" to phone,
+                                    "dateOfBirth" to dateOfBirth,
+                                    "isPhoneVerified" to false
+                                )
+
+                                FirebaseFirestore.getInstance().collection("Users").document(user?.uid!!)
+                                    .set(userData)
+                                    .addOnSuccessListener {
+                                        loadingDialog.dismiss()
+                                        //update the device token to firebase so we can send notification later
+                                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                                                innerTask->
+                                            var token = innerTask.token
+                                            var db = FirebaseFirestore.getInstance()
+                                            db.collection("Users").document(FirebaseAuth.getInstance().currentUser?.uid!!).update(mapOf(
+                                                "cloudMessagingId" to token
+                                            ))
+                                        }
+
+                                        var intent = Intent(this@RegisterActivity,EmailVerificationActivity::class.java)
+                                        startActivity(intent)
+                                    }
+                                    .addOnFailureListener {
+                                            e -> Log.d("error", "Error writing document", e) }
+                            }else{
+                                loadingDialog.dismiss()
+                                if(task.exception is FirebaseAuthUserCollisionException){
+                                    var errorDialog = ErrorDialog(this,"Email already in use","Please try another Email")
+                                    errorDialog.show()
+                                }else{
+                                    var errorDialog = ErrorDialog(this,"Error","We have encountered error when connecting to firebase!")
+                                    errorDialog.show()
+                                }
+                                Log.d("error",task.exception!!.toString())
+                            }
+                        }
                 }
+            }else{
+                loadingDialog.dismiss()
+                var errorDialog = ErrorDialog(this,"Error","We have encountered error when connecting to firebase!")
+                errorDialog.show()
             }
+        }
+
     }
 
     fun validate(): Boolean{
@@ -140,7 +160,7 @@ class RegisterActivity : AppCompatActivity() {
 
         phoneError+= "${FormUtils.isNull("Phone No",phone)?:""}|"
         phoneError+= "${FormUtils.isOnlyNumber("Phone No",phone)?:""}|"
-        phoneError+= "${FormUtils.isLengthBetween("Phone No",phone,10,11)?:""}|"
+        phoneError+= "${FormUtils.isLengthBetween("Phone No",phone,9,10)?:""}|"
 
         dateOfBirthError+= "${FormUtils.isNull("Date Of Birth",dateOfBirth)?:""}|"
 
