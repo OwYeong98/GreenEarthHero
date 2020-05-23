@@ -225,6 +225,7 @@
                     android:id="@+id/inputBirthDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:editable="false"
                     android:textColor="@color/lightgrey"
                     android:hint="Date Of Birth" />
             </com.google.android.material.textfield.TextInputLayout>
