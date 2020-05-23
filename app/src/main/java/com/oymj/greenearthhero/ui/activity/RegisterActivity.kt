@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -19,6 +20,8 @@ import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FormUtils
 import kotlinx.android.synthetic.main.activity_register.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -43,7 +46,20 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this@RegisterActivity,"Please fill in the form",Toast.LENGTH_SHORT).show()
         }
 
+        val builder = MaterialDatePicker.Builder.datePicker()
+        val currentTimeInMillis = Calendar.getInstance().timeInMillis
+        builder.setSelection(currentTimeInMillis)
+        val picker = builder.build()
+        picker.addOnPositiveButtonClickListener {
+                dateLong->
+            val date = Date(dateLong)
+            inputBirthDate.setText(SimpleDateFormat("dd/MM/yyyy").format(date))
+            validate()
+        }
 
+        inputBirthDate.setOnClickListener {
+            picker.show(supportFragmentManager, picker.toString())
+        }
     }
 
     private fun createUserAccount(){
@@ -126,6 +142,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun validate(): Boolean{
+        inputBirthDate.setError(null)
         var email:String = inputEmail.text.toString()
         var password: String = inputPassword.text.toString()
         var confirmPassword: String = inputConfirmPasword.text.toString()
@@ -145,10 +162,10 @@ class RegisterActivity : AppCompatActivity() {
         emailError+= "${FormUtils.isNull("Email",email)?:""}|"
         emailError+= "${FormUtils.isEmail(email)?:""}|"
 
-        passwordError+="${FormUtils.isNull("Password",email)?:""}|"
+        passwordError+="${FormUtils.isNull("Password",password)?:""}|"
         passwordError+="${FormUtils.isMatchRegex(password,"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$","Password must contain at least one uppercase,lowercase,number,symbol with minimum of 8 character")?:""}|"
 
-        if(password != confirmPassword){
+        if(confirmPassword != password){
             confirmPasswordError += "Confirm password does not match your password!"
         }
 
@@ -180,6 +197,9 @@ class RegisterActivity : AppCompatActivity() {
                     break
                 }
             }
+        }
+        if(confirmPasswordError!=""){
+            inputConfirmPasword.error = confirmPasswordError
         }
         if(firstNameError!=""){
             for(err in firstNameError.split("|")){
@@ -214,7 +234,7 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        var allError = emailError+passwordError+firstNameError+lastNameError+phoneError+dateOfBirthError
+        var allError = emailError+passwordError+confirmPasswordError+firstNameError+lastNameError+phoneError+dateOfBirthError
 
         return allError.replace("|","")== ""
     }
