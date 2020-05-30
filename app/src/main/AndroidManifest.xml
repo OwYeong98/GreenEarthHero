@@ -74,6 +74,7 @@
         <activity android:name=".ui.activity.VolunteerCollectionActivity" />
         <activity android:name=".ui.activity.MyVolunteerActivity" />
         <activity android:name=".ui.activity.MyRequestAndRequestHistoryActivity" />
+        <activity android:name=".ui.activity.ViewVolunteerLocationActivity" />
         <!--   End Recycle Platform Activity   -->
 
         <!--   Chat Platform Activity   -->

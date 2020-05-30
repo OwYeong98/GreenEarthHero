@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="25dp"
+            android:text="Volunteer's Location"
+            android:textColor="@color/darkgrey"
+            android:fontFamily="@font/montserrat"
+            android:textSize="18dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textAlignment="center"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat"
+        android:layout_marginBottom="20dp"
+        android:text="The Map will update volunteer location in realtime. The accuracy may affect based on the Volunteer's GPS signal."/>
+
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.ViewVolunteerLocationActivity"
+        android:id="@+id/googleMapFragmentView"
+        android:layout_weight="1"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-70dp"
+        android:orientation="horizontal">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/btnRecenterRider"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_rider_recenter"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/Widget.MaterialComponents.FloatingActionButton"
+            android:id="@+id/btnRecenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/darkgrey"
+            android:elevation="6dp"
+            android:clickable="true"
+            android:scaleType="center"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/my_location_icon"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            app:layout_constraintRight_toLeftOf="@id/guideline11"
+            app:layout_constraintBottom_toBottomOf="@id/recycle_action_button_wrapper"
+            app:tint="@color/white" />
+
+    </LinearLayout>
+
+</LinearLayout>

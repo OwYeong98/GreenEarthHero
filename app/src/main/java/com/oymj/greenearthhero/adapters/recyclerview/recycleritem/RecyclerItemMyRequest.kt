@@ -36,6 +36,8 @@ class RecyclerItemMyRequest : UniversalRecyclerItem(RecycleRequest::class.java.s
                 val btnCancelRequest = view.findViewById<TextView>(R.id.btnCancelRequest)
                 val btnChat = view.findViewById<TextView>(R.id.btnChat)
                 val btnMarkAsCollected = view.findViewById<TextView>(R.id.btnMarkAsCollected)
+                val btnViewVolunteerLocation = view.findViewById<TextView>(R.id.btnViewVolunteerLocation)
+                val btnShareLocation = view.findViewById<TextView>(R.id.btnShareLocation)
 
                 val tvDistanceAwayContainer = view.findViewById<CardView>(R.id.tvDistanceAwayContainer)
                 val totalContainer = view.findViewById<LinearLayout>(R.id.totalContainer)
@@ -57,11 +59,15 @@ class RecyclerItemMyRequest : UniversalRecyclerItem(RecycleRequest::class.java.s
                     tvStatus.text ="Status: Collecting By ${data.acceptedCollectUser!!.getFullName()}"
                 }
 
-
+                if(data.isLocationShared)
+                    btnViewVolunteerLocation.visibility = View.VISIBLE
+                else
+                    btnViewVolunteerLocation.visibility = View.GONE
 
                 //hide
                 tvDistanceAwayContainer.visibility = View.GONE
                 totalContainer.visibility = View.GONE
+                btnShareLocation.visibility = View.GONE
 
                 //hide chat button if there are no anyone accepted the request
                 if(data.acceptedCollectUser == null){
@@ -74,6 +80,13 @@ class RecyclerItemMyRequest : UniversalRecyclerItem(RecycleRequest::class.java.s
                 //set ripple background
                 btnCancelRequest.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
                     view.context.resources.getColor(R.color.red),
+                    view.context.resources.getColor(R.color.transparent_pressed),
+                    view.context.resources.getColor(R.color.transparent),
+                    25f,0
+                )
+
+                btnViewVolunteerLocation.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
+                    view.context.resources.getColor(R.color.yellow),
                     view.context.resources.getColor(R.color.transparent_pressed),
                     view.context.resources.getColor(R.color.transparent),
                     25f,0
@@ -93,6 +106,11 @@ class RecyclerItemMyRequest : UniversalRecyclerItem(RecycleRequest::class.java.s
 
                 btnChat.setOnClickListener{
                     adapter.onItemClickedListener(data,2)
+                }
+
+                btnViewVolunteerLocation.setOnClickListener {
+                    adapter.onItemClickedListener(data,3)
+
                 }
 
             }

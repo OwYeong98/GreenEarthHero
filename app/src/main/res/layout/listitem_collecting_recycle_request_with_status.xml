@@ -188,6 +188,36 @@
             android:textColor="@color/white"
             android:text="Chat with collector"/>
 
+        <TextView
+            android:id="@+id/btnViewVolunteerLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:paddingLeft="15dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingRight="15dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            android:text="View Volunteer Location"/>
+
+        <TextView
+            android:id="@+id/btnShareLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:paddingLeft="15dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:paddingRight="15dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            android:text="Start Share Location"/>
+
     </LinearLayout>
     <Space
         android:layout_width="0dp"

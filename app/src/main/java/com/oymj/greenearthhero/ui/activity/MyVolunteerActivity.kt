@@ -1,5 +1,6 @@
 package com.oymj.greenearthhero.ui.activity
 
+import android.content.Intent
 import android.net.sip.SipSession
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +12,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ListenerRegistration
@@ -18,13 +20,18 @@ import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapterRepo
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemMyVolunteerCollectionRequest
+import com.oymj.greenearthhero.data.ChatMessage
+import com.oymj.greenearthhero.data.ChatRoom
 import com.oymj.greenearthhero.data.RecycleRequest
+import com.oymj.greenearthhero.data.User
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import kotlinx.android.synthetic.main.activity_my_volunteer.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -171,7 +178,58 @@ class MyVolunteerActivity : AppCompatActivity() {
 
                     }else if(clickType == 3){
                         //click type 3 is chat with requester
+                        var loadingDialog = LoadingDialog(this@MyVolunteerActivity)
+                        loadingDialog.show()
 
+                        var recycleRequest = data
+                        var requesterUserId = recycleRequest.requestedUser.userId
+                        Log.d("wtf","user1: ${FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@MyVolunteerActivity)!!} | user2: ${requesterUserId}")
+                        ChatRoom.getSpecificChatRoomProvidingTwoUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@MyVolunteerActivity)!!,requesterUserId, callback = {
+                                success,message,chatRoomRef->
+
+                            GlobalScope.launch {
+                                if(chatRoomRef!=null){
+                                    loadingDialog.dismiss()
+                                    //if found we return previous activity
+                                    var intent = Intent(this@MyVolunteerActivity,ChatRoomActivity::class.java)
+                                    intent.putExtra("chatRoom",chatRoomRef)
+                                    startActivity(intent)
+                                }else{
+                                    loadingDialog.dismiss()
+
+                                    var user1 = User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().currentUser?.uid!!) //currentlogged in user
+                                    var user2 = recycleRequest.requestedUser
+
+                                    var id = "-1"
+                                    var lastMessage = ""
+                                    var lastMessageSendBy = ""
+                                    var messageList = ArrayList<ChatMessage>()
+
+                                    var newChatRoom = ChatRoom(id, user1!!, user2!!, messageList, lastMessage,lastMessageSendBy)
+                                    var intent = Intent(this@MyVolunteerActivity,ChatRoomActivity::class.java)
+                                    intent.putExtra("chatRoom",newChatRoom)
+                                    startActivity(intent)
+                                }
+                            }
+                        })
+
+                    }else if(clickType == 4){
+                        //click type 4 is share location
+                        var loadingDialog = LoadingDialog(this@MyVolunteerActivity)
+                        loadingDialog.show()
+
+
+                        FirebaseFirestore.getInstance().collection("Recycle_Request").document(data.id)
+                            .update(mapOf("isLocationShared" to !data.isLocationShared))
+                            .addOnSuccessListener {
+                                loadingDialog.dismiss()
+                                var successDialog = SuccessDialog(this@MyVolunteerActivity,"Shared Location Successfully","The Requester will now be able to view your location!")
+                                successDialog.show()
+                            }.addOnFailureListener {
+                                loadingDialog.dismiss()
+                                var errorDialog = ErrorDialog(this@MyVolunteerActivity,"Oops","Sorry, We have encountered some error when connecting with Firebase.")
+                                errorDialog.show()
+                            }
                     }
 
                 }
