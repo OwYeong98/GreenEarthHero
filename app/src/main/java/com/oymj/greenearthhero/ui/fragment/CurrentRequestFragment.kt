@@ -75,8 +75,8 @@ class CurrentRequestFragment : Fragment() {
                         loadingDialog.show()
 
                         var recycleRequest = data
-                        var requesterUserId = recycleRequest.requestedUser.userId
-                        ChatRoom.getSpecificChatRoomProvidingTwoUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)!!,requesterUserId, callback = {
+                        var collectorUserId = recycleRequest.acceptedCollectUser!!.userId
+                        ChatRoom.getSpecificChatRoomProvidingTwoUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)!!,collectorUserId, callback = {
                                 success,message,chatRoomRef->
 
                             GlobalScope.launch {
@@ -90,7 +90,7 @@ class CurrentRequestFragment : Fragment() {
                                     loadingDialog.dismiss()
 
                                     var user1 = User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().currentUser?.uid!!) //currentlogged in user
-                                    var user2 = recycleRequest.requestedUser
+                                    var user2 = recycleRequest.acceptedCollectUser
 
                                     var id = "-1"
                                     var lastMessage = ""
