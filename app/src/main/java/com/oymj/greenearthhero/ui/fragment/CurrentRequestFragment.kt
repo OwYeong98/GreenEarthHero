@@ -1,5 +1,6 @@
 package com.oymj.greenearthhero.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,12 +8,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
 import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemMyRequest
+import com.oymj.greenearthhero.data.ChatMessage
+import com.oymj.greenearthhero.data.ChatRoom
 import com.oymj.greenearthhero.data.RecycleRequest
+import com.oymj.greenearthhero.data.User
+import com.oymj.greenearthhero.ui.activity.ChatRoomActivity
+import com.oymj.greenearthhero.ui.activity.ViewVolunteerLocationActivity
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
@@ -20,6 +27,8 @@ import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import kotlinx.android.synthetic.main.activity_my_request_and_request_history.*
 import kotlinx.android.synthetic.main.fragment_current_request.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.Error
 
 class CurrentRequestFragment : Fragment() {
@@ -60,6 +69,48 @@ class CurrentRequestFragment : Fragment() {
 
                         })
                         confirmDialog.show()
+                    }else if(clickType == 2){
+                        //chat with volunteer pressed
+                        var loadingDialog = LoadingDialog(context!!)
+                        loadingDialog.show()
+
+                        var recycleRequest = data
+                        var requesterUserId = recycleRequest.requestedUser.userId
+                        ChatRoom.getSpecificChatRoomProvidingTwoUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)!!,requesterUserId, callback = {
+                                success,message,chatRoomRef->
+
+                            GlobalScope.launch {
+                                if(chatRoomRef!=null){
+                                    loadingDialog.dismiss()
+                                    //if found we return previous activity
+                                    var intent = Intent(context!!, ChatRoomActivity::class.java)
+                                    intent.putExtra("chatRoom",chatRoomRef)
+                                    startActivity(intent)
+                                }else{
+                                    loadingDialog.dismiss()
+
+                                    var user1 = User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().currentUser?.uid!!) //currentlogged in user
+                                    var user2 = recycleRequest.requestedUser
+
+                                    var id = "-1"
+                                    var lastMessage = ""
+                                    var lastMessageSendBy = ""
+                                    var messageList = ArrayList<ChatMessage>()
+
+                                    var newChatRoom = ChatRoom(id, user1!!, user2!!, messageList, lastMessage,lastMessageSendBy)
+                                    var intent = Intent(context!!,ChatRoomActivity::class.java)
+                                    intent.putExtra("chatRoom",newChatRoom)
+                                    startActivity(intent)
+                                }
+                            }
+                        })
+
+                    }else if(clickType == 3){
+                        var intent = Intent(context!!,ViewVolunteerLocationActivity::class.java)
+                        intent.putExtra("volunteerUserId",data.acceptedCollectUser?.userId)
+                        intent.putExtra("destLat",data.location.latitude)
+                        intent.putExtra("destLong",data.location.longitude)
+                        startActivity(intent)
                     }
                 }
             }

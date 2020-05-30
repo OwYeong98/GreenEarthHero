@@ -58,7 +58,8 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         inputBirthDate.setOnClickListener {
-            picker.show(supportFragmentManager, picker.toString())
+            if(!picker.isVisible)
+                picker.show(supportFragmentManager, picker.toString())
         }
     }
 

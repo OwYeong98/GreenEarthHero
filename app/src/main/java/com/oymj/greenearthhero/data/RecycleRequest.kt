@@ -17,7 +17,8 @@ class RecycleRequest(
     var plasticWeight:Int,
     var metalWeight:Int,
     var paperWeight:Int,
-    var acceptedCollectUser: User?
+    var acceptedCollectUser: User?,
+    var isLocationShared: Boolean
 ) {
 
     companion object{
@@ -50,6 +51,7 @@ class RecycleRequest(
                                 var paperWeight = recycleRequest.getLong("paper_weight")?.toInt()
                                 var metalWeight = recycleRequest.getLong("metal_weight")?.toInt()
                                 var acceptedCollectBy = recycleRequest.getString("accepted_collect_by")
+                                var isLocationShared = recycleRequest.getBoolean("isLocationShared")
 
 
                                 var userRequestedObj: User? = null
@@ -69,7 +71,7 @@ class RecycleRequest(
                                     }
                                 }
 
-                                var newRecycleRequest = RecycleRequest(id,dateRequested!!,userRequestedObj!!,address!!,location!!,glassWeight!!,plasticWeight!!, metalWeight!!, paperWeight!!, acceptedCollectUserObj)
+                                var newRecycleRequest = RecycleRequest(id,dateRequested!!,userRequestedObj!!,address!!,location!!,glassWeight!!,plasticWeight!!, metalWeight!!, paperWeight!!, acceptedCollectUserObj,isLocationShared!!)
                                 recycleRequestList.add(newRecycleRequest)
                             }
 

@@ -22,6 +22,10 @@ class EmailVerificationActivity : AppCompatActivity() {
         setupUI()
         sendEmailVerification()
 
+        btnBack.setOnClickListener {
+            finish()
+        }
+
         btnResendEmail.setOnClickListener {
             sendEmailVerification()
         }
@@ -61,7 +65,9 @@ class EmailVerificationActivity : AppCompatActivity() {
 
                if(user.isEmailVerified){
                    var successDialog = SuccessDialog(this,"Email is verified successfully","Thank you for verifying your email."){
-
+                       finish()
+                       var intent = Intent(this,PhoneVerificationActivity::class.java)
+                       startActivity(intent)
                    }
                    successDialog.show()
                }else{

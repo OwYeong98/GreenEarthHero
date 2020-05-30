@@ -26,8 +26,8 @@ object LocationUtils{
         if(!::locCallback.isInitialized){
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
             locRequest = LocationRequest()
-            locRequest.interval = 50000
-            locRequest.fastestInterval = 50000
+            locRequest.interval = 1000
+            locRequest.fastestInterval = 1000
             locRequest.smallestDisplacement = 170f // 170 m = 0.1 mile
             locRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY //set according to your app function
 

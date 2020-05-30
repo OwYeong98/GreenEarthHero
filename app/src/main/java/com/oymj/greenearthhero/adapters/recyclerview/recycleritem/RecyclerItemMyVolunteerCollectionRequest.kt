@@ -42,6 +42,9 @@ class RecyclerItemMyVolunteerCollectionRequest : UniversalRecyclerItem(RecycleRe
                 val btnCancelRequest = view.findViewById<TextView>(R.id.btnCancelRequest)
                 val btnChat = view.findViewById<TextView>(R.id.btnChat)
                 val btnMarkAsCollected = view.findViewById<TextView>(R.id.btnMarkAsCollected)
+                val btnShareLocation = view.findViewById<TextView>(R.id.btnShareLocation)
+                val btnViewVolunteerLocation = view.findViewById<TextView>(R.id.btnViewVolunteerLocation)
+
 
                 val tvDistanceAwayContainer = view.findViewById<CardView>(R.id.tvDistanceAwayContainer)
                 val totalContainer = view.findViewById<LinearLayout>(R.id.totalContainer)
@@ -59,12 +62,33 @@ class RecyclerItemMyVolunteerCollectionRequest : UniversalRecyclerItem(RecycleRe
                 tvStatus.text ="Status: In Collection"
 
                 btnCancelRequest.visibility = View.GONE
+                btnViewVolunteerLocation.visibility = View.GONE
 
                 if(LocationUtils.getLastKnownLocation() != null){
                     var userCurrentLoc = LocationUtils.getLastKnownLocation()
                     tvDistanceAway.text = String.format("%.2f",data.getDistanceBetween()/1000)
                 }else{
                     tvDistanceAway.text = "N/A"
+                }
+
+                if(data.isLocationShared){
+                    //set ripple background
+                    btnShareLocation.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
+                        view.context.resources.getColor(R.color.blue),
+                        view.context.resources.getColor(R.color.transparent_pressed),
+                        view.context.resources.getColor(R.color.transparent),
+                        30f,0
+                    )
+                    btnShareLocation.text = "Stop Sharing Location"
+                }else{
+                    //set ripple background
+                    btnShareLocation.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,
+                        view.context.resources.getColor(R.color.darkBlue),
+                        view.context.resources.getColor(R.color.transparent_pressed),
+                        view.context.resources.getColor(R.color.transparent),
+                        30f,0
+                    )
+                    btnShareLocation.text = "Start Sharing Location"
                 }
 
 
@@ -109,6 +133,10 @@ class RecyclerItemMyVolunteerCollectionRequest : UniversalRecyclerItem(RecycleRe
 
                 btnChat.setOnClickListener{
                     adapter.onItemClickedListener(data,3)
+                }
+
+                btnShareLocation.setOnClickListener {
+                    adapter.onItemClickedListener(data,4)
                 }
             }
         }

@@ -403,7 +403,8 @@ class RecycleActivity : AppCompatActivity() {
                     "metal_weight" to metalAmount,
                     "plastic_weight" to plasticAmount,
                     "paper_weight" to paperAmount,
-                    "accepted_collect_by" to ""
+                    "accepted_collect_by" to "",
+                    "isLocationShared" to false
                 )
 
                 var loadingDialog = LoadingDialog(this)

@@ -14,6 +14,7 @@ import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.FormUtils
+import com.oymj.greenearthhero.utils.LocationUtils
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -97,6 +98,14 @@ class LoginActivity : AppCompatActivity() {
                             var intent = Intent(this@LoginActivity, PhoneVerificationActivity::class.java)
                             startActivity(intent)
                         }else{
+                            LocationUtils.addLocationUpdatesCallback("Update_User_Location") { location->
+                                var userId = FirebaseAuth.getInstance().currentUser?.uid
+                                if(userId!=null){
+                                    FirebaseFirestore.getInstance().collection("Users").document(userId)
+                                        .update(mapOf("locationLat" to location.latitude, "locationLong" to location.longitude))
+                                }
+                            }
+
                             //redirect to menu activity
                             var intent = Intent(this@LoginActivity, MenuActivity::class.java)
                             intent.putExtra("callFromLogin",true)

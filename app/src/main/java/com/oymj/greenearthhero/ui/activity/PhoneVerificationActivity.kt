@@ -22,6 +22,7 @@ import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.ui.dialog.ResendSMSVerificationDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
+import com.oymj.greenearthhero.utils.LocationUtils
 import com.oymj.greenearthhero.utils.RippleUtil
 import kotlinx.android.synthetic.main.activity_phone_verification.*
 import java.text.DecimalFormat
@@ -61,6 +62,9 @@ class PhoneVerificationActivity : AppCompatActivity() {
                 sendVerificationCode(phoneNo)
             }
             resendDialog.show()
+        }
+        btnBack.setOnClickListener {
+            finish()
         }
     }
 
@@ -103,7 +107,18 @@ class PhoneVerificationActivity : AppCompatActivity() {
                             mapOf("isPhoneVerified" to true, "phone" to phoneNo))
                             .addOnSuccessListener {
                                 loadingDialog.dismiss()
+
+                                //update user location
+                                LocationUtils.addLocationUpdatesCallback("Update_User_Location") { location->
+                                    var userId = FirebaseAuth.getInstance().currentUser?.uid
+                                    if(userId!=null){
+                                        FirebaseFirestore.getInstance().collection("Users").document(userId)
+                                            .update(mapOf("locationLat" to location.latitude, "locationLong" to location.longitude))
+                                    }
+                                }
+
                                 var successDialog = SuccessDialog(this@PhoneVerificationActivity,"Successfully verified!","We automatically detected the verification code from your message"){
+                                    finish()
                                     var intent = Intent(this@PhoneVerificationActivity, MenuActivity::class.java)
                                     intent.putExtra("callFromLogin",true)
                                     startActivity(intent)
