@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.dialog.LoadingDialog"
     android:layout_width="300dp"
     android:layout_height="350dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,15 +15,17 @@
         android:background="@null">
 
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_margin="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/intro_slide_image_1"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/loadingIcon"
+            android:layout_margin="20dp"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_anim" />
 
         <TextView
             android:id="@+id/textView4"
@@ -34,7 +37,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintTop_toBottomOf="@+id/loadingIcon" />
 
         <TextView
             android:id="@+id/textView5"
