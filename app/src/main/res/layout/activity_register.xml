@@ -208,27 +208,6 @@
                     android:textColor="@color/lightgrey" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutBirthDate"
-                style="@style/textInputOutlineTextStyle"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
-                app:hintTextColor="#000000"
-                app:boxStrokeColor="@color/lightgrey"
-                app:layout_constraintEnd_toStartOf="@+id/guideline8"
-                app:layout_constraintHeight_percent="0.08"
-                app:layout_constraintStart_toStartOf="@+id/guideline7"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPhone">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputBirthDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:editable="false"
-                    android:textColor="@color/lightgrey"
-                    android:hint="Date Of Birth" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegister"
@@ -247,7 +226,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline8"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/guideline7"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutBirthDate" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPhone" />
 
             <TextView
                 android:id="@+id/tvHaveAccount"

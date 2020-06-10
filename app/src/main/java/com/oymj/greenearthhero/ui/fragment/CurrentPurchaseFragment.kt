@@ -17,12 +17,8 @@ import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemCu
 import com.oymj.greenearthhero.data.SecondHandItem
 import com.oymj.greenearthhero.ui.activity.CurrentPurchaseDetailActivity
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
-import com.oymj.greenearthhero.ui.dialog.LoadingDialog
-import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
-import kotlinx.android.synthetic.main.fragment_sales_history.*
-import java.text.SimpleDateFormat
-import java.util.*
+import kotlinx.android.synthetic.main.fragment_current_purchase.*
 import kotlin.collections.ArrayList
 
 class CurrentPurchaseFragment : Fragment() {
@@ -111,6 +107,9 @@ class CurrentPurchaseFragment : Fragment() {
     }
 
     private fun getCurrentPurchaseListFromFirebase(){
+        zeroStateContainer.visibility = View.GONE
+        currentPurchaseRecyclerView.visibility = View.VISIBLE
+
         //clear previous data first
         currentPurchaseList.clear()
 
@@ -129,9 +128,13 @@ class CurrentPurchaseFragment : Fragment() {
                     //filter only show request that are requested by the current logged in user
                     data!!.forEach { item-> currentPurchaseList.add(item) }
 
-                    //refresh recyclerview
-                    recyclerViewAdapter.notifyDataSetChanged()
-
+                    if(currentPurchaseList.size > 0){
+                        //refresh recyclerview
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }else{
+                        zeroStateContainer.visibility = View.VISIBLE
+                        currentPurchaseRecyclerView.visibility = View.GONE
+                    }
                 }
 
             }else{

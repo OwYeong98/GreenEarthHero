@@ -16,8 +16,6 @@ import com.oymj.greenearthhero.data.RecycleRequest
 import com.oymj.greenearthhero.data.RecycleRequestHistory
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
-import kotlinx.android.synthetic.main.fragment_current_request.*
-import kotlinx.android.synthetic.main.fragment_current_request.swipeLayout
 import kotlinx.android.synthetic.main.fragment_recycle_request_history.*
 import okhttp3.internal.notify
 
@@ -106,6 +104,9 @@ class RecycleRequestHistoryFragment : Fragment() {
     }
 
     private fun getRecycleHistoryFromFirebase(){
+        zeroStateContainer.visibility = View.GONE
+        recycleRequestHistoryRecyclerView.visibility = View.VISIBLE
+
         recycleHistoryList.clear()
         recyclerViewAdapter.startSkeletalLoading(6,UniversalAdapter.SKELETAL_TYPE_3)
 
@@ -113,45 +114,50 @@ class RecycleRequestHistoryFragment : Fragment() {
             success,message,data->
 
             if(success){
-                recyclerViewAdapter.stopSkeletalLoading()
-                swipeLayout.isRefreshing = false
+                activity?.runOnUiThread {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    swipeLayout.isRefreshing = false
 
-                var totalMetal = 0
-                var totalGlass = 0
-                var totalPlastic = 0
-                var totalPaper = 0
+                    var totalMetal = 0
+                    var totalGlass = 0
+                    var totalPlastic = 0
+                    var totalPaper = 0
 
-                recycleHistoryList.clear()
-                for(history in data!!){
-                    if(history.userRequested.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
-                        totalMetal += history.metalWeight
-                        totalGlass += history.glassWeight
-                        totalPlastic += history.plasticWeight
-                        totalPaper += history.paperWeight
-                        recycleHistoryList.add(history)
+                    recycleHistoryList.clear()
+                    for(history in data!!){
+                        if(history.userRequested.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(context!!)){
+                            totalMetal += history.metalWeight
+                            totalGlass += history.glassWeight
+                            totalPlastic += history.plasticWeight
+                            totalPaper += history.paperWeight
+                            recycleHistoryList.add(history)
+                        }
+                    }
+
+                    //update the total recycler material
+                    tvPlasticAmount.text = "$totalPlastic KG"
+                    tvGlassAmount.text = "$totalGlass KG"
+                    tvMetalAmount.text = "$totalMetal KG"
+                    tvPaperAmount.text = "$totalPaper KG"
+
+
+                    recycleHistoryList.sortBy { data-> (data as RecycleRequestHistory).dateCollected.time }
+
+                    if(recycleHistoryList.size >0){
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }else{
+                        zeroStateContainer.visibility = View.VISIBLE
+                        recycleRequestHistoryRecyclerView.visibility = View.GONE
                     }
                 }
-
-                //update the total recycler material
-                tvPlasticAmount.text = "$totalPlastic KG"
-                tvGlassAmount.text = "$totalGlass KG"
-                tvMetalAmount.text = "$totalMetal KG"
-                tvPaperAmount.text = "$totalPaper KG"
-
-
-                recycleHistoryList.sortBy { data-> (data as RecycleRequestHistory).dateCollected.time }
-                recyclerViewAdapter.notifyDataSetChanged()
-
-
-
-
             }else{
-                recyclerViewAdapter.stopSkeletalLoading()
-                swipeLayout.isRefreshing = false
+                activity?.runOnUiThread {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    swipeLayout.isRefreshing = false
 
-                var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
-                errorDialog.show()
-
+                    var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
+                    errorDialog.show()
+                }
             }
         })
     }

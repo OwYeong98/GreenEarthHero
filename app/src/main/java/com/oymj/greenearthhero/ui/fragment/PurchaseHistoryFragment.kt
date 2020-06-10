@@ -14,7 +14,10 @@ import com.oymj.greenearthhero.adapters.recyclerview.UniversalAdapter
 import com.oymj.greenearthhero.data.SecondHandItemHistory
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
+import kotlinx.android.synthetic.main.fragment_purchase_history.*
 import kotlinx.android.synthetic.main.fragment_sales_history.*
+import kotlinx.android.synthetic.main.fragment_sales_history.swipeLayout
+import kotlinx.android.synthetic.main.fragment_sales_history.zeroStateContainer
 
 class PurchaseHistoryFragment : Fragment() {
 
@@ -83,6 +86,9 @@ class PurchaseHistoryFragment : Fragment() {
     }
 
     private fun getPurchaseHistoryFromFirebase(){
+        zeroStateContainer.visibility = View.GONE
+        purchaseHistoryRecyclerView.visibility = View.VISIBLE
+
         //clear previous data first
         purchaseHistoryList.clear()
 
@@ -100,8 +106,13 @@ class PurchaseHistoryFragment : Fragment() {
                 purchaseHistoryList.addAll(data!!)
 
                 activity?.runOnUiThread{
-                    //refresh recyclerview
-                    recyclerViewAdapter.notifyDataSetChanged()
+                    if(purchaseHistoryList.size > 0 ){
+                        //refresh recyclerview
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }else{
+                        zeroStateContainer.visibility = View.VISIBLE
+                        purchaseHistoryRecyclerView.visibility = View.GONE
+                    }
                 }
 
             }else{
