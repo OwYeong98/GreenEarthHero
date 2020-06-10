@@ -85,6 +85,9 @@ class FoodDonationHistoryFragment : Fragment() {
     }
 
     private fun getFoodDonationHistoryFromFirebase(){
+        zeroStateContainer.visibility = View.GONE
+        foodDonationHistoryRecyclerView.visibility = View.VISIBLE
+
         foodDonationHistoryList.clear()
         recyclerViewAdapter.startSkeletalLoading(6,UniversalAdapter.SKELETAL_TYPE_3)
 
@@ -110,9 +113,13 @@ class FoodDonationHistoryFragment : Fragment() {
                     //update the total recycler material
                     tvTotalFoodContributed.text = totalFoodDonated.toString()
 
-                    recyclerViewAdapter.notifyDataSetChanged()
+                    if(foodDonationHistoryList.size>0){
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }else{
+                        zeroStateContainer.visibility = View.VISIBLE
+                        foodDonationHistoryRecyclerView.visibility = View.GONE
+                    }
                 }
-
             }else{
                 activity?.runOnUiThread {
                     recyclerViewAdapter.stopSkeletalLoading()

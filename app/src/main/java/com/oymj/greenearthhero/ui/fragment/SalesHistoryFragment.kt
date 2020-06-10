@@ -83,6 +83,9 @@ class SalesHistoryFragment : Fragment() {
     }
 
     private fun getSalesHistoryFromFirebase(){
+        zeroStateContainer.visibility = View.GONE
+        salesHistoryRecyclerView.visibility = View.VISIBLE
+
         //clear previous data first
         salesHistoryList.clear()
 
@@ -100,8 +103,14 @@ class SalesHistoryFragment : Fragment() {
                 salesHistoryList.addAll(data!!)
 
                 activity?.runOnUiThread {
-                    //refresh recyclerview
-                    recyclerViewAdapter.notifyDataSetChanged()
+
+                    if(salesHistoryList.size > 0){
+                        //refresh recyclerview
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }else{
+                        zeroStateContainer.visibility = View.VISIBLE
+                        salesHistoryRecyclerView.visibility = View.GONE
+                    }
                 }
 
             }else{

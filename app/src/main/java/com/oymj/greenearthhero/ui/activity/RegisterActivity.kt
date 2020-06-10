@@ -45,22 +45,6 @@ class RegisterActivity : AppCompatActivity() {
             else
                 Toast.makeText(this@RegisterActivity,"Please fill in the form",Toast.LENGTH_SHORT).show()
         }
-
-        val builder = MaterialDatePicker.Builder.datePicker()
-        val currentTimeInMillis = Calendar.getInstance().timeInMillis
-        builder.setSelection(currentTimeInMillis)
-        val picker = builder.build()
-        picker.addOnPositiveButtonClickListener {
-                dateLong->
-            val date = Date(dateLong)
-            inputBirthDate.setText(SimpleDateFormat("dd/MM/yyyy").format(date))
-            validate()
-        }
-
-        inputBirthDate.setOnClickListener {
-            if(!picker.isVisible)
-                picker.show(supportFragmentManager, picker.toString())
-        }
     }
 
     private fun createUserAccount(){
@@ -70,7 +54,6 @@ class RegisterActivity : AppCompatActivity() {
         var firstName: String = inputFirstName.text.toString()
         var lastName: String = inputLastName.text.toString()
         var phone: String = "+60"+inputPhone.text.toString()
-        var dateOfBirth: String = inputBirthDate.text.toString()
 
         var loadingDialog = LoadingDialog(this)
         loadingDialog.show()
@@ -97,7 +80,6 @@ class RegisterActivity : AppCompatActivity() {
                                     "firstName" to firstName,
                                     "lastName" to lastName,
                                     "phone" to phone,
-                                    "dateOfBirth" to dateOfBirth,
                                     "isPhoneVerified" to false
                                 )
 
@@ -143,14 +125,12 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun validate(): Boolean{
-        inputBirthDate.setError(null)
         var email:String = inputEmail.text.toString()
         var password: String = inputPassword.text.toString()
         var confirmPassword: String = inputConfirmPasword.text.toString()
         var firstName: String = inputFirstName.text.toString()
         var lastName: String = inputLastName.text.toString()
         var phone: String = inputPhone.text.toString()
-        var dateOfBirth: String = inputBirthDate.text.toString()
 
         var emailError = ""
         var passwordError = ""
@@ -158,7 +138,6 @@ class RegisterActivity : AppCompatActivity() {
         var firstNameError = ""
         var lastNameError = ""
         var phoneError = ""
-        var dateOfBirthError = ""
 
         emailError+= "${FormUtils.isNull("Email",email)?:""}|"
         emailError+= "${FormUtils.isEmail(email)?:""}|"
@@ -180,7 +159,6 @@ class RegisterActivity : AppCompatActivity() {
         phoneError+= "${FormUtils.isOnlyNumber("Phone No",phone)?:""}|"
         phoneError+= "${FormUtils.isLengthBetween("Phone No",phone,9,10)?:""}|"
 
-        dateOfBirthError+= "${FormUtils.isNull("Date Of Birth",dateOfBirth)?:""}|"
 
         Log.d("asd",emailError)
         if(emailError!=""){
@@ -226,16 +204,8 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
-        if(dateOfBirthError!=""){
-            for(err in dateOfBirthError.split("|")){
-                if(err!=""){
-                    inputBirthDate.error = err
-                    break
-                }
-            }
-        }
 
-        var allError = emailError+passwordError+confirmPasswordError+firstNameError+lastNameError+phoneError+dateOfBirthError
+        var allError = emailError+passwordError+confirmPasswordError+firstNameError+lastNameError+phoneError
 
         return allError.replace("|","")== ""
     }

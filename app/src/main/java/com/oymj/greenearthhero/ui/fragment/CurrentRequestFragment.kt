@@ -169,6 +169,9 @@ class CurrentRequestFragment : Fragment() {
     }
 
     private fun getRecyclerRequestFromFirebase(){
+        zeroStateContainer.visibility = View.GONE
+        currentRequestRecyclerView.visibility = View.VISIBLE
+
         //clear previous data first
         currentRequestList.clear()
 
@@ -190,16 +193,23 @@ class CurrentRequestFragment : Fragment() {
                     }
                 }
 
-                //refresh recyclerview
-                recyclerViewAdapter.notifyDataSetChanged()
-
-
+                activity?.runOnUiThread {
+                    if(currentRequestList.size >0){
+                        //refresh recyclerview
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }else{
+                        zeroStateContainer.visibility = View.VISIBLE
+                        currentRequestRecyclerView.visibility = View.GONE
+                    }
+                }
             }else{
-                recyclerViewAdapter.stopSkeletalLoading()
-                swipeLayout.isRefreshing = false
+                activity?.runOnUiThread {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    swipeLayout.isRefreshing = false
 
-                var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
-                errorDialog.show()
+                    var errorDialog = ErrorDialog(context!!,"Error when getting data from Firebase","Contact the developer. Error Code: $message")
+                    errorDialog.show()
+                }
             }
 
         }

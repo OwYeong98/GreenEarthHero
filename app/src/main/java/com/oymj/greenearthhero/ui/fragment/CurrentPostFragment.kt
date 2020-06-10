@@ -112,6 +112,9 @@ class CurrentPostFragment : Fragment() {
     }
 
     private fun getCurrentPostFromFirebase(){
+        zeroStateContainer.visibility = View.GONE
+        currentPostRecyclerView.visibility = View.VISIBLE
+
         //clear previous data first
         currentPostList.clear()
 
@@ -130,8 +133,14 @@ class CurrentPostFragment : Fragment() {
 
                     currentPostList.sortByDescending { item-> if(item is SecondHandItem) item.datePosted.time else 0 }
 
-                    //refresh recyclerview
-                    recyclerViewAdapter.notifyDataSetChanged()
+                    if(currentPostList.size > 0){
+                        //refresh recyclerview
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }else{
+                        currentPostRecyclerView.visibility = View.GONE
+                        zeroStateContainer.visibility = View.VISIBLE
+                    }
+
                 }
 
             }else{

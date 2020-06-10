@@ -17,9 +17,10 @@ import com.oymj.greenearthhero.adapters.recyclerview.recycleritem.RecyclerItemMy
 import com.oymj.greenearthhero.data.FoodDonation
 import com.oymj.greenearthhero.ui.activity.FoodDonationDetailActivity
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
-import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
-import kotlinx.android.synthetic.main.fragment_current_request.*
+import kotlinx.android.synthetic.main.fragment_current_request.swipeLayout
+import kotlinx.android.synthetic.main.fragment_current_request.zeroStateContainer
+import kotlinx.android.synthetic.main.fragment_my_donation.*
 
 class MyDonationFragment : Fragment() {
 
@@ -109,6 +110,9 @@ class MyDonationFragment : Fragment() {
     }
 
     private fun getFoodDonationFromFirebase(){
+        zeroStateContainer.visibility = View.GONE
+        currentDonationRecyclerView.visibility = View.VISIBLE
+
         //clear previous data first
         currentDonationList.clear()
 
@@ -127,8 +131,13 @@ class MyDonationFragment : Fragment() {
                     currentDonationList.addAll(data!!)
 
 
-                    //refresh recyclerview
-                    recyclerViewAdapter.notifyDataSetChanged()
+                    if(currentDonationList.size > 0 ){
+                        //refresh recyclerview
+                        recyclerViewAdapter.notifyDataSetChanged()
+                    }else{
+                        zeroStateContainer.visibility = View.VISIBLE
+                        currentDonationRecyclerView.visibility = View.GONE
+                    }
                 }
 
             }else{
