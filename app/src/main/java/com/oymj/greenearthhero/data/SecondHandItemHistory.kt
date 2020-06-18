@@ -41,11 +41,11 @@ class SecondHandItemHistory(
 
                             var userBoughtData = item.get("user_bought") as HashMap<String,String>
                             var userBoughtObj = User(userBoughtData["userId"]!!,userBoughtData["email"]!!,userBoughtData["firstName"]!!
-                                ,userBoughtData["lastName"]!!,userBoughtData["phone"]!!,(userBoughtData["dateOfBirth"] as Timestamp).toDate(),(userBoughtData["isPhoneVerified"] as Boolean))
+                                ,userBoughtData["lastName"]!!,userBoughtData["phone"]!!,(userBoughtData["isPhoneVerified"] as Boolean))
 
                             var userPostedData = item.get("user_posted") as HashMap<String,String>
                             var userPostedObj = User(userPostedData["userId"]!!,userPostedData["email"]!!,userPostedData["firstName"]!!
-                                ,userPostedData["lastName"]!!,userPostedData["phone"]!!,(userPostedData["dateOfBirth"] as Timestamp).toDate(),(userPostedData["isPhoneVerified"] as Boolean))
+                                ,userPostedData["lastName"]!!,userPostedData["phone"]!!,(userPostedData["isPhoneVerified"] as Boolean))
 
                             var deliveryLocationData = item.get("delivery_location") as HashMap<String,String>
                             var positionData = item.get("delivery_location.location") as HashMap<String,Double>
@@ -91,11 +91,11 @@ class SecondHandItemHistory(
 
                             var userBoughtData = item.get("user_bought") as HashMap<String,String>
                             var userBoughtObj = User(userBoughtData["userId"]!!,userBoughtData["email"]!!,userBoughtData["firstName"]!!
-                                ,userBoughtData["lastName"]!!,userBoughtData["phone"]!!,(userBoughtData["dateOfBirth"] as Timestamp).toDate(),(userBoughtData["isPhoneVerified"] as Boolean))
+                                ,userBoughtData["lastName"]!!,userBoughtData["phone"]!!,(userBoughtData["isPhoneVerified"] as Boolean))
 
                             var userPostedData = item.get("user_posted") as HashMap<String,String>
                             var userPostedObj = User(userPostedData["userId"]!!,userPostedData["email"]!!,userPostedData["firstName"]!!
-                                ,userPostedData["lastName"]!!,userPostedData["phone"]!!,(userPostedData["dateOfBirth"] as Timestamp).toDate(),(userPostedData["isPhoneVerified"] as Boolean))
+                                ,userPostedData["lastName"]!!,userPostedData["phone"]!!,(userPostedData["isPhoneVerified"] as Boolean))
 
                             var deliveryLocationData = item.get("delivery_location") as HashMap<String,String>
                             var positionData = item.get("delivery_location.location") as HashMap<String,Double>

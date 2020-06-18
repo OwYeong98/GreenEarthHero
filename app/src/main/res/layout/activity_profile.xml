@@ -305,29 +305,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/darkgrey"
-                    android:text="Date of Birth"
-                    android:layout_marginLeft="10dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textSize="16sp"/>
-                <EditText
-                    android:id="@+id/tvDateOfBirth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minHeight="20dp"
-                    android:enabled="false"
-                    android:layout_marginLeft="10dp"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/montserrat"
-                    android:textColor="@color/darkgrey"
-                    android:text=""
-                    android:background="@null"
-                    android:minWidth="150dp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/darkgrey"
                     android:text="Email"
                     android:layout_marginLeft="10dp"
                     android:fontFamily="@font/montserrat_bold"

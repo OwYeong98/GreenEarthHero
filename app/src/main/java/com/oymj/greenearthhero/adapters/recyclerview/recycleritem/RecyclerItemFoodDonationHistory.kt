@@ -32,6 +32,7 @@ class RecyclerItemFoodDonationHistory : UniversalRecyclerItem(FoodDonationHistor
                 tvDate.text = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(data.dateEnded)
                 tvRestaurantName.text = data.location.name
                 tvAddress.text = data.location.address
+                tvTotalFood.text = "Total Food:\n ${data.totalFoodAmount}"
 
 
                 tvTotalFood.background = RippleUtil.getRippleButtonOutlineDrawable(view.context,

@@ -138,7 +138,6 @@ class ProfileActivity : AppCompatActivity(){
                     tvFullName.text = data?.getFullName()
                     tvFirstName.setText(data?.firstName!!)
                     tvLastName.setText(data?.lastName!!)
-                    tvDateOfBirth.setText(SimpleDateFormat("dd/MM/yyyy").format(data.dateOfBirth))
                     tvEmail.setText(data?.email!!)
                     tvPhone.setText(data?.phone!!)
 
@@ -196,14 +195,6 @@ class ProfileActivity : AppCompatActivity(){
         tvLastName.isEnabled = true
         tvLastName.setPadding(5,20,0,20)
 
-        tvDateOfBirth.background = RippleUtil.getRippleButtonOutlineDrawable(this,
-            resources.getColor(R.color.white),
-            resources.getColor(R.color.white),
-            resources.getColor(R.color.black),
-            20f,2
-        )
-        tvDateOfBirth.isEnabled = true
-        tvDateOfBirth.setPadding(5,20,0,20)
     }
 
     private fun disableEdit(){
@@ -217,9 +208,6 @@ class ProfileActivity : AppCompatActivity(){
         tvLastName.isEnabled = false
         tvLastName.setPadding(0,0,0,0)
 
-        tvDateOfBirth.background = null
-        tvDateOfBirth.isEnabled = false
-        tvDateOfBirth.setPadding(0,0,0,0)
     }
 
     private fun saveDetailToFirebase(){
@@ -227,8 +215,7 @@ class ProfileActivity : AppCompatActivity(){
         var db = FirebaseFirestore.getInstance()
         db.collection("Users").document(currentViewingUserId).update(mapOf(
             "firstName" to tvFirstName.text.toString(),
-            "lastName" to tvLastName.text.toString(),
-            "dateOfBirth" to tvDateOfBirth.text.toString()
+            "lastName" to tvLastName.text.toString()
         )).addOnSuccessListener {
             disableEdit()
             displayUserDataFromFirebase(currentViewingUserId)
@@ -244,11 +231,9 @@ class ProfileActivity : AppCompatActivity(){
     fun validate(): Boolean{
         var firstName: String = tvFirstName.text.toString()
         var lastName: String = tvLastName.text.toString()
-        var dateOfBirth: String = tvDateOfBirth.text.toString()
 
         var firstNameError = ""
         var lastNameError = ""
-        var dateOfBirthError = ""
 
 
         firstNameError+= "${FormUtils.isNull("First Name",firstName)?:""}|"
@@ -257,8 +242,6 @@ class ProfileActivity : AppCompatActivity(){
         lastNameError+= "${FormUtils.isNull("Last Name",lastName)?:""}|"
         lastNameError+= "${FormUtils.isLengthBetween("Last Name",lastName,3,20)?:""}|"
 
-
-        dateOfBirthError+= "${FormUtils.isNull("Date Of Birth",dateOfBirth)?:""}|"
 
         if(firstNameError!=""){
             for(err in firstNameError.split("|")){
@@ -277,16 +260,7 @@ class ProfileActivity : AppCompatActivity(){
             }
         }
 
-        if(dateOfBirthError!=""){
-            for(err in dateOfBirthError.split("|")){
-                if(err!=""){
-                    tvDateOfBirth.error = err
-                    break
-                }
-            }
-        }
-
-        var allError = firstNameError+lastNameError+dateOfBirthError
+        var allError = firstNameError+lastNameError
 
         return allError.replace("|","")== ""
     }
