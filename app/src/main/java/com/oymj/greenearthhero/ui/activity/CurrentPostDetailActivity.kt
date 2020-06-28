@@ -302,7 +302,8 @@ class CurrentPostDetailActivity: AppCompatActivity() {
             btnBack,
             btnEditDetail,
             btnAddDeliveryDetail,
-            btnCancelSelling
+            btnCancelSelling,
+            btnChatWithBuyer
         )
 
         for (view in actionButtonViewList) {

@@ -47,7 +47,7 @@ class FoodDonationHistory(
                                 ,donateLocationData["address"]!!,location)
 
                             var donatorUserObj = User(donatorUserData["userId"]!!,donatorUserData["email"]!!,donatorUserData["firstName"]!!
-                                ,donatorUserData["lastName"]!!,donatorUserData["phone"]!!,(donatorUserData["isPhoneVerified"] as Boolean))
+                                ,donatorUserData["lastName"]!!,donatorUserData["phone"]!!,(donatorUserData["phoneVerified"] as Boolean))
 
                             var newFoodHistory = FoodDonationHistory(id,donatorUserObj,dateStarted,dateEnded!!,donateLocationObj!!,minutesAvailable,foodList,totalFoodAmount!!)
 

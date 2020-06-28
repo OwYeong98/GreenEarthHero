@@ -45,6 +45,10 @@ class AddDonationLocationActivity: AppCompatActivity() {
                     submitAddLocationToFirebase()
                 }
                 btnCancel->{
+                    var intent = Intent()
+                    intent.putExtra("id",currentEditingLocation.id)
+                    setResult(Activity.RESULT_OK,intent)
+                    finish()
                     finish()
                 }
                 btnRecenter->{
@@ -99,23 +103,14 @@ class AddDonationLocationActivity: AppCompatActivity() {
     }
 
     private fun displayDonateLocationData(data:Location){
-        currentEditingLocation=data
 
         tvTitle.text = "Edit Donation Location"
         btnAdd.text = "Edit"
+
         btnDelete.visibility = View.VISIBLE
         inputDonateLocationName.setText(data?.name)
         inputDonateLocationAddress.setText(data?.address)
-        updateCurrentPinnedLocationWithLatLong(data.location.lat!!,data.location.lon!!)
 
-        var newCameraPosition = com.google.android.gms.maps.model.CameraPosition.builder()
-            .target(LatLng(data.location.lat!!, data.location.lon!!))
-            .zoom(15f)
-            .bearing(90f)
-            .tilt(0f)
-            .build()
-
-        myGoogleMap.animateCamera(com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(newCameraPosition))
     }
 
     private fun linkAllButtonWithOnClickListener() {
@@ -238,50 +233,41 @@ class AddDonationLocationActivity: AppCompatActivity() {
             myGoogleMap.uiSettings.isMyLocationButtonEnabled = false
             myGoogleMap.uiSettings.isCompassEnabled = false
 
-
-            if (LocationUtils?.getLastKnownLocation() != null) {
-
-                var userCurrentLocationLatLng = LocationUtils!!.getLastKnownLocation()!!
+            //Display edit data
+//            if(::currentEditingLocation.isInitialized){
+//
+//            }
+//                displayDonateLocationData(currentEditingLocation)
+            var userCurrentLocationLatLng:LatLng? = null
+            if(::currentEditingLocation.isInitialized){
+                userCurrentLocationLatLng = LatLng(currentEditingLocation.location.lat!!,currentEditingLocation.location.lon!!)
+                displayDonateLocationData(currentEditingLocation)
+            }else if (LocationUtils?.getLastKnownLocation() != null) {
+                userCurrentLocationLatLng = LatLng(LocationUtils!!.getLastKnownLocation()!!.latitude,LocationUtils!!.getLastKnownLocation()!!.longitude)
                 updateCurrentPinnedLocationWithLatLong(userCurrentLocationLatLng.latitude!!, userCurrentLocationLatLng.longitude!!)
-
-                var newCameraPosition = com.google.android.gms.maps.model.CameraPosition.builder()
-                    .target(LatLng(userCurrentLocationLatLng.latitude!!, userCurrentLocationLatLng.longitude!!))
-                    .zoom(15f)
-                    .bearing(90f)
-                    .tilt(0f)
-                    .build()
-
-                currentPinnedLocationMarker = myGoogleMap.addMarker(
-                    MarkerOptions()
-                        .position(LatLng(userCurrentLocationLatLng.latitude,userCurrentLocationLatLng.longitude))
-                        .draggable(true)
-                        .title("Drag Me")
-                        .snippet("Long Click the Marker!"))
-
-                myGoogleMap.animateCamera(com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(newCameraPosition))
             }else{
                 var kualaLumpur=LatLng(3.140853, 101.693207)
+                userCurrentLocationLatLng = kualaLumpur
                 updateCurrentPinnedLocationWithLatLong(kualaLumpur.latitude,kualaLumpur.longitude)
-                currentPinnedLocationMarker = myGoogleMap.addMarker(
-                    MarkerOptions()
-                        .position(kualaLumpur)
-                        .draggable(true)
-                        .title("Drag Me")
-                        .snippet("Long Click the Marker!"))
-
-                var newCameraPosition = com.google.android.gms.maps.model.CameraPosition.builder()
-                    .target(kualaLumpur)
-                    .zoom(15f)
-                    .bearing(90f)
-                    .tilt(0f)
-                    .build()
-
-                myGoogleMap.animateCamera(com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(newCameraPosition))
             }
 
-            //Display edit data
-            if(::currentEditingLocation.isInitialized)
-                displayDonateLocationData(currentEditingLocation)
+            var newCameraPosition = com.google.android.gms.maps.model.CameraPosition.builder()
+                .target(userCurrentLocationLatLng)
+                .zoom(15f)
+                .bearing(90f)
+                .tilt(0f)
+                .build()
+
+            currentPinnedLocationMarker = myGoogleMap.addMarker(
+                MarkerOptions()
+                    .position(userCurrentLocationLatLng)
+                    .draggable(true)
+                    .title("Drag Me")
+                    .snippet("Long Click the Marker!"))
+
+            myGoogleMap.animateCamera(com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(newCameraPosition))
+
+
 
             myGoogleMap.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener{
                 override fun onMarkerDragEnd(marker: Marker?) {

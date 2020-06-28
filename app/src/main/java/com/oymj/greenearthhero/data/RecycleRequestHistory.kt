@@ -51,10 +51,10 @@ class RecycleRequestHistory(
                         var userCollectedData = recycleHistory.get("user_collected") as HashMap<String,String>
 
                         var userRequestedObj = User(userRequestedData["userId"]!!,userRequestedData["email"]!!,userRequestedData["firstName"]!!
-                            ,userRequestedData["lastName"]!!,userRequestedData["phone"]!!,(userRequestedData["isPhoneVerified"] as Boolean))
+                            ,userRequestedData["lastName"]!!,userRequestedData["phone"]!!,(userRequestedData["phoneVerified"] as Boolean))
 
                         var userCollectedObj = User(userCollectedData["userId"]!!,userCollectedData["email"]!!,userCollectedData["firstName"]!!
-                            ,userCollectedData["lastName"]!!,userCollectedData["phone"]!!,(userCollectedData["isPhoneVerified"] as Boolean))
+                            ,userCollectedData["lastName"]!!,userCollectedData["phone"]!!,(userCollectedData["phoneVerified"] as Boolean))
 
                         var newRecycleHistory = RecycleRequestHistory(id,dateCollected,userRequestedObj,userCollectedObj,address!!,location!!,glassWeight!!,plasticWeight!!,metalWeight!!,paperWeight!!)
                         recycleHistoryList.add(newRecycleHistory)
@@ -94,10 +94,10 @@ class RecycleRequestHistory(
                         var userCollectedData = recycleHistory.get("user_collected") as HashMap<String,String>
 
                         var userRequestedObj = User(userRequestedData["userId"]!!,userRequestedData["email"]!!,userRequestedData["firstName"]!!
-                            ,userRequestedData["lastName"]!!,userRequestedData["phone"]!!,(userRequestedData["isPhoneVerified"] as Boolean))
+                            ,userRequestedData["lastName"]!!,userRequestedData["phone"]!!,(userRequestedData["phoneVerified"] as Boolean))
 
                         var userCollectedObj = User(userCollectedData["userId"]!!,userCollectedData["email"]!!,userCollectedData["firstName"]!!
-                            ,userCollectedData["lastName"]!!,userCollectedData["phone"]!!,(userCollectedData["isPhoneVerified"] as Boolean))
+                            ,userCollectedData["lastName"]!!,userCollectedData["phone"]!!,(userCollectedData["phoneVerified"] as Boolean))
 
                         var newRecycleHistory = RecycleRequestHistory(id,dateCollected,userRequestedObj,userCollectedObj,address!!,location!!,glassWeight!!,plasticWeight!!,metalWeight!!,paperWeight!!)
                         recycleHistoryList.add(newRecycleHistory)

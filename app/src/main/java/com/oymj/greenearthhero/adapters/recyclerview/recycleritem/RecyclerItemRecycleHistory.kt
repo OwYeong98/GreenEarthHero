@@ -39,6 +39,8 @@ class RecyclerItemRecycleHistory : UniversalRecyclerItem(RecycleRequestHistory::
                 val btnCancelRequest = view.findViewById<TextView>(R.id.btnCancelRequest)
                 val btnChat = view.findViewById<TextView>(R.id.btnChat)
                 val btnMarkAsCollected = view.findViewById<TextView>(R.id.btnMarkAsCollected)
+                val btnShareLocation = view.findViewById<TextView>(R.id.btnShareLocation)
+                val btnViewVolunteerLocation = view.findViewById<TextView>(R.id.btnViewVolunteerLocation)
 
                 val tvCollectedBy = view.findViewById<TextView>(R.id.tvCollectedBy)
                 val tvDistanceAwayContainer = view.findViewById<CardView>(R.id.tvDistanceAwayContainer)
@@ -73,6 +75,8 @@ class RecyclerItemRecycleHistory : UniversalRecyclerItem(RecycleRequestHistory::
                 btnChat.visibility = View.GONE
                 btnCancelVolunteer.visibility = View.GONE
                 btnCancelRequest.visibility = View.GONE
+                btnShareLocation.visibility = View.GONE
+                btnViewVolunteerLocation.visibility = View.GONE
 
                 totalContainer.visibility = View.GONE
                 btnMarkAsCollected.visibility = View.GONE
