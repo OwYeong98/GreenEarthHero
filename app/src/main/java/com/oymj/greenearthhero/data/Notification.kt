@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.google.firebase.firestore.FirebaseFirestore
 import com.oymj.greenearthhero.R
-import com.oymj.greenearthhero.ui.activity.ChatRoomActivity
-import com.oymj.greenearthhero.ui.activity.CurrentPostDetailActivity
-import com.oymj.greenearthhero.ui.activity.CurrentPurchaseDetailActivity
-import com.oymj.greenearthhero.ui.activity.MyRequestAndRequestHistoryActivity
+import com.oymj.greenearthhero.ui.activity.*
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import java.text.SimpleDateFormat
@@ -106,6 +103,10 @@ class Notification(
                 intent.putExtra("itemId",relatedId)
                 context.startActivity(intent)
             }
+            "Item_History"->{
+                var intent = Intent(context, CurrentPostAndSalesHistoryActivity::class.java)
+                context.startActivity(intent)
+            }
         }
     }
 
@@ -125,6 +126,9 @@ class Notification(
                 imageResourceId= R.drawable.ic_notification_second_hand_platform
             }
             "Item_Sale"->{
+                imageResourceId= R.drawable.ic_notification_second_hand_platform
+            }
+            "Item_History"->{
                 imageResourceId= R.drawable.ic_notification_second_hand_platform
             }
         }

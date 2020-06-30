@@ -130,12 +130,17 @@ class CurrentPostDetailActivity: AppCompatActivity() {
                     var confirmDialog = YesOrNoDialog(this@CurrentPostDetailActivity,"Are you sure you want to cancel this item selling post?") {
                             isYes->
                         if(isYes){
+                            //remove listener first to not listen to update for this post because we want to delete it from database
+                            listener.remove()
+
                             var loadingDialog = LoadingDialog(this@CurrentPostDetailActivity)
                             loadingDialog.show()
                             FirebaseFirestore.getInstance().collection("Second_Hand_Item").document(currentViewingItemId).delete()
                                 .addOnSuccessListener {
                                     loadingDialog.dismiss()
-                                    var successDialog = SuccessDialog(this@CurrentPostDetailActivity,"Cancelled Successfully!","Your Item Post has been canceled successfully.")
+                                    var successDialog = SuccessDialog(this@CurrentPostDetailActivity,"Cancelled Successfully!","Your Item Post has been canceled successfully."){
+                                        finish()
+                                    }
                                     successDialog.show()
                                 }
                                 .addOnFailureListener {
