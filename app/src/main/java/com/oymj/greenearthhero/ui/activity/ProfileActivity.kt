@@ -14,20 +14,21 @@ import android.view.ViewAnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.oymj.greenearthhero.R
-import com.oymj.greenearthhero.data.RecycleRequestHistory
-import com.oymj.greenearthhero.data.User
+import com.oymj.greenearthhero.data.*
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.LoadingDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.utils.FirebaseUtil
 import com.oymj.greenearthhero.utils.FormUtils
 import com.oymj.greenearthhero.utils.RippleUtil
-import kotlinx.android.synthetic.main.activity_menu.*
+import kotlinx.android.synthetic.main.activity_menu.menu_bg
 import kotlinx.android.synthetic.main.activity_profile.*
-import kotlinx.android.synthetic.main.listitem_chat_room.*
-import java.text.SimpleDateFormat
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class ProfileActivity : AppCompatActivity(){
     private var isFromMenuActivity:Boolean = false
@@ -51,7 +52,42 @@ class ProfileActivity : AppCompatActivity(){
                     var intent = Intent(this@ProfileActivity, MenuActivity::class.java)
                     startActivity(intent)
                 }
+                btnBack->{
+                    finish()
+                }
+                btnMessageHim->{
+                    var loadingDialog = LoadingDialog(this@ProfileActivity)
+                    loadingDialog.show()
 
+                    ChatRoom.getSpecificChatRoomProvidingTwoUser(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@ProfileActivity)!!,currentViewingUserId, callback = {
+                            success,message,chatRoomRef->
+
+                        GlobalScope.launch {
+                            if(chatRoomRef!=null){
+                                loadingDialog.dismiss()
+                                //if found we return previous activity
+                                var intent = Intent(this@ProfileActivity,ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoom",chatRoomRef)
+                                startActivity(intent)
+                            }else{
+                                loadingDialog.dismiss()
+
+                                var user1 = User.suspendGetSpecificUserFromFirebase(FirebaseAuth.getInstance().currentUser?.uid!!) //currentlogged in user
+                                var user2 = User.suspendGetSpecificUserFromFirebase(currentViewingUserId)
+
+                                var id = "-1"
+                                var lastMessage = ""
+                                var lastMessageSendBy = ""
+                                var messageList = ArrayList<ChatMessage>()
+
+                                var newChatRoom = ChatRoom(id, user1!!, user2!!, messageList, lastMessage,lastMessageSendBy)
+                                var intent = Intent(this@ProfileActivity,ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoom",newChatRoom)
+                                startActivity(intent)
+                            }
+                        }
+                    })
+                }
             }
         }
     }
@@ -109,7 +145,9 @@ class ProfileActivity : AppCompatActivity(){
         //all button with onClick listener should be registered in this list
         val actionButtonViewList = listOf(
             btnEditProfile,
-            btnMenu
+            btnMenu,
+            btnBack,
+            btnMessageHim
         )
 
         for (view in actionButtonViewList) {
@@ -121,6 +159,7 @@ class ProfileActivity : AppCompatActivity(){
         var loadingDialog = LoadingDialog(this)
         loadingDialog.show()
 
+        calculateAchievementOnRecycleReuseAndReduce(userId)
         User.getSpecificUserFromFirebase(userId, callback = {
             success,message,data->
 
@@ -155,6 +194,55 @@ class ProfileActivity : AppCompatActivity(){
                 }
             })
         })
+    }
+
+    private fun calculateAchievementOnRecycleReuseAndReduce(userId: String){
+
+        FoodDonationHistory.getFoodDonationHistoryListByUserFromFirebase(userId,callback = {
+                success,message,data->
+            if(success){
+                var totalFoodDonated = data!!.fold(0,{prev,obj-> prev + obj.totalFoodAmount})
+
+                runOnUiThread{
+                    loading_reduced.visibility = View.GONE
+                    reduced_icon.visibility = View.VISIBLE
+                    tvReducedAmount.text = "$totalFoodDonated meals"
+                }
+            }
+        })
+
+        RecycleRequestHistory.getSpecificUserRecycleRequestHistoryFromFirebase(userId,callback = {
+                success, message, data ->
+            if(success){
+                var totalRecycled = data!!.fold(0,{prev,obj-> prev + obj.getTotalAmount()})
+
+                runOnUiThread{
+                    loading_recycled.visibility = View.GONE
+                    recyled_icon.visibility = View.VISIBLE
+                    tvRecycledAmount.text = "$totalRecycled Kg"
+                }
+            }
+        })
+
+
+        SecondHandItemHistory.getItemSaleHistoryOfUserFromFirebase(userId,callback = {
+                success, message, data ->
+            SecondHandItemHistory.getPurchaseHistoryOfUserFromFirebase(userId,callback = {
+                    innerSuccess, innerMessage, innerData ->
+
+                if(success && innerSuccess){
+                    var totalItemSale = data!!.size + innerData!!.size
+
+                    runOnUiThread{
+                        loading_reused.visibility = View.GONE
+                        reused_icon.visibility = View.VISIBLE
+                        tvReusedAmount.text = "$totalItemSale items"
+                    }
+                }
+            })
+        })
+
+
     }
 
     private fun setupUI(){

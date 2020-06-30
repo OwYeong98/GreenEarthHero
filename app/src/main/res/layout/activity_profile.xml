@@ -132,9 +132,22 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <ProgressBar
+                                android:id="@+id/loading_recycled"
+                                style="?android:attr/progressBarStyle"
+                                android:indeterminateTint="@color/lightestgrey"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="35dp"
+                                android:layout_marginRight="35dp"
+                                android:layout_centerInParent="true"
+                                android:visibility="visible" />
+
+                            <ImageView
+                                android:id="@+id/recyled_icon"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:src="@drawable/recycle_grayscale_icon" />
                             <TextView
                                 android:layout_width="match_parent"
@@ -151,7 +164,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
-                                android:text="5kg"
+                                android:text=""
                                 android:textSize="13dp"
                                 android:textColor="@color/white"
                                 android:fontFamily="@font/montserrat_regular"/>
@@ -163,9 +176,22 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <ProgressBar
+                                android:id="@+id/loading_reduced"
+                                style="?android:attr/progressBarStyle"
+                                android:indeterminateTint="@color/lightestgrey"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="35dp"
+                                android:layout_marginRight="35dp"
+                                android:layout_centerInParent="true"
+                                android:visibility="visible" />
+
+                            <ImageView
+                                android:id="@+id/reduced_icon"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:src="@drawable/fooddonation_grayscale_icon" />
                             <TextView
                                 android:layout_width="match_parent"
@@ -182,7 +208,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
-                                android:text="5kg"
+                                android:text=""
                                 android:textSize="13dp"
                                 android:textColor="@color/white"
                                 android:fontFamily="@font/montserrat_regular"/>
@@ -195,9 +221,22 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <ImageView
+                            <ProgressBar
+                                android:id="@+id/loading_reused"
+                                style="?android:attr/progressBarStyle"
+                                android:indeterminateTint="@color/lightestgrey"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="35dp"
+                                android:layout_marginRight="35dp"
+                                android:layout_centerInParent="true"
+                                android:visibility="visible" />
+
+                            <ImageView
+                                android:id="@+id/reused_icon"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:src="@drawable/goodselling_grayscale_icon" />
                             <TextView
                                 android:layout_width="match_parent"
@@ -214,7 +253,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAlignment="center"
-                                android:text="5kg"
+                                android:text=""
                                 android:textSize="13dp"
                                 android:textColor="@color/white"
                                 android:fontFamily="@font/montserrat_regular"/>

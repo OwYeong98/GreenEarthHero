@@ -200,21 +200,35 @@
                 android:layout_weight="3"
                 android:orientation="vertical">
 
+                <ProgressBar
+                    android:id="@+id/loading_recycled"
+                    style="?android:attr/progressBarStyle"
+                    android:indeterminateTint="@color/lightestgrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible" />
+
                 <ImageView
+                    android:id="@+id/recyled_icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="35dp"
                     android:layout_marginRight="35dp"
                     android:adjustViewBounds="true"
+                    android:visibility="gone"
                     android:src="@drawable/recycle_grayscale_icon" />
 
                 <TextView
+                    android:id="@+id/recycledAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat"
-                    android:text="Recycled\n5 kg"
+                    android:text="Recycled"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
@@ -226,21 +240,35 @@
                 android:layout_weight="3"
                 android:orientation="vertical">
 
+                <ProgressBar
+                    android:id="@+id/loading_reduced"
+                    style="?android:attr/progressBarStyle"
+                    android:indeterminateTint="@color/lightestgrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible" />
+
                 <ImageView
+                    android:id="@+id/reduced_icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="35dp"
                     android:layout_marginRight="35dp"
                     android:adjustViewBounds="true"
+                    android:visibility="gone"
                     android:src="@drawable/fooddonation_grayscale_icon" />
 
                 <TextView
+                    android:id="@+id/reducedAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat"
-                    android:text="Reduced\n5 meals"
+                    android:text="Reduced"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="15sp" />
@@ -252,21 +280,35 @@
                 android:layout_weight="3"
                 android:orientation="vertical">
 
+                <ProgressBar
+                    android:id="@+id/loading_reused"
+                    style="?android:attr/progressBarStyle"
+                    android:indeterminateTint="@color/lightestgrey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_centerInParent="true"
+                    android:visibility="visible" />
+
                 <ImageView
+                    android:id="@+id/reused_icon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="35dp"
                     android:layout_marginRight="35dp"
                     android:adjustViewBounds="true"
+                    android:visibility="gone"
                     android:src="@drawable/goodselling_grayscale_icon" />
 
                 <TextView
+                    android:id="@+id/reusedAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/montserrat"
-                    android:text="Reused\n5 items"
+                    android:text="Reused"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="15sp" />

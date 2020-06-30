@@ -17,8 +17,12 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FirebaseFirestore
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.data.FoodDonationHistory
 import com.oymj.greenearthhero.data.Notification
+import com.oymj.greenearthhero.data.RecycleRequestHistory
+import com.oymj.greenearthhero.data.SecondHandItemHistory
 import com.oymj.greenearthhero.ui.dialog.ErrorDialog
 import com.oymj.greenearthhero.ui.dialog.SuccessDialog
 import com.oymj.greenearthhero.ui.dialog.YesOrNoDialog
@@ -117,6 +121,7 @@ class MenuActivity : AppCompatActivity() {
         }
         animateMenuIcon()
         setupUI()
+        calculateAchievementOnRecycleReuseAndReduce()
 
     }
 
@@ -159,6 +164,55 @@ class MenuActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun calculateAchievementOnRecycleReuseAndReduce(){
+
+        FoodDonationHistory.getFoodDonationHistoryListByUserFromFirebase(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
+                success,message,data->
+            if(success){
+                var totalFoodDonated = data!!.fold(0,{prev,obj-> prev + obj.totalFoodAmount})
+
+                runOnUiThread{
+                    loading_reduced.visibility = View.GONE
+                    reduced_icon.visibility = View.VISIBLE
+                    reducedAmount.text = "Reduced\n$totalFoodDonated meals"
+                }
+            }
+        })
+
+        RecycleRequestHistory.getSpecificUserRecycleRequestHistoryFromFirebase(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
+                success, message, data ->
+            if(success){
+                var totalRecycled = data!!.fold(0,{prev,obj-> prev + obj.getTotalAmount()})
+
+                runOnUiThread{
+                    loading_recycled.visibility = View.GONE
+                    recyled_icon.visibility = View.VISIBLE
+                    recycledAmount.text = "Recycled\n$totalRecycled Kg"
+                }
+            }
+        })
+
+
+        SecondHandItemHistory.getItemSaleHistoryOfUserFromFirebase(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
+                success, message, data ->
+            SecondHandItemHistory.getPurchaseHistoryOfUserFromFirebase(FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)!!,callback = {
+                    innerSuccess, innerMessage, innerData ->
+
+                if(success && innerSuccess){
+                    var totalItemSale = data!!.size + innerData!!.size
+
+                    runOnUiThread{
+                        loading_reused.visibility = View.GONE
+                        reused_icon.visibility = View.VISIBLE
+                        reusedAmount.text = "Reused\n$totalItemSale items"
+                    }
+                }
+            })
+        })
+
+
     }
 
     private fun linkAllButtonWithOnClickListener() {
