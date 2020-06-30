@@ -90,7 +90,16 @@ class BuyerViewItemDetailActivity: AppCompatActivity() {
                         }
                     })
                 }
-
+                tvSellerName->{
+                    var intent= Intent(this@BuyerViewItemDetailActivity,ProfileActivity::class.java)
+                    intent.putExtra("userId",currentViewingItemDetail.postedByUser.userId)
+                    startActivity(intent)
+                }
+                ivUserIcon->{
+                    var intent= Intent(this@BuyerViewItemDetailActivity,ProfileActivity::class.java)
+                    intent.putExtra("userId",currentViewingItemDetail.postedByUser.userId)
+                    startActivity(intent)
+                }
             }
         }
     }
