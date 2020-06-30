@@ -2,6 +2,7 @@ package com.oymj.greenearthhero.adapters.recyclerview.recycleritem
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -48,21 +49,23 @@ class RecyclerItemSecondHandItem : UniversalRecyclerItem(SecondHandItem::class.j
                 ivImage.setImageResource(R.drawable.skeleton_rounded_square)
                 shimmerLayout.startShimmerAnimation()
 
+                if(data.imageUrl != ""){
+                    var storageRef = FirebaseStorage.getInstance().reference
+                    var foodImageRef = storageRef.child(data.imageUrl)
+                    val TEN_MEGABYTE: Long = 1024 * 1024 * 10
+                    foodImageRef.getBytes(TEN_MEGABYTE)
+                        .addOnSuccessListener {
+                                imageData->
 
-                var storageRef = FirebaseStorage.getInstance().reference
-                var foodImageRef = storageRef.child(data.imageUrl)
-                val TEN_MEGABYTE: Long = 1024 * 1024 * 10
-                foodImageRef.getBytes(TEN_MEGABYTE)
-                    .addOnSuccessListener {
-                            imageData->
+                            if(imageData != null){
+                                shimmerLayout.stopShimmerAnimation()
+                                var foodImage = BitmapFactory.decodeByteArray(imageData!!,0,imageData.size)
+                                ivImage.setImageBitmap(foodImage)
+                            }
 
-                        if(imageData != null){
-                            shimmerLayout.stopShimmerAnimation()
-                            var foodImage = BitmapFactory.decodeByteArray(imageData!!,0,imageData.size)
-                            ivImage.setImageBitmap(foodImage)
                         }
+                }
 
-                    }
 
                 mainContainer.setOnClickListener {
                     adapter.onItemClickedListener(data,1)

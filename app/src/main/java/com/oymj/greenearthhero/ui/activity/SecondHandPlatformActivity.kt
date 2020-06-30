@@ -166,7 +166,7 @@ class SecondHandPlatformActivity : AppCompatActivity() {
     private fun listenToFirebaseCollectionChangesAndUpdateUI(){
         var db = FirebaseFirestore.getInstance()
 
-        listener = db.collection("Second_Hand_Item").whereEqualTo("userId", FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)).addSnapshotListener{
+        listener = db.collection("Second_Hand_Item").addSnapshotListener{
                 snapshot,e->
             if (e != null) {
                 return@addSnapshotListener
@@ -194,27 +194,31 @@ class SecondHandPlatformActivity : AppCompatActivity() {
                 recyclerViewAdapter.stopSkeletalLoading()
                 swipeLayout.isRefreshing = false
 
-                itemOnSaleFullList.addAll(data!!)
-                //if the item is not posted by current user only show it
-                data!!.forEach { i-> if(i.postedByUser.userId != FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@SecondHandPlatformActivity))itemOnSaleList.add(i)}
+                //clear previous data first
+                itemOnSaleList.clear()
+                itemOnSaleFullList.clear()
 
-                var sortBy = sortBySpinner.selectedItem as String
-                when(sortBy){
-                    "Latest Post"->{
-                        itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.datePosted.time else 0 }
-                    }
-                    "Oldest Post"->{
-                        itemOnSaleList.sortByDescending { current-> if(current is SecondHandItem) current.datePosted.time else 0}
-                    }
-                    "Price Asc"->{
-                        itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.itemPrice else 0.0 }
-                    }
-                    "Price Desc"->{
-                        itemOnSaleList.sortByDescending { current-> if(current is SecondHandItem) current.itemPrice else 0.0 }
-                    }
-                }
+                //if the item is not posted by current user only show it
+                data!!.forEach { i-> if(i.postedByUser.userId != FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@SecondHandPlatformActivity))itemOnSaleFullList.add(i)}
+                itemOnSaleList.addAll(itemOnSaleFullList)
 
                 runOnUiThread {
+                    var sortBy = sortBySpinner.selectedItem as String
+                    when(sortBy){
+                        "Latest Post"->{
+                            itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.datePosted.time else 0 }
+                        }
+                        "Oldest Post"->{
+                            itemOnSaleList.sortByDescending { current-> if(current is SecondHandItem) current.datePosted.time else 0}
+                        }
+                        "Price Asc"->{
+                            itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.itemPrice else 0.0 }
+                        }
+                        "Price Desc"->{
+                            itemOnSaleList.sortByDescending { current-> if(current is SecondHandItem) current.itemPrice else 0.0 }
+                        }
+                    }
+
                     //refresh recyclerview
                     recyclerViewAdapter.notifyDataSetChanged()
                 }
