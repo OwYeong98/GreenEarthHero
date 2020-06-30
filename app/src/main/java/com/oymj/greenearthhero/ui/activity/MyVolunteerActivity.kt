@@ -125,7 +125,8 @@ class MyVolunteerActivity : AppCompatActivity() {
                 myVolunteerList.clear()
                 swipeLayout.isRefreshing = false
 
-                //filter only show request that are requested by the current logged in user
+
+                //filter only show request that are volunteer by the current logged in user
                 for(request in data!!){
                     if(request.acceptedCollectUser != null){
                         if(request.acceptedCollectUser!!.userId == FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this)){
@@ -134,13 +135,19 @@ class MyVolunteerActivity : AppCompatActivity() {
                     }
                 }
 
-                //sort by near to far
-                myVolunteerList.sortBy { obj-> (obj as RecycleRequest).getDistanceBetween() }
-
-                //refresh recyclerview
-                recyclerViewAdapter.notifyDataSetChanged()
-
-
+                runOnUiThread {
+                    if (myVolunteerList.size >0){
+                        //sort by near to far
+                        myVolunteerList.sortBy { obj-> (obj as RecycleRequest).getDistanceBetween() }
+                        myVolunteerRecyclerView.visibility = View.VISIBLE
+                        zeroStateContainer.visibility = View.GONE
+                    }else{
+                        myVolunteerRecyclerView.visibility = View.GONE
+                        zeroStateContainer.visibility = View.VISIBLE
+                    }
+                    //refresh recyclerview
+                    recyclerViewAdapter.notifyDataSetChanged()
+                }
             }else{
                 recyclerViewAdapter.stopSkeletalLoading()
                 swipeLayout.isRefreshing = false
