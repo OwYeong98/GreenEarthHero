@@ -173,7 +173,10 @@ class MyVolunteerActivity : AppCompatActivity() {
                     //clicktype 1 is cancel volunteer
                     if(clickType == 1){
                         var confirmDialog = YesOrNoDialog(this@MyVolunteerActivity,"Are you sure you want to cancel volunteer collection for this request?",callback = {
-                            updateFirebaseCancelVolunteer(data)
+                            isYesPressed->
+
+                            if(isYesPressed)
+                                updateFirebaseCancelVolunteer(data)
                         })
                         confirmDialog.show()
                     }else if(clickType ==2){

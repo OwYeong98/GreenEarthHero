@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -191,25 +192,25 @@ class SecondHandPlatformActivity : AppCompatActivity() {
                 success,message,data->
 
             if(success){
-                recyclerViewAdapter.stopSkeletalLoading()
-                swipeLayout.isRefreshing = false
-
-                //clear previous data first
-                itemOnSaleList.clear()
-                itemOnSaleFullList.clear()
-
-                //if the item is not posted by current user only show it
-                data!!.forEach { i-> if(i.postedByUser.userId != FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@SecondHandPlatformActivity))itemOnSaleFullList.add(i)}
-                itemOnSaleList.addAll(itemOnSaleFullList)
-
                 runOnUiThread {
+                    recyclerViewAdapter.stopSkeletalLoading()
+                    swipeLayout.isRefreshing = false
+
+                    //clear previous data first
+                    itemOnSaleList.clear()
+                    itemOnSaleFullList.clear()
+
+                    //if the item is not posted by current user only show it
+                    data!!.forEach { i-> if(i.postedByUser.userId != FirebaseUtil.getUserIdAndRedirectToLoginIfNotFound(this@SecondHandPlatformActivity))itemOnSaleFullList.add(i)}
+                    itemOnSaleList.addAll(itemOnSaleFullList)
+
                     var sortBy = sortBySpinner.selectedItem as String
                     when(sortBy){
                         "Latest Post"->{
-                            itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.datePosted.time else 0 }
+                            itemOnSaleList.sortByDescending { current-> if(current is SecondHandItem) current.datePosted.time else 0 }
                         }
                         "Oldest Post"->{
-                            itemOnSaleList.sortByDescending { current-> if(current is SecondHandItem) current.datePosted.time else 0}
+                            itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.datePosted.time else 0}
                         }
                         "Price Asc"->{
                             itemOnSaleList.sortBy { current-> if(current is SecondHandItem) current.itemPrice else 0.0 }
