@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.oymj.greenearthhero.R
+import com.oymj.greenearthhero.data.User
 import com.oymj.greenearthhero.utils.LocationUtils
 import kotlinx.android.synthetic.main.activity_view_volunteer_location.*
 
@@ -105,6 +106,25 @@ class ViewVolunteerLocationActivity : AppCompatActivity() {
 
     private fun listenToVolunteerLocationUpdate(){
         var db = FirebaseFirestore.getInstance()
+
+        db.collection("Users").document(volunteerUserId).get()
+            .addOnSuccessListener {
+                documentSnapshot ->
+                var volunteerLat = documentSnapshot.getDouble("locationLat")
+                var volunteerLong = documentSnapshot.getDouble("locationLong")
+
+                if(volunteerLat!=null && volunteerLong!=null ){
+                    volunteerMarker.position = LatLng(volunteerLat,volunteerLong)
+
+                    var newCameraPosition = CameraPosition.builder()
+                        .target(LatLng(volunteerLat,volunteerLong))
+                        .zoom(15f)
+                        .bearing(90f)
+                        .tilt(0f)
+                        .build()
+                    myGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(newCameraPosition))
+                }
+            }
 
         listener = db.collection("Users").document(volunteerUserId).addSnapshotListener{
                 snapshot,e->
