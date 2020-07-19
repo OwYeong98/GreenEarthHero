@@ -391,7 +391,7 @@ class FoodDonationDetailActivity : AppCompatActivity() {
             "donateLocation" to data.location,
             "donatorUser" to data.donatorUser,
             "minutesAvailable" to data.minutesAvailable,
-            "totalFoodAmount" to data.totalFoodAmount
+            "totalFoodAmount" to data.foodList.foldRight(0,{food,total-> total+food.claimedFoodQuantity})
         )
 
         var loadingDialog = LoadingDialog(this)
